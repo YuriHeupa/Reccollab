@@ -77,22 +77,32 @@ public abstract class View extends GAbstractControl {
 
 	public GButton AddButton(int x, int y, int width, int height, 
 			String text, Object objCallback, String funcCallback) {
-		return AddButton(x, y, width, height, text, -1, objCallback, funcCallback);
+		return AddButton(x, y, width, height, text, -1, objCallback, funcCallback, GAlign.CENTER, GAlign.CENTER);
+	}
+	
+	public GButton AddButton(int x, int y, int width, int height, 
+			String text, int GCScheme, Object objCallback, String funcCallback) {
+		GButton tmp = AddButton(x, y, width, height, text, 
+				GCScheme, objCallback, funcCallback, 
+				GAlign.CENTER, GAlign.CENTER);
+		return tmp;
 	}
 
 	public GButton AddButton(int x, int y, int width, int height, 
 			String text, int GCScheme,  Object objCallback, String funcCallback, 
 			String iconPath, int iconImages, GAlign iconHorz, GAlign iconVert) {
 		GButton tmp = AddButton(x, y, width, height, text, 
-				GCScheme, objCallback, funcCallback);
+				GCScheme, objCallback, funcCallback, GAlign.CENTER, GAlign.CENTER);
 		if(!iconPath.isEmpty())
 			tmp.setIcon(iconPath, iconImages, iconHorz, iconVert);
 		return tmp;
 	}
 	
 	public GButton AddButton(int x, int y, int width, int height, 
-			String text, int GCScheme, Object objCallback, String funcCallback) {
+			String text, int GCScheme, Object objCallback, String funcCallback,
+			GAlign horz, GAlign vert) {
 		GButton tmp = new GButton(Application.app, x, y, width, height);
+		tmp.setTextAlign(horz, vert);
 		tmp.setText(text);
 		tmp.setTextBold();
 		tmp.setOpaque(false);
@@ -102,6 +112,9 @@ public abstract class View extends GAbstractControl {
 		addControl(tmp);
 		return tmp;
 	}
+	
+	
+
 
 
 	public GDropList AddDropList(int x, int y, int width, int height, int elements, 
