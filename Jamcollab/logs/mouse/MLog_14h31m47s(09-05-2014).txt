@@ -1,0 +1,3 @@
+Total de cliques: 19
+Distancia percorrida: 767 px
+Tempo decorrido: 00:00:25

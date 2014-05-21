@@ -1,0 +1,4 @@
+Número palavras: 41
+Número letras: 250
+Palavras/Minuto: 0
+Letras/Minuto: 0

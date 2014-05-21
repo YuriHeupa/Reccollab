@@ -1,0 +1,2 @@
+Total de cliques: 1
+Distancia percorrida: 0 px

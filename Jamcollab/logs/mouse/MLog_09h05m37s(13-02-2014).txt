@@ -1,0 +1,2 @@
+Total de cliques: 3
+Distancia percorrida: 214 px
