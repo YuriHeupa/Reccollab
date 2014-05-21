@@ -1,2 +1,0 @@
-Total de cliques: 6
-Distancia percorrida: 404 px

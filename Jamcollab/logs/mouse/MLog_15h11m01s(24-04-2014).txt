@@ -1,3 +1,0 @@
-Total de cliques: 0
-Distancia percorrida: 209 px
-Tempo decorrido: 00:00:06
