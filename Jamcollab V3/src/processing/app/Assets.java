@@ -1,0 +1,54 @@
+package processing.app;
+
+import processing.app.controls.ImageManager;
+import processing.app.data.DAO;
+import processing.app.data.Data;
+import processing.core.PImage;
+
+public class Assets {
+
+	public static DAO ConfigDAO = new DAO("AppConfig");
+
+	public static String WINDOW_TITLE = "Jamcollab - Curitiba 2014";
+	public static String WINDOWS_ICON = "resources/sprites/ico.png";
+
+	public static PImage mapPIN = null;
+	public static PImage zoomIn = null;
+	public static PImage zoomOut = null;
+	public static String MAP1LEVEL1 = null;
+	public static String MAP1LEVEL2 = null;
+	public static String MAP1LEVEL3 = null;
+	public static String MAP2LEVEL1 = null;
+	public static String MAP2LEVEL2 = null;
+	public static String MAP2LEVEL3 = null;
+	public static String MAP3LEVEL1 = null;
+	public static String MAP3LEVEL2 = null;
+	public static String MAP3LEVEL3 = null;
+
+	public static void loadResources() {
+		mapPIN = ImageManager.loadImage(Application.app, "./resources/maps/MapPin.png");
+		//mapPIN = Application.app.loadImage("./resources/maps/MapPin.png");
+		zoomIn = Application.app.loadImage("./resources/maps/ZoomIn.png");
+		zoomOut = Application.app.loadImage("./resources/maps/ZoomOut.png"); 
+		MAP1LEVEL1 = "./resources/maps/T/LEVEL1.png";
+		MAP1LEVEL2 = "./resources/maps/T/LEVEL2.png";
+		MAP1LEVEL3 = "./resources/maps/T/LEVEL3.png";
+		MAP2LEVEL1 = "./resources/maps/1/LEVEL1.png";
+		MAP2LEVEL2 = "./resources/maps/1/LEVEL2.png";
+		MAP2LEVEL3 = "./resources/maps/1/LEVEL3.png";
+		MAP3LEVEL1 = "./resources/maps/2/LEVEL1.png";
+		MAP3LEVEL2 = "./resources/maps/2/LEVEL2.png";
+		MAP3LEVEL3 = "./resources/maps/2/LEVEL3.png";
+	}
+
+	public static void LoadAppDefaultConfig() {
+		ConfigDAO.insertData(new Data("MAPS", "true"));
+		ConfigDAO.insertData(new Data("GAMES", "false"));
+		ConfigDAO.insertData(new Data("TOOLTIP_TIME_MS", "20"));
+		ConfigDAO.insertData(new Data("HOST", "ggjcwb.com"));
+		ConfigDAO.insertData(new Data("ADDRESS", "/map.php"));
+	}
+
+	
+	
+}
