@@ -9,7 +9,7 @@ public class Assets {
 
 	public static DAO ConfigDAO = new DAO("AppConfig");
 
-	public static String WINDOW_TITLE = "Jamcollab - Brasil 2014";
+	public static String WINDOW_TITLE = "JamCollab - V3.0";
 	public static String WINDOWS_ICON = "resources/sprites/ico.png";
 	
 	public static String ACTION_TOGGLE = "resources/sprites/actionToggle.png";

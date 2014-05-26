@@ -11,7 +11,7 @@ import processing.app.Utils;
 import processing.app.controls.GDropList;
 import processing.app.controls.GEvent;
 import processing.app.sceens.MainPanel;
-import processing.app.screens.views.WebcamConfigView;
+import processing.app.screens.views.WebcamConfig;
 import processing.core.PImage;
 import processing.event.MouseEvent;
 
@@ -54,23 +54,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	 * Webcam.setHandleTermSignal(true);
 	 * }
 	 * */
-
-	/**
-	 * Constructor of WebCamHandler class
-	 */
-	private WebcamHandler() {
-
-		Webcam.addDiscoveryListener(this);
-
-		SetActiveCamera(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0));
-
-		recording = String.valueOf(Utils.AppDAO.
-				getStringData("WEBCAM_TOGGLE", "0")).
-				equals("0") ? false : true;
-
-		startTime = Application.app.millis();
-	}
-
+	
 	/**
 	Checks if the record mode is on
 	@return True if it´s recording
@@ -160,7 +144,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		event.getWebcam().setCustomViewSizes(nonStandardResolutions);
 		event.getWebcam().setViewSize(WebcamResolution.HD720.getSize());
 		System.out.println("Webcam has been connected: " + event.getWebcam().getName());
-		WebcamConfigView.UpdateWebcamList();
+		WebcamConfig.UpdateWebcamList();
 	}
 
 	@Override
@@ -168,7 +152,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		if(event.getWebcam() == selectedCam)
 			SetActiveCamera(-1);
 		System.out.println("Webcam has been disconnected: " + event.getWebcam().getName());
-		WebcamConfigView.UpdateWebcamList();
+		WebcamConfig.UpdateWebcamList();
 	}
 
 	public int getImageTakenCount() {
@@ -200,7 +184,15 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 
 	@Override
 	public void Init() {
-		// TODO Auto-generated method stub
+		Webcam.addDiscoveryListener(this);
+
+		SetActiveCamera(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0));
+
+		recording = String.valueOf(Utils.AppDAO.
+				getStringData("WEBCAM_TOGGLE", "0")).
+				equals("0") ? false : true;
+
+		startTime = Application.app.millis();
 		
 	}
 
@@ -211,6 +203,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 
 		System.out.println("CameraSelectionList - GDropList event occured " + System.currentTimeMillis()%10000000 );
 	}
+	
 
 	@Override
 	public void SetViewActive(boolean state) {

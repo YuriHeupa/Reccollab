@@ -11,7 +11,7 @@ import processing.app.Application;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.sceens.MainPanel;
-import processing.app.screens.views.KeyboardConfigView;
+import processing.app.screens.views.KeyboardConfig;
 import processing.event.MouseEvent;
 
 
@@ -167,7 +167,7 @@ public class IOHandler extends BaseObject {
 	private void HitKey(int index) {
 		Keyword tmp = keys.remove(index);
 		tmp.Hit();
-		if(KeyboardConfigView.IsKeysTyped()) {
+		if(KeyboardConfig.IsKeysTyped()) {
 			MainPanel.KBFlash.Flash();
 			keysTypedCount++;
 		}
@@ -190,7 +190,7 @@ public class IOHandler extends BaseObject {
 	private void HitWord(int index) {
 		Keyword tmp = words.remove(index);
 		tmp.Hit();
-		if(KeyboardConfigView.IsWordsTyped()) {
+		if(KeyboardConfig.IsWordsTyped()) {
 			MainPanel.KBFlash.Flash();
 			wordsTypedCount++;
 		}
@@ -227,7 +227,7 @@ public class IOHandler extends BaseObject {
 	}
 
 	public void insertKey(String key) {
-		if(KeyboardConfigView.IsKeysTyped()) {
+		if(KeyboardConfig.IsKeysTyped()) {
 			int indexOfKey = containsKey(key);
 			if(indexOfKey != -1) { // se ja existe na lista incrementa o hit
 				HitKey(indexOfKey);
@@ -240,7 +240,7 @@ public class IOHandler extends BaseObject {
 	}
 
 	public void insertWord(String word) {
-		if(KeyboardConfigView.IsWordsTyped()) {
+		if(KeyboardConfig.IsWordsTyped()) {
 			int indexOfWord = containsWord(word);
 			if(indexOfWord != -1) { // se ja existe na lista incrementa o hit
 				HitWord(indexOfWord);

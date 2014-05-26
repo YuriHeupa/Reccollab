@@ -79,9 +79,7 @@ public class Utils {
 				File.separator + "Screenshot"));
 		AppDAO.insertData(new Data("WEBCAM_PATH", getDefaultSavePath()+ 
 				File.separator + "Webcam"));
-		AppDAO.insertData(new Data("MIC_PATH", getDefaultSavePath()+ 
-				File.separator + "Mic"));
-		AppDAO.insertData(new Data("WATCH_PATH", ""));
+		AppDAO.insertData(new Data("FILECHANGE_PATH", ""));
 		AppDAO.insertData(new Data("FILELOGS_PATH", getDefaultSavePath()+ 
 				File.separator + "FileLogs"));
 
@@ -215,7 +213,28 @@ public class Utils {
 		DirectoryCheck("MIC_PATH", "Mic");
 		DirectoryCheck("FILECHANGE_PATH", "FileLogs");
 	}
+	
+	public static long getFileFolderSize(File dir) {
+        long size = 0;
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                if (file.isFile()) {
+                    size += file.length();
+                } else
+                    size += getFileFolderSize(file);
+            }
+        } else if (dir.isFile()) {
+            size += dir.length();
+        }
+        return size;
+    }
 
 
+	public static String humanReadableByteCount(long bytes) {
+	    if (bytes < 1000) return bytes + " B";
+	    int exp = (int) (Math.log(bytes) / Math.log(1000));
+	    String pre = ("kMGTPE").charAt(exp-1)+"";
+	    return String.format("%.1f %sB", bytes / Math.pow(1000, exp), pre);
+	}
 
 }

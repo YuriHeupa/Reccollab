@@ -34,8 +34,8 @@ public class TooltipHandler extends BaseObject {
 	@Override
 	public void Update() {
 		boolean condition = (showFrame+1) >= Application.app.frameCount;
-		//tooltipImg.setVisible(condition);
-		//tooltipText.setVisible(condition);
+		tooltipImg.setVisible(condition);
+		tooltipText.setVisible(condition);
 		if(condition) {
 			tooltipImg.moveTo(showPos.x-(tooltipImg.getWidth()/2),
 					showPos.y-tooltipImg.getHeight());

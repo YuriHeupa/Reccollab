@@ -20,6 +20,7 @@ import processing.app.screen.managers.TooltipHandler;
 import processing.app.screen.managers.ViewHandler;
 import processing.app.screens.views.MapView;
 import processing.app.tools.encoder.Encoder;
+import processing.app.tools.filechange.FileChangeHandler;
 import processing.app.tools.io.IOHandler;
 import processing.app.tools.io.IOListener;
 import processing.app.tools.process.ProcessHandler;
@@ -108,6 +109,11 @@ public class Application extends PApplet {
 			loadingStatus = "Inicializando sistema de captura de imagem";
 			// Init Screenshot Handler
 			ScreenShotHandler.instantiate();
+			break;
+		case 60:
+			loadingStatus = "Inicializando sistema de alteração de arquivos";
+			// Init Filechange Handler
+			FileChangeHandler.instantiate();
 			break;
 		case 68:
 			loadingStatus = "Inicializando sistema de ajuda";

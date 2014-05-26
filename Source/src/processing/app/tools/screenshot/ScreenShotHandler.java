@@ -104,7 +104,7 @@ public class ScreenShotHandler extends BaseObject {
 
 	public static String getImageTakenResolution() {
 		if(imageTaken == null)
-			return "?x?";
+			return "Ainda não há imagens capturadas";
 		String resolution = imageTaken.width + "x" +imageTaken.height;
 		return resolution;
 	}

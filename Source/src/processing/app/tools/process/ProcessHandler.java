@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import processing.app.Application;
 import processing.app.BaseObject;
-import processing.app.screens.views.ProgressStaticsView;
-import processing.app.screens.views.StaticsView;
+import processing.app.screens.views.ProgressStatics;
+import processing.app.screens.views.Statics;
 import processing.event.MouseEvent;
 
 import com.sun.jna.Platform;
@@ -74,8 +74,8 @@ public class ProcessHandler extends BaseObject {
 							process.add(line.substring(0, line.indexOf(" "))); //<-- Parse data here.
 						}
 					}
-					ProgressStaticsView.SetProcess(getMostOpenList());
-					StaticsView.setProcess(getMostOpen());
+					ProgressStatics.SetProcess(getMostOpenList());
+					Statics.setProcess(getMostOpen());
 					input.close();
 				} catch (Exception err) {
 					err.printStackTrace();

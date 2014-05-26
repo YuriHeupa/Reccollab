@@ -12,7 +12,7 @@ import org.jnativehook.mouse.NativeMouseWheelListener;
 
 import processing.app.Application;
 import processing.app.BaseObject;
-import processing.app.screens.views.MouseConfigView;
+import processing.app.screens.views.MouseConfig;
 import processing.event.MouseEvent;
 
 
@@ -85,7 +85,7 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	 */
 	public void nativeMouseClicked(NativeMouseEvent e) {
 		if(Application.READY) {
-			if(MouseConfigView.IsMouseClicks())
+			if(MouseConfig.IsMouseClicks())
 				SendEvent("IOHandler", "addMouseClick", e.getX(), e.getY(), e.getButton());
 		}
 	}

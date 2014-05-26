@@ -12,17 +12,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import processing.app.Utils;
+import processing.app.screens.views.FilechangeStatics;
 
 class DirectoryWatcher implements Runnable {
 
 	private Path pathToWatch;
+	private int created = 0;
+	private int deleted = 0;
+	private int modified = 0;
 
 	/**
 	 * Constructor of DirectoryWatcher class
 	 * @param Target the main PApplet of application
 	 */
 	public DirectoryWatcher() {
-		pathToWatch = Paths.get(Utils.AppDAO.getStringData("WATCH_PATH", ""));
+		pathToWatch = Paths.get(Utils.AppDAO.getStringData("FILECHANGE_PATH", ""));
 	}
 
 	/**
@@ -34,18 +38,24 @@ class DirectoryWatcher implements Runnable {
 	private String getEventType(WatchEvent<?> event) {
 		Kind<?> kind = event.kind();
 		String type = "";
-		if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE))
+		if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
 			type = " [CREATED]";
-		else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE))
+			created++;
+			FilechangeStatics.CreatedText.setText(String.valueOf(created));
+		}else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
 			type = " [DELETED]";
-		else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY))
+			deleted++;
+			FilechangeStatics.DeletedText.setText(String.valueOf(deleted));
+		}else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
 			type = " [MODIFIED]";
-		return type;
+			modified++;
+			FilechangeStatics.ModifiedText.setText(String.valueOf(modified));
+		}return type;
 
 	} 
 
 
-	
+
 	/**
 	 * Main loop of this class, where the thread will be updated
 	 */
@@ -60,14 +70,13 @@ class DirectoryWatcher implements Runnable {
 			while (true) {
 				WatchKey watchKey;
 				watchKey = watchService.take(); // This call is blocking the thread until events are present
-				
+
 				HashMap<String, String> logChanges = new HashMap<>();  
 				// Poll for file system events on the WatchKey
 				for (final WatchEvent<?> event : watchKey.pollEvents()) {
-					getEventType(event);
 					logChanges.put(event.context().toString(), getEventType(event));
 				}
-				
+
 				// Handle the log output file
 				if(pathToWatch.toFile().exists()) {
 					ArrayList<String> log = new ArrayList<>();
@@ -78,7 +87,7 @@ class DirectoryWatcher implements Runnable {
 					// Save the log
 					Utils.saveLog(Utils.AppDAO.getStringData("FILELOGS_PATH", ""), log, "FCLog");
 				}
-				
+
 				// If the pool is empty get out cause the path could be deleted
 				if(!watchKey.reset()) {
 					System.out.println("Path deleted");

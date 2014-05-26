@@ -2,19 +2,26 @@ package processing.app.tools.filechange;
 
 import java.io.File;
 
-import processing.app.Utils;
+import ch.qos.logback.core.util.FileUtil;
 
-public class FileChangeHandler {
+import com.sun.jna.platform.FileUtils;
+
+import processing.app.BaseObject;
+import processing.app.Utils;
+import processing.event.MouseEvent;
+
+public class FileChangeHandler extends BaseObject {
 
 	private static FileChangeHandler instance;
 
-	private static Thread dirWatcherThread = null;
 
 	public static void instantiate() {
 		if(instance == null)
 			instance = new FileChangeHandler();
 	}
 
+	private static Thread dirWatcherThread = null;
+	
 	/**
 	 * Checks if the watch mode is on
 	 * @return True if it´s watching
@@ -25,13 +32,6 @@ public class FileChangeHandler {
 		if (dirWatcherThread.isAlive())
 			return true;
 		return false;
-	}
-
-	/**
-	 * Constructor of FileChange class
-	 */
-	public FileChangeHandler() {
-
 	}
 
 	/**
@@ -57,23 +57,50 @@ public class FileChangeHandler {
 	public static void update() {
 		if(isWatching() && !GetWatchFolder().exists()) {
 			dirWatcherThread.interrupt();
-			System.out.println("Path deleted");
 		}
 	}
 
 	public static File GetWatchFolder() {
-		return new File(Utils.AppDAO.getStringData("WATCH_PATH", ""));
+		return new File(Utils.AppDAO.getStringData("FILECHANGE_PATH", ""));
 	}
 
 
 	public static String getDataSize() {
-		if(GetWatchFolder().length() < 1024) {
-			return String.valueOf(GetWatchFolder().length()) + " B";
-		} else if(GetWatchFolder().length() > 1024 && GetWatchFolder().length() < 1048576) {
-			return String.valueOf(GetWatchFolder().length() / 1024) + " KB";
-		} else {
-			return String.valueOf(GetWatchFolder().length() / (1024 * 1024)) + " MB";
-		}
+		return Utils.humanReadableByteCount(
+				Utils.getFileFolderSize(GetWatchFolder()));  
+		
+	}
+
+	@Override
+	public void Mouse(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void SetViewActive(boolean state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
+		SetActive(String.valueOf(Utils.AppDAO.
+				getStringData("FILECHANGE_TOGGLE", "0")).
+				equals("0") ? false : true);
+		
+	}
+
+	@Override
+	public void Update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Exit() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
