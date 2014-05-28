@@ -30,6 +30,7 @@
 
 package processing.app.controls;
 
+import java.awt.AWTPermission;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -112,7 +113,7 @@ public class GClip implements ClipboardOwner {
 		SecurityManager security = System.getSecurityManager();
 		if (security != null) {
 			try {
-				security.checkSystemClipboardAccess();
+				security.checkPermission(new AWTPermission("accessClipboard"));
 				clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			} catch (SecurityException e) {
 				clipboard = new Clipboard("Application Clipboard");

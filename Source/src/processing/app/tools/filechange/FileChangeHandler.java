@@ -1,10 +1,6 @@
 package processing.app.tools.filechange;
 
-import java.io.File;
-
-import ch.qos.logback.core.util.FileUtil;
-
-import com.sun.jna.platform.FileUtils;
+import java.io.File;	
 
 import processing.app.BaseObject;
 import processing.app.Utils;
@@ -24,7 +20,7 @@ public class FileChangeHandler extends BaseObject {
 	
 	/**
 	 * Checks if the watch mode is on
-	 * @return True if it´s watching
+	 * @return True if itï¿½s watching
 	 */
 	public static boolean isWatching() {
 		if (dirWatcherThread == null)

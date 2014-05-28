@@ -1,1 +1,1 @@
-start javaw -jar App.jar
+start javaw -jar Jamcollab.jar
