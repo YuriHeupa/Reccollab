@@ -1,6 +1,6 @@
 package processing.app.tools.filechange;
 
-import java.io.File;	
+import java.io.File;
 
 import processing.app.BaseObject;
 import processing.app.Utils;
@@ -20,7 +20,7 @@ public class FileChangeHandler extends BaseObject {
 	
 	/**
 	 * Checks if the watch mode is on
-	 * @return True if itï¿½s watching
+	 * @return True if it´s watching
 	 */
 	public static boolean isWatching() {
 		if (dirWatcherThread == null)

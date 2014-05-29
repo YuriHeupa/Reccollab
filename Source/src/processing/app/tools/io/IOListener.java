@@ -12,6 +12,7 @@ import org.jnativehook.mouse.NativeMouseWheelListener;
 
 import processing.app.Application;
 import processing.app.BaseObject;
+import processing.app.Utils;
 import processing.app.screens.views.MouseConfig;
 import processing.event.MouseEvent;
 
@@ -142,6 +143,7 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 			GlobalScreen.getInstance().addNativeKeyListener(this);
 		} catch (NativeHookException e) {
 			e.printStackTrace();
+			Utils.LogError("The mouse and keyboard listener couldn't initialize because it don't have SO permissions, please check your system security preferences. ERROR: " + e.toString() + " at " + e.getStackTrace());
 		}
 		
 	}

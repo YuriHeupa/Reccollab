@@ -12,6 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import processing.app.data.DAO;
 import processing.app.data.Data;
@@ -21,6 +24,26 @@ public class Utils {
 
 	public static DAO AppDAO = new DAO("AppData");
 
+	private static Logger logger = Logger.getLogger("errorLog");  
+	private static FileHandler fh;  
+    
+    public static void Load() {
+    	try {   
+            fh = new FileHandler("./error.log");  
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();  
+            fh.setFormatter(formatter);  
+        } catch (SecurityException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
+    }
+    
+    public static void LogError(String msg) {
+    	logger.info(msg);
+    }
+    
 	public static String dateFormat() {
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("HH.mm.ss(dd-MM-yyyy)");

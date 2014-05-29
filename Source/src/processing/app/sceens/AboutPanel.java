@@ -1,10 +1,13 @@
 package processing.app.sceens;
 
+import java.awt.Font;
+
 import processing.app.Application;
 import processing.app.BaseObject;
 import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
+import processing.app.controls.GLabel;
 import processing.app.screen.managers.ViewHandler;
 import processing.event.MouseEvent;
 
@@ -15,11 +18,14 @@ public class AboutPanel extends BaseObject {
 		super();
 	}
 	
+	private GLabel aboutText;
 
 	@Override
 	public void Init() {
 		//AddImage(30, 144, "./resources/sprites/logo.png");
 		view.AddImage(0, 0, "./resources/sprites/border.png");
+		aboutText = view.AddLabel(20, 50, 560, 500, "Criado como projeto de iniciação científica por Yuri Heupa sob orientação de Bruno Campagnolo, a partir de recursos da fundação Araucária. Versão 1.3", false);
+		aboutText.setFont(new Font("Verdana", Font.PLAIN, 22));
 		view.AddLabel(160, 160, 260, 20, "", false, GCScheme.GREEN_SCHEME);
 		view.AddButton((Application.app.width/2)-60, 
 				Application.app.height-60, 

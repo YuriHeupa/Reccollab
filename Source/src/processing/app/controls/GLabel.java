@@ -249,7 +249,8 @@ public class GLabel extends GTextIconAlignBase {
 				}
 				// display text
 				g2d.setColor(jpalette[2]);
-				lineInfo.layout.draw(g2d, sx, 0);
+				layout.draw(g2d, sx, 0);
+				
 				buffer.translate(0, layout.getDescent() + layout.getLeading());
 			}
 			buffer.endDraw();

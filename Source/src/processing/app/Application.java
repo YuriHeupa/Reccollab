@@ -64,6 +64,7 @@ public class Application extends PApplet {
 		case 5:
 			// Load GUI
 			GUISetup();
+			Utils.Load();
 			break;
 		case 10:
 			loadingStatus = "Definindo configurações do programa";
@@ -197,6 +198,7 @@ public class Application extends PApplet {
 		//create an instance of your processing applet
 		final Application applet = new Application();
 
+		
 		//start the applet
 		applet.init();
 
