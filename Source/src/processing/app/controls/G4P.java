@@ -89,7 +89,7 @@ public class G4P implements GConstants, PConstants {
 	 * <li>SansSerif </li>
 	 * </ul>
 	 */
-	static Font globalFont = new Font("Dialog", Font.PLAIN, 12);
+	static Font globalFont = new Font("SansSerif", Font.PLAIN, 12);
 	static Font numericLabelFont = new Font("DialogInput", Font.BOLD, 12);
 
 	// Store of info about windows and controls

@@ -1,7 +1,7 @@
 package processing.app.screen.managers;
 
 import processing.app.controls.GImageToggleButton;
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.Assets;
 
 public class FlashAction extends GImageToggleButton {
@@ -10,9 +10,9 @@ public class FlashAction extends GImageToggleButton {
 	private int currentFrame = 0;
 	
 	public FlashAction(int x, int y) {
-		super(Application.app, x, y, Assets.ACTION_TOGGLE, 2, 1);
+		super(Jamcollab.app, x, y, Assets.ACTION_TOGGLE, 2, 1);
 		setEnabled(false);
-		currentFrame = Application.app.frameCount-FLASH;
+		currentFrame = Jamcollab.app.frameCount-FLASH;
 	}
 
 	private void Light(boolean state) {
@@ -22,10 +22,10 @@ public class FlashAction extends GImageToggleButton {
 
 	
 	public void Flash() {
-		currentFrame = Application.app.frameCount;
+		currentFrame = Jamcollab.app.frameCount;
 	}
 	
 	public void Update() {
-		Light(((currentFrame+FLASH) >= Application.app.frameCount ? true : false));
+		Light(((currentFrame+FLASH) >= Jamcollab.app.frameCount ? true : false));
 	}
 }

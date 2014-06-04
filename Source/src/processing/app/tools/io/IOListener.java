@@ -10,7 +10,7 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.screens.views.MouseConfig;
@@ -32,12 +32,12 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	 * Pointer Acceleration Threshold: 	System Property "jnativehook.pointerAccelerationThreshold"
 	 */
 	public static IOListener instance;
-	
+
 	public static void instantiate() {
 		if(instance == null)
 			instance = new IOListener();
 	}
-	
+
 	@Override
 	public void Update() {}
 
@@ -53,7 +53,6 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	public void nativeKeyReleased(NativeKeyEvent e) {}
 
 	private void processAndValidate(char raw, int code) {
-
 		if(code == 186) // troca cedilha por c
 			code = 67;
 		if(code == 8 && !buffer.isEmpty()) {
@@ -61,16 +60,28 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 			return;
 		}
 
-		if(code != 32 && code != 13 && Character.isLetter(raw)) { // se nao for espaco incrementa o buffer
-			String temp = NativeKeyEvent.getKeyText(code).toString();
-			SendEvent("IOHandler", "insertKey", temp);
-			buffer += NativeKeyEvent.getKeyText(code).toString();
-		} else { // se for espaco insere na lista
-			if(!buffer.isEmpty()) {
-				SendEvent("IOHandler", "insertWord", buffer);
-				buffer = "";
-			}
+		if(System.getProperty("os.name").equals("Mac OS X")) {
+			if(code != 36 && code != 49 && Character.isLetter(raw)) { // se nao for espaco incrementa o buffer
+				SendEvent("IOHandler", "insertKey", raw+"");
+				buffer += raw;
+			} else { // se for espaco insere na lista
+				if(!buffer.isEmpty()) {
+					SendEvent("IOHandler", "insertWord", buffer);
+					buffer = "";
+				}
 
+			}
+		} else {
+			if(code != 32 && code != 13 && Character.isLetter(raw)) { // se nao for espaco incrementa o buffer
+				SendEvent("IOHandler", "insertKey", raw+"");
+				buffer += raw;
+			} else { // se for espaco insere na lista
+				if(!buffer.isEmpty()) {
+					SendEvent("IOHandler", "insertWord", buffer);
+					buffer = "";
+				}
+
+			}
 		}
 	}
 
@@ -85,7 +96,7 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	 * @see org.jnativehook.mouse.NativeMouseListener#nativeMouseClicked(org.jnativehook.mouse.NativeMouseEvent)
 	 */
 	public void nativeMouseClicked(NativeMouseEvent e) {
-		if(Application.READY) {
+		if(Jamcollab.READY) {
 			if(MouseConfig.IsMouseClicks())
 				SendEvent("IOHandler", "addMouseClick", e.getX(), e.getY(), e.getButton());
 		}
@@ -106,8 +117,9 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	 * @see org.jnativehook.mouse.NativeMouseMotionListener#nativeMouseMoved(org.jnativehook.mouse.NativeMouseEvent)
 	 */
 	public void nativeMouseMoved(NativeMouseEvent e) {
-		if(Application.READY)
-			IOHandler.setLastMousePosition(e.getX(), e.getY());
+		if(Jamcollab.READY)
+			if(MouseConfig.IsMouseMovement())
+				SendEvent("IOHandler", "addMouseMovement", e.getX(), e.getY());
 	}
 
 	/**
@@ -123,7 +135,7 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	@Override
 	public void Mouse(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -145,13 +157,13 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 			e.printStackTrace();
 			Utils.LogError("The mouse and keyboard listener couldn't initialize because it don't have SO permissions, please check your system security preferences. ERROR: " + e.toString() + " at " + e.getStackTrace());
 		}
-		
+
 	}
 
 	@Override
 	public void SetViewActive(boolean state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

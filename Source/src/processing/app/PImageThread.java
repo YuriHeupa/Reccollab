@@ -12,7 +12,7 @@ public class PImageThread {
 		Thread loadThread;
 		loadThread = new Thread() {  
 			public void run() {  
-				image = Application.app.loadImage(path);
+				image = Jamcollab.app.loadImage(path);
 			}
 		};
 
@@ -21,8 +21,8 @@ public class PImageThread {
 	
 	public void Draw(float x, float y) {
 		if(image != null)
-			Application.app.image(image, x, y);
-		Application.app.stroke(255, 0, 0);
+			Jamcollab.app.image(image, x, y);
+		Jamcollab.app.stroke(255, 0, 0);
 
 	}
 

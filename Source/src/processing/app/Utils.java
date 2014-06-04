@@ -84,19 +84,18 @@ public class Utils {
 		AppDAO.insertData(new Data("PIN_MAP", "-1"));
 		AppDAO.insertData(new Data("SS_CAPTURE_INTERVAL", "60"));
 		AppDAO.insertData(new Data("WB_CAPTURE_INTERVAL", "60"));
-		AppDAO.insertData(new Data("MOUSE_CAPTURE_INTERVAL", "1000"));
+		AppDAO.insertData(new Data("SAVE_MOUSE_MOVEMENTS", "true"));
 		AppDAO.insertData(new Data("SAVE_MOUSE_CLICKS", "true"));
 		AppDAO.insertData(new Data("WORDS_TYPED", "false"));
 		AppDAO.insertData(new Data("WORDS_PM", "false"));
 		AppDAO.insertData(new Data("KEYS_TYPED", "true"));
 		AppDAO.insertData(new Data("KEYS_PM", "true"));
-		AppDAO.insertData(new Data("SCREENSHOT_TOGGLE", "1"));
+		AppDAO.insertData(new Data("SCREENSHOT_TOGGLE", "0"));
 		AppDAO.insertData(new Data("PROCESS_TOGGLE", "0"));
 		AppDAO.insertData(new Data("FILECHANGE_TOGGLE", "0"));
-		AppDAO.insertData(new Data("MIC_TOGGLE", "1"));
-		AppDAO.insertData(new Data("HOTKEY_TOGGLE", "1"));
-		AppDAO.insertData(new Data("MOUSE_TOGGLE", "1"));
-		AppDAO.insertData(new Data("WEBCAM_TOGGLE", "1"));
+		AppDAO.insertData(new Data("HOTKEY_TOGGLE", "0"));
+		AppDAO.insertData(new Data("MOUSE_TOGGLE", "0"));
+		AppDAO.insertData(new Data("WEBCAM_TOGGLE", "0"));
 		AppDAO.insertData(new Data("WEBCAM_SELECTEDCAM", "0"));
 		AppDAO.insertData(new Data("SCREENSHOT_PATH", getDefaultSavePath()+ 
 				File.separator + "Screenshot"));
@@ -195,10 +194,10 @@ public class Utils {
 	}
 
 	public static boolean isMouseColliding(Vector2D position, PImage sprite) {
-		if(Application.app.mouseX > position.x && 
-				Application.app.mouseY > position.y && 
-				Application.app.mouseX < position.x + sprite.width && 
-				Application.app.mouseY < position.y + sprite.height)
+		if(Jamcollab.app.mouseX > position.x && 
+				Jamcollab.app.mouseY > position.y && 
+				Jamcollab.app.mouseX < position.x + sprite.width && 
+				Jamcollab.app.mouseY < position.y + sprite.height)
 			return true;
 		return false;
 	}

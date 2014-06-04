@@ -1,6 +1,6 @@
 package processing.app.screen.managers;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Vector2D;
 import processing.app.controls.GCScheme;
@@ -24,7 +24,7 @@ public class TooltipHandler extends BaseObject {
 	private static Vector2D showPos = new Vector2D(0, 0);
 
 	public static void Show(Vector2D position, String text) {
-		showFrame = Application.app.frameCount;
+		showFrame = Jamcollab.app.frameCount;
 		if(text.length() > 45)
 			text = text.substring(0, 45);
 		tooltipText.setText(text);
@@ -33,7 +33,7 @@ public class TooltipHandler extends BaseObject {
 
 	@Override
 	public void Update() {
-		boolean condition = (showFrame+1) >= Application.app.frameCount;
+		boolean condition = (showFrame+1) >= Jamcollab.app.frameCount;
 		tooltipImg.setVisible(condition);
 		tooltipText.setVisible(condition);
 		if(condition) {
@@ -58,19 +58,19 @@ public class TooltipHandler extends BaseObject {
 
 	@Override
 	public void Init() {
-		tooltipImg = new GImageButton(Application.app, 0, 0, 192, 50, 
+		tooltipImg = new GImageButton(Jamcollab.app, 0, 0, 192, 50, 
 				new String[] { "./resources/sprites/tooltip.png", 
 				"./resources/sprites/tooltip.png",
 		"./resources/sprites/tooltip.png" } , 
 				"./resources/sprites/tooltip.png");
 		tooltipImg.setVisible(false);
-		tooltipText = new GLabel(Application.app, 0, 0, 176, 40);
+		tooltipText = new GLabel(Jamcollab.app, 0, 0, 176, 40);
 		tooltipText.setText("Desligado");
 		tooltipText.setLocalColorScheme(GCScheme.RED_SCHEME);
 		tooltipText.setOpaque(false);
 		tooltipText.setVisible(false);
 		tooltipText.setZ(50);
-		showFrame = Application.app.frameCount-10;
+		showFrame = Jamcollab.app.frameCount-10;
 		
 		
 	}

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
-import processing.app.Application;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.Utils;
-import processing.app.sceens.MainPanel;
+import processing.app.screens.MainPanel;
 import processing.app.screens.views.KeyboardConfig;
 import processing.event.MouseEvent;
 
@@ -20,35 +20,18 @@ public class IOHandler extends BaseObject {
 
 	private static IOHandler instance;
 
+	int startTime = 0;
+
 	public static void instantiate() {
 		if(instance == null)
 			instance = new IOHandler();
 	}
-	
+
 	@Override
 	public void Update() {
-		if(listeningMouse) {
-			if (Application.app.frameCount%
-					((Utils.AppDAO.getIntData("MOUSE_CAPTURE_INTERVAL", 0)/1000.0f)*60) == 0) {
-				if(MainPanel.MSFlash != null)
-					MainPanel.MSFlash.Flash();
-				mousePositions.add(lastMousePosition);
-			}
-		}
 		if(listeningKeyboard) {
-			/*
-			if(((KeyboardConfigPanel) PanelHandler.GetPanel("HotkeysConfig")).IsKeysMinute()) {
-
-				if(MainPanel.HotkeysAction != null)
-					MainPanel.HotkeysAction.Flash();
-				keysMinuteCount = (int) ((keysTypedCount) * 3600 / (Application.app.frameCount - startTime ));
-			}
-			if(((KeyboardConfigPanel) PanelHandler.GetPanel("HotkeysConfig")).IsWordsMinute()) {
-
-				if(MainPanel.HotkeysAction != null)
-					MainPanel.HotkeysAction.Flash();
-				wordsMinuteCount = (int) ((wordsTypedCount) * 3600 / (Application.app.frameCount - startTime ));
-			}*/
+			keysMinuteCount = (int) ((keysTypedCount) * 3600 / (Jamcollab.app.frameCount - startTime ));
+			wordsMinuteCount = (int) ((wordsTypedCount) * 3600 / (Jamcollab.app.frameCount - startTime ));
 		}
 
 	}
@@ -62,7 +45,6 @@ public class IOHandler extends BaseObject {
 	private static int wordsTypedCount = 0;
 	private static int wordsMinuteCount = 0;
 	private static int distanceMouseTravel = 0;
-	private static MouseInfo lastMousePosition = new MouseInfo(0, 0);
 	private static ArrayList<MouseInfo> mouseClicks = new ArrayList<MouseInfo>();
 	private static ArrayList<MouseInfo> mousePositions = new ArrayList<MouseInfo>();
 	private static ArrayList<Keyword> words = new ArrayList<Keyword>();
@@ -116,23 +98,15 @@ public class IOHandler extends BaseObject {
 		// Save keyboard word hits log
 		ArrayList<String> wordsLog = new ArrayList<String>();
 		for(Keyword word : words) 
-			wordsLog.add(word.getHits() + " " + word.getKeyword());
+			wordsLog.add("[" +word.getHandleTime() + "] - " + word.getKeyword());
 		Utils.saveLog("logs/keyboard/words", wordsLog, "KWLog");
 
 		// Save keyboard keys hits log
 		ArrayList<String> keysLog = new ArrayList<String>();
 		for(Keyword key : keys) 
-			keysLog.add(key.getHits() + " " + key.getKeyword());
+			keysLog.add("[" +key.getHandleTime() + "] - " + key.getKeyword());
 		Utils.saveLog("logs/keyboard/keys", keysLog, "KKLog");
 
-	}
-
-	public static boolean isListeningMouse() {
-		return listeningMouse;
-	}
-
-	public static boolean isListeningKeyboard() {
-		return listeningKeyboard;
 	}
 
 	public static void SetMouseActive(boolean state) {
@@ -145,8 +119,8 @@ public class IOHandler extends BaseObject {
 
 	public static ArrayList<Keyword> getWordsMostDigited() {
 		ArrayList<Keyword> tmp = new ArrayList<Keyword>();
-		for(int i = words.size(); i >= 0; i--) {
-			if(words.size() > i) {
+		for(int i = words.size()-5; i < words.size(); i++) {
+			if(i >= 0) {
 				tmp.add(words.get(i));
 			}
 		}
@@ -155,100 +129,49 @@ public class IOHandler extends BaseObject {
 
 	public static ArrayList<Keyword> getKeysMostDigited() {
 		ArrayList<Keyword> tmp = new ArrayList<Keyword>();
-		for(int i = 5; i >= 0; i--) {
-			if(keys.size() > i) {
+		for(int i = keys.size()-5; i < keys.size(); i++) {
+			if(i >= 0) {
 				tmp.add(keys.get(i));
 			}
 		}
 		return tmp;
 	}
-
-
-	private void HitKey(int index) {
-		Keyword tmp = keys.remove(index);
-		tmp.Hit();
-		if(KeyboardConfig.IsKeysTyped()) {
-			MainPanel.KBFlash.Flash();
-			keysTypedCount++;
-		}
-		if(keys.size() == 0) {
-			keys.add(tmp);
-			return;
-		}
-
-		int insertIndex = keys.size()-1;
-		for(int i = 0; i < keys.size(); i++) {
-			if(tmp.getHits() >= keys.get(i).getHits()) {
-				insertIndex = i;
-				break;
-			} else if(i == keys.size()-1)
-				insertIndex = i+1;
-		}
-		keys.add(insertIndex, tmp);
-	}
-
-	private void HitWord(int index) {
-		Keyword tmp = words.remove(index);
-		tmp.Hit();
-		if(KeyboardConfig.IsWordsTyped()) {
-			MainPanel.KBFlash.Flash();
-			wordsTypedCount++;
-		}
-		if(words.size() == 0) {
-			words.add(tmp);
-			return;
-		}
-
-		int insertIndex = words.size()-1;
-		for(int i = 0; i < words.size(); i++) {
-			if(tmp.getHits() >= words.get(i).getHits()) {
-				insertIndex = i;
-				break;
-			} else if(i == words.size()-1)
-				insertIndex = i+1;
-		}
-		words.add(insertIndex, tmp);
-	}
-
-	private int containsKey(String key) {
+/*
+	private int keyFrequency(String key) {
+		int counter = 0;
 		for(int i = 0; i < keys.size(); i++) {
 			if(keys.get(i).getKeyword().equals(key))
-				return i;
+				counter++;
 		}
-		return -1;
+		return counter;
 	}
 
-	private int containsWord(String key) {
+	private int wordFrequency(String word) {
+		int counter = 0;
 		for(int i = 0; i < words.size(); i++) {
-			if(words.get(i).getKeyword().equals(key))
-				return i;
+			if(words.get(i).getKeyword().equals(word))
+				counter++;
 		}
-		return -1;
-	}
+		return counter;
+	}*/
 
 	public void insertKey(String key) {
+		if(!listeningKeyboard)
+			return;
 		if(KeyboardConfig.IsKeysTyped()) {
-			int indexOfKey = containsKey(key);
-			if(indexOfKey != -1) { // se ja existe na lista incrementa o hit
-				HitKey(indexOfKey);
-			} else { // nao existe na lista apenas cria uma nova entrada
-				keysTypedCount++;
-				MainPanel.KBFlash.Flash();	
-				keys.add(new Keyword(key));
-			}
+			keysTypedCount++;
+			MainPanel.KBFlash.Flash();	
+			keys.add(new Keyword(key));
 		}
 	}
 
 	public void insertWord(String word) {
+		if(!listeningKeyboard)
+			return;
 		if(KeyboardConfig.IsWordsTyped()) {
-			int indexOfWord = containsWord(word);
-			if(indexOfWord != -1) { // se ja existe na lista incrementa o hit
-				HitWord(indexOfWord);
-			} else { // nao existe na lista apenas cria uma nova entrada
-				wordsTypedCount++;
-				MainPanel.KBFlash.Flash();	
-				words.add(new Keyword(word));
-			}
+			wordsTypedCount++;
+			MainPanel.KBFlash.Flash();	
+			words.add(new Keyword(word));
 		}
 	}
 
@@ -268,16 +191,20 @@ public class IOHandler extends BaseObject {
 		return wordsMinuteCount;
 	}
 
-	public static void addMouseClick(int x, int y, int button) {
+	public void addMouseClick(int x, int y, int button) {
+		if(!listeningMouse)
+			return;
 		if(MainPanel.MSFlash != null)
 			MainPanel.MSFlash.Flash();
 		IOHandler.mouseClicks.add(new MouseInfo(x, y, button));
 	}
 
-	public static void setLastMousePosition(int x, int y) {
+	public void addMouseMovement(int x, int y) {
+		if(!listeningMouse)
+			return;
 		if(MainPanel.MSFlash != null)
 			MainPanel.MSFlash.Flash();
-		IOHandler.lastMousePosition = new MouseInfo(x, y);
+		IOHandler.mousePositions.add(new MouseInfo(x, y));
 		distanceMouseTravel++;
 	}
 
@@ -292,13 +219,13 @@ public class IOHandler extends BaseObject {
 	@Override
 	public void Mouse(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void Exit() {
 		SaveIOLog();
-		
+
 	}
 
 	@Override
@@ -309,13 +236,13 @@ public class IOHandler extends BaseObject {
 				getStringData("HOTKEY_TOGGLE", "0")).equals("0") ? false : true;
 		SetMouseActive(listeningMouse);
 		SetKeyboardActive(listeningKeyboard);
-		
+
 	}
 
 	@Override
 	public void SetViewActive(boolean state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

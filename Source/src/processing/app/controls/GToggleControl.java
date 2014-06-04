@@ -154,8 +154,14 @@ public abstract class GToggleControl extends GTextIconAlignBase {
 		case MouseEvent.RELEASE:
 			// Release focus without firing an event - that would have
 			// been done
-			if (focusIsWith == this && dragging)
+			if (focusIsWith == this && dragging) {
+				hasBeenClicked();
 				this.loseFocus(null);
+				if (selected)
+					fireEvent(this, GEvent.SELECTED);
+				else if (group == null)
+					fireEvent(this, GEvent.DESELECTED);
+			}
 			dragging = false;
 			break;
 		}

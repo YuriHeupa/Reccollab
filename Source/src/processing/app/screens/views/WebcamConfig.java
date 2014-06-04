@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.controls.G4P;
@@ -86,7 +86,7 @@ public class WebcamConfig extends BaseObject {
 	} 
 
 	public void SearchPathButtonClick(GButton source, GEvent event) { 
-		Application.app.selectFolder("Selecione uma pasta para salvar as fotos:", "selectFolder", null, this);
+		Jamcollab.app.selectFolder("Selecione uma pasta para salvar as fotos:", "selectFolder", null, this);
 	} 
 
 	public void selectFolder(File selection) {
@@ -121,57 +121,57 @@ public class WebcamConfig extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Application.app, 48, 32, 504, 20);
+		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		Title.setText("Webcam");
 		Title.setTextBold();
 		Title.setOpaque(false);
 		Title.setVisible(false);
-		Option1Label = new GLabel(Application.app, 34, 88, 222, 16);
+		Option1Label = new GLabel(Jamcollab.app, 34, 88, 222, 16);
 		Option1Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		Option1Label.setText("Tempo de captura em segundos:");
 		Option1Label.setOpaque(false);
 		Option1Label.setVisible(false);
-		CaptureTimeInput = new GTextField(Application.app, 256, 88, 216, 16, G4P.SCROLLBARS_NONE);
+		CaptureTimeInput = new GTextField(Jamcollab.app, 256, 88, 216, 16, G4P.SCROLLBARS_NONE);
 		CaptureTimeInput.setOpaque(true);
 		CaptureTimeInput.addEventHandler(this, "CaptureTimeInputChanged");
 		CaptureTimeInput.setVisible(false);
 		CaptureTimeInput.setText(Utils.AppDAO.getStringData("WB_CAPTURE_INTERVAL", "0"));
-		Option2Label = new GLabel(Application.app, 64, 112, 192, 16);
+		Option2Label = new GLabel(Jamcollab.app, 64, 112, 192, 16);
 		Option2Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		Option2Label.setText("Pasta de Salvamento:");
 		Option2Label.setOpaque(false);
 		Option2Label.setVisible(false);
-		SavePathInput = new GTextField(Application.app, 256, 112, 216, 16, G4P.SCROLLBARS_NONE);
+		SavePathInput = new GTextField(Jamcollab.app, 256, 112, 216, 16, G4P.SCROLLBARS_NONE);
 		SavePathInput.setOpaque(true);
 		SavePathInput.setEnabled(false);
 		SavePathInput.setVisible(false);
 		SavePathInput.setText(Utils.AppDAO.getStringData("WEBCAM_PATH", ""));
-		SearchPathButton = new GButton(Application.app, 480, 112, 76, 16);
+		SearchPathButton = new GButton(Jamcollab.app, 480, 112, 76, 16);
 		SearchPathButton.setIcon("resources/sprites/folderIcon.png", 1, GAlign.RIGHT, GAlign.MIDDLE);
 		SearchPathButton.setText("Procurar");
 		SearchPathButton.setTextBold();
 		SearchPathButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		SearchPathButton.addEventHandler(this, "SearchPathButtonClick");
 		SearchPathButton.setVisible(false);
-		Option3Label = new GLabel(Application.app, 64, 136, 192, 16);
+		Option3Label = new GLabel(Jamcollab.app, 64, 136, 192, 16);
 		Option3Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		Option3Label.setText("Seleção da camera:");
 		Option3Label.setOpaque(false);
 		Option3Label.setVisible(false);
-		CameraSelectionList = new GDropList(Application.app, 256, 136, 216, 60, 3);
+		CameraSelectionList = new GDropList(Jamcollab.app, 256, 136, 216, 60, 3);
 		CameraSelectionList.setItems(WebcamHandler.instance.GetActiveCameras(), 0);
 		CameraSelectionList.setLocalColorScheme(GCScheme.SCHEME_8);
 		CameraSelectionList.addEventHandler(WebcamHandler.instance, "CameraSelectionListClick");
 		CameraSelectionList.setVisible(false);
 		CameraSelectionList.setSelected(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0)+1);
-		BackButton = new GButton(Application.app, 480, 32, 80, 24);
+		BackButton = new GButton(Jamcollab.app, 480, 32, 80, 24);
 		BackButton.setText("Voltar");
 		BackButton.setTextBold();
 		BackButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		BackButton.addEventHandler(this, "BackButtonClicked");
 		BackButton.setVisible(false);
-		SaveButton = new GButton(Application.app, 390, 32, 80, 24);
+		SaveButton = new GButton(Jamcollab.app, 390, 32, 80, 24);
 		SaveButton.setText("Salvar");
 		SaveButton.setTextBold();
 		SaveButton.setLocalColorScheme(GCScheme.SCHEME_15);

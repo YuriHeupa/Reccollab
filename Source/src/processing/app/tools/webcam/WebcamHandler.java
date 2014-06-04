@@ -5,12 +5,12 @@ import java.io.File;
 
 import com.github.sarxos.webcam.*;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.controls.GDropList;
 import processing.app.controls.GEvent;
-import processing.app.sceens.MainPanel;
+import processing.app.screens.MainPanel;
 import processing.app.screens.views.WebcamConfig;
 import processing.core.PImage;
 import processing.event.MouseEvent;
@@ -99,7 +99,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		//for (Webcam webcam : Webcam.getWebcams()) {
 		//System.out.println("This webcam has been found in the system: " + webcam.getName());
 		recording = state;
-		startTime = Application.app.millis();
+		startTime = Jamcollab.app.millis();
 	}
 
 	public void takeCapture(String path, Format format) {
@@ -131,9 +131,9 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	@Override
 	public void Update() {
 		if (recording) {
-			int elapsed = Application.app.millis() - startTime;
+			int elapsed = Jamcollab.app.millis() - startTime;
 			if(((float)(elapsed) / 1000) > Utils.AppDAO.getIntData("WB_CAPTURE_INTERVAL", 0)) {
-				startTime = Application.app.millis();
+				startTime = Jamcollab.app.millis();
 				takeCapture(Utils.AppDAO.getStringData("WEBCAM_PATH", "0"), Format.JPG);
 			}
 		}
@@ -165,7 +165,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 
 	public String getImageTakenResolution() {
 		if(imageTaken == null)
-			return "?x?";
+			return "Ainda não há imagens capturadas";
 		String resolution = imageTaken.width + "x" +imageTaken.height;
 		return resolution;
 	}
@@ -192,7 +192,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 				getStringData("WEBCAM_TOGGLE", "0")).
 				equals("0") ? false : true;
 
-		startTime = Application.app.millis();
+		startTime = Jamcollab.app.millis();
 		
 	}
 

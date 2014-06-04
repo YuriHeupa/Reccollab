@@ -2,7 +2,7 @@ package processing.app.tools.map;
 
 import java.util.ArrayList;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.PImageThread;
 import processing.app.Vector2D;
 import processing.app.screens.views.MapView;
@@ -36,8 +36,8 @@ public class Map {
 
 	public void Draw(float x, float y) {
 		if(getMapSlice() != null)
-			Application.app.image(getMapSlice(), x, y);
-		Application.app.stroke(255, 0, 0);
+			Jamcollab.app.image(getMapSlice(), x, y);
+		Jamcollab.app.stroke(255, 0, 0);
 
 	}
 

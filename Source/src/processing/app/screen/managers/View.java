@@ -2,7 +2,7 @@ package processing.app.screen.managers;
 
 import java.util.LinkedList;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.controls.G4P;
 import processing.app.controls.GAbstractControl;
@@ -27,7 +27,7 @@ public class View extends GAbstractControl {
 	}
 	
 	public View (BaseObject parent) {
-		super(Application.app, 0, 0, 1, 1);
+		super(Jamcollab.app, 0, 0, 1, 1);
 		this.parent = parent;
 		// Create the list of children
 		children = new LinkedList<GAbstractControl>();
@@ -91,7 +91,7 @@ public class View extends GAbstractControl {
 	public GButton AddButton(int x, int y, int width, int height, 
 			String text, int GCScheme, Object objCallback, String funcCallback,
 			GAlign horz, GAlign vert) {
-		GButton tmp = new GButton(Application.app, x, y, width, height);
+		GButton tmp = new GButton(Jamcollab.app, x, y, width, height);
 		tmp.setTextAlign(horz, vert);
 		tmp.setText(text);
 		tmp.setTextBold();
@@ -105,7 +105,7 @@ public class View extends GAbstractControl {
 
 	
 	public GImageToggleButton AddImageToggleButton(int x, int y, String sprite, int cols, int rows) {
-		GImageToggleButton tmp = new GImageToggleButton(Application.app, x, y, sprite, cols, rows);
+		GImageToggleButton tmp = new GImageToggleButton(Jamcollab.app, x, y, sprite, cols, rows);
 		addControl(tmp);
 		return tmp;
 	}
@@ -113,7 +113,7 @@ public class View extends GAbstractControl {
 
 	public GDropList AddDropList(int x, int y, int width, int height, int elements, 
 			int GCScheme, String[] itens, int selected) {
-		GDropList tmp = new GDropList(Application.app, x, y, width, height, elements);
+		GDropList tmp = new GDropList(Jamcollab.app, x, y, width, height, elements);
 		tmp.setItems(itens, selected);
 		tmp.setLocalColorScheme(GCScheme);
 		addControl(tmp);
@@ -122,7 +122,7 @@ public class View extends GAbstractControl {
 	
 	public GLabel AddLabel(int x, int y, int width, int height, 
 			String text, GAlign horz, GAlign vert, boolean bold, int GCScheme) {
-		GLabel tmp = new GLabel(Application.app, x, y, width, height);
+		GLabel tmp = new GLabel(Jamcollab.app, x, y, width, height);
 		tmp.setText(text);
 		if(bold)
 			tmp.setTextBold();
@@ -150,16 +150,16 @@ public class View extends GAbstractControl {
 			String text, GAlign horz, GAlign vert, boolean bold) {
 		return AddLabel(x, y, width, height, text, horz, vert, bold, -1);
 	}
-	
+
 	public GImage AddImage(int x, int y, String sprite) {
-		GImage tmp = new GImage(Application.app, x, y, sprite);
+		GImage tmp = new GImage(Jamcollab.app, x, y, sprite);
 		tmp.setOpaque(false);
 		addControl(tmp);
 		return tmp;
 	}
 
 	public GTextField AddTextField(int x, int y, int width, int height, int scrollbar) {
-		GTextField tmp = new GTextField(Application.app, x, y, width, height, scrollbar);
+		GTextField tmp = new GTextField(Jamcollab.app, x, y, width, height, scrollbar);
 		tmp.setOpaque(false);
 		addControl(tmp);
 		return tmp;

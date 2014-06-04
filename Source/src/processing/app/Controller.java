@@ -23,7 +23,7 @@ public class Controller {
 	}
 
 	public void draw() {
-		if(instance == null || !Application.READY)
+		if(instance == null || !Jamcollab.READY)
 			return;
 		for(BaseObject bo : instance.objects) {
 			bo.Update();

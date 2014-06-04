@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.screens.views.ProgressStatics;
 import processing.app.screens.views.Statics;
@@ -52,8 +52,8 @@ public class ProcessHandler extends BaseObject {
 
 	@Override
 	public void Update() {
-		if(Application.READY && RUNNING) {
-			if (Application.app.frameCount%20 == 0) {
+		if(Jamcollab.READY && RUNNING) {
+			if (Jamcollab.app.frameCount%20 == 0) {
 				try {
 					String line;
 					// Execute command

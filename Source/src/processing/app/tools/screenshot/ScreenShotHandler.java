@@ -21,10 +21,10 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
-import processing.app.sceens.MainPanel;
+import processing.app.screens.MainPanel;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.MouseEvent;
@@ -39,9 +39,9 @@ public class ScreenShotHandler extends BaseObject {
 
 	public void CanUpdate(boolean state) {
 		if(state)
-			Application.app.registerMethod("draw", this);
+			Jamcollab.app.registerMethod("draw", this);
 		else
-			Application.app.unregisterMethod("draw", this);
+			Jamcollab.app.unregisterMethod("draw", this);
 
 	}
 
@@ -61,11 +61,11 @@ public class ScreenShotHandler extends BaseObject {
 	 */
 	public static void SetActive(boolean state) {
 		recording = state;
-		startTime = Application.app.millis();
+		startTime = Jamcollab.app.millis();
 		if(state)
-			Application.app.registerMethod("draw", instance);
+			Jamcollab.app.registerMethod("draw", instance);
 		else
-			Application.app.unregisterMethod("draw", instance);
+			Jamcollab.app.unregisterMethod("draw", instance);
 	}
 
 	private static void saveScreens(PImage [] screens) {
@@ -119,9 +119,9 @@ public class ScreenShotHandler extends BaseObject {
 	@Override
 	public void Update() {
 		if (recording) {
-			int elapsed = Application.app.millis() - startTime;
+			int elapsed = Jamcollab.app.millis() - startTime;
 			if(((float)(elapsed) / 1000) > Utils.AppDAO.getIntData("SS_CAPTURE_INTERVAL", 0)) {
-				startTime = Application.app.millis();
+				startTime = Jamcollab.app.millis();
 				MainPanel.SSFlash.Flash();
 				screenShots = getScreens();
 				saveScreens(screenShots);
@@ -149,7 +149,7 @@ public class ScreenShotHandler extends BaseObject {
 		recording = String.valueOf(Utils.AppDAO.
 				getStringData("SCREENSHOT_TOGGLE", "0")).
 				equals("0") ? false : true;
-		startTime = Application.app.millis();
+		startTime = Jamcollab.app.millis();
 		
 	}
 

@@ -6,6 +6,7 @@ import processing.app.controls.GLabel;
 import processing.app.tools.filechange.FileChangeHandler;
 import processing.app.tools.io.IOHandler;
 import processing.app.tools.screenshot.ScreenShotHandler;
+import processing.app.tools.webcam.WebcamHandler;
 import processing.event.MouseEvent;
 
 public class Statics extends BaseObject {
@@ -26,9 +27,11 @@ public class Statics extends BaseObject {
 	@Override
 	public void Update() {
 		ScreenshotImagesNumber.setText(String.valueOf(ScreenShotHandler.getImageTakenCount()));
-		ScreenshotImageResolution.setText(ScreenShotHandler.getImageTakenResolution());  
-		//WebcamImagesNumber.setText(String.valueOf(WebCamController.getInstance().getImageTakenCount()));  
-		//WebcamImageResolution.setText(WebCamController.getInstance().getImageTakenResolution());  
+		String tmp = ScreenShotHandler.getImageTakenResolution();
+		ScreenshotImageResolution.setText((tmp.length() < 10) ? tmp : "");  
+		WebcamImagesNumber.setText(String.valueOf(WebcamHandler.instance.getImageTakenCount()));  
+		String tmp2 = WebcamHandler.instance.getImageTakenResolution();
+		WebcamImageResolution.setText((tmp2.length() < 10) ? tmp2 : "");  
 		MouseClicksNumber.setText(String.valueOf(IOHandler.getClickCount()));  
 		DistanceMouseTravelNumber.setText(String.valueOf(IOHandler.getDistanceMouseTravel())+" px");  
 		WordsTypedNumber.setText(String.valueOf(IOHandler.getWordsTypedCount()));  
@@ -100,7 +103,7 @@ public class Statics extends BaseObject {
 		KeysTypedNumber = view.AddLabel(448, 216, 80, 16, "0", GAlign.LEFT, GAlign.MIDDLE, false);
 		WordsMinuteTypedNumber = view.AddLabel(448, 200, 80, 16, "0", GAlign.LEFT, GAlign.MIDDLE, false);
 		KeysMinuteTypedNumber = view.AddLabel(448, 232, 80, 16, "0", GAlign.LEFT, GAlign.MIDDLE, false);
-		FilesDataSizeNumber = view.AddLabel(208, 248, 80, 16, "0 MB", GAlign.LEFT, GAlign.MIDDLE, false);
+		FilesDataSizeNumber = view.AddLabel(208, 252, 80, 16, "0 MB", GAlign.LEFT, GAlign.MIDDLE, false);
 		ProcessMostOpenWord = view.AddLabel(208, 314, 80, 16, "Indefinido", GAlign.LEFT, GAlign.MIDDLE, false);
 
 

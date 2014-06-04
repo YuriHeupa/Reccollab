@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.controls.G4P;
@@ -30,11 +30,6 @@ import processing.event.MouseEvent;
 
 public class ViewerVideo extends BaseObject {
 
-	GButton EmptyButton; 
-	GButton AdvancedButton; 
-	GButton ResizeButton; 
-	GButton PIPButton; 
-	GButton VideoButton; 
 
 	GTextField MainImagePathInput; 
 	GTextField OutputPathInput; 
@@ -85,45 +80,18 @@ public class ViewerVideo extends BaseObject {
 		FormatSelectionList = view.AddDropList(196, 136, 216, 80, 4, 
 				GCScheme.SCHEME_8, Encoder.formatList(), 0);
 
-		VideoButton = new GButton(Application.app, 36, 320, 96, 30);
-		VideoButton.setText("Video");
-		VideoButton.setTextBold();
-		VideoButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		VideoButton.addEventHandler(this, "VideoButtonClick");
-		VideoButton.setVisible(false);
-		PIPButton = new GButton(Application.app, 144, 320, 96, 30);
-		PIPButton.setText("PIP");
-		PIPButton.setTextBold();
-		PIPButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		PIPButton.addEventHandler(this, "PIPButtonClick");
-		PIPButton.setVisible(false);
-		ResizeButton = new GButton(Application.app, 252, 320, 96, 30);
-		ResizeButton.setText("Redimensionar");
-		ResizeButton.setTextBold();
-		ResizeButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		ResizeButton.addEventHandler(this, "ResizeButtonClick");
-		ResizeButton.setVisible(false);
-		AdvancedButton = new GButton(Application.app, 360, 320, 96, 30);
-		AdvancedButton.setText("Avançado");
-		AdvancedButton.setTextBold();
-		AdvancedButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		AdvancedButton.addEventHandler(this, "AdvancedButtonClick");
-		AdvancedButton.setVisible(false);
-		EmptyButton = new GButton(Application.app, 468, 320, 96, 30);
-		EmptyButton.setText("Vazio");
-		EmptyButton.setTextBold();
-		EmptyButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		EmptyButton.addEventHandler(this, "EmptyButtonClick");
-		EmptyButton.setVisible(false);
+		view.AddButton(34, 308, 127, 22, "Video", this, "VideoButtonClick");
+		view.AddButton(169, 308, 127, 22, "PIP", this, "PIPButtonClick");
+		view.AddButton(304, 308, 127, 22, "Redimensionar", this, "ResizeButtonClick");
+		view.AddButton(439, 308, 127, 22, "Mouse", this, "MouseButtonClick");
+		view.AddButton(34, 336, 127, 22, "Teclado", this, "KeyboardButtonClick");
+		view.AddButton(169, 336, 127, 22, "Arquivos", this, "FilesButtonClick");
+		view.AddButton(304, 336, 127, 22, "Programas", this, "ProcessButtonClick");
+		view.AddButton(439, 336, 127, 22, "Mapa", this, "MapButtonClick");
 	}
 
 	@Override
 	public void SetViewActive(boolean state) {
-		VideoButton.setVisible(view.isVisible());
-		PIPButton.setVisible(view.isVisible());
-		ResizeButton.setVisible(view.isVisible());
-		AdvancedButton.setVisible(view.isVisible());
-		EmptyButton.setVisible(view.isVisible());
 
 	}
 
@@ -136,7 +104,7 @@ public class ViewerVideo extends BaseObject {
 		if(encodeThread != null) {
 			if(encodeThread.isAlive()) {
 				encodingDialog.setVisible(true);
-				encodingDialog.setLocationRelativeTo(Application.jframe);  
+				encodingDialog.setLocationRelativeTo(Jamcollab.jframe);  
 				return;
 			}
 		}
@@ -148,7 +116,7 @@ public class ViewerVideo extends BaseObject {
 		encodingDialog.setResizable(false);
 		encodingDialog.getContentPane().add(p1);  
 		encodingDialog.setSize(180, 60);  
-		encodingDialog.setLocationRelativeTo(Application.jframe);  
+		encodingDialog.setLocationRelativeTo(Jamcollab.jframe);  
 		encodingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
 		encodeThread = new Thread() {  
@@ -193,7 +161,7 @@ public class ViewerVideo extends BaseObject {
 				SwingUtilities.invokeLater(new Runnable(){ 
 					public void run(){  
 						encodingDialog.dispose();
-						JOptionPane.showMessageDialog(Application.jframe, 
+						JOptionPane.showMessageDialog(Jamcollab.jframe, 
 								"Video gerado com sucesso");
 						Utils.OpenFile(new File(fileName).getAbsolutePath());
 					}  
@@ -210,12 +178,12 @@ public class ViewerVideo extends BaseObject {
 	} 
 
 	public void SearchMainImagePathButtonClick(GButton source, GEvent event) { 
-		Application.app.selectFolder("Selecione uma pasta:", "selectMainImageFolder", null, this);
+		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectMainImageFolder", null, this);
 	} 
 
 
 	public void SearchOutputPathButtonClick(GButton source, GEvent event) { 
-		Application.app.selectFolder("Selecione uma pasta:", "selectOutputFolder", null, this);
+		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectOutputFolder", null, this);
 	} 
 
 	public void selectMainImageFolder(File selection) {
@@ -238,25 +206,38 @@ public class ViewerVideo extends BaseObject {
 		// TODO Auto-generated method stub
 
 	}
-	public void EmptyButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Empty");
+	public void ProcessButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("ProcessViewer");
 	}
 
-	public void AdvancedButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Advanced");
+	public void MapButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("MapViewer");
+	}
+	
+	public void FilesButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("FilesViewer");
+	}
+
+	public void KeyboardButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("KeyboardViewer");
+	}
+
+	public void MouseButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("MouseViewer");
 	}
 
 	public void ResizeButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Resize");
+		ViewHandler.Enable("ResizeViewer");
 	} 
 
 	public void PIPButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("PIP");
+		ViewHandler.Enable("PIPViewer");
 	}
 
 	public void VideoButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Video");
+		ViewHandler.Enable("VideoViewer");
 	}
+
 
 	@Override
 	public void Mouse(MouseEvent e) {

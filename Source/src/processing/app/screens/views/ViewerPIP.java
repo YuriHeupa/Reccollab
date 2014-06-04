@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.controls.G4P;
@@ -28,13 +28,7 @@ import processing.event.MouseEvent;
 
 public class ViewerPIP extends BaseObject {
 
-	GButton EmptyButton; 
-	GButton AdvancedButton; 
-	GButton ResizeButton; 
-	GButton PIPButton; 
-	GButton VideoButton; 
-	
-	GTextField MainImagePathInput; 
+	GTextField SourcePathInput; 
 	GTextField OutputPathInput; 
 	GTextField PIPImagePathInput; 
 
@@ -42,7 +36,7 @@ public class ViewerPIP extends BaseObject {
 	GDropList PositionSelectionList; 
 
 	Thread pipThread;
-	JDialog pipDialog = new JDialog();  
+	JDialog pipDialog = new JDialog();
 
 	public ViewerPIP() {
 		super();
@@ -59,18 +53,12 @@ public class ViewerPIP extends BaseObject {
 		view.AddLabel(4, 160, 192, 16, "Tamanho:", GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 184, 192, 16, "Posição:", GAlign.RIGHT, GAlign.MIDDLE, false);
 
-		MainImagePathInput = new GTextField(Application.app, 196, 88, 216, 16, G4P.SCROLLBARS_NONE);
-		MainImagePathInput.setOpaque(true);
-		MainImagePathInput.setEnabled(false);
-		MainImagePathInput.setVisible(false);
-		PIPImagePathInput = new GTextField(Application.app, 196, 112, 216, 16, G4P.SCROLLBARS_NONE);
-		PIPImagePathInput.setOpaque(true);
+		SourcePathInput = view.AddTextField(196, 88, 216, 16, G4P.SCROLLBARS_NONE);
+		SourcePathInput.setEnabled(false);
+		PIPImagePathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
 		PIPImagePathInput.setEnabled(false);
-		PIPImagePathInput.setVisible(false);
-		OutputPathInput = new GTextField(Application.app, 196, 136, 216, 16, G4P.SCROLLBARS_NONE);
-		OutputPathInput.setOpaque(true);
+		OutputPathInput = view.AddTextField(196, 136, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
-		OutputPathInput.setVisible(false);
 
 		view.AddButton(420, 88, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
 				"SearchMainImagePathButtonClick", "resources/sprites/folderIcon.png", 
@@ -85,69 +73,39 @@ public class ViewerPIP extends BaseObject {
 		view.AddButton(480, 32, 80, 24, "Gerar", GCScheme.SCHEME_15, 
 				this, "GenerateButtonClicked");
 		String[] sizes = {"PEQUENO", "MEDIO", "GRANDE"};
-		SizeSelectionList = new GDropList(Application.app, 196, 160, 216, 80, 4);
+		SizeSelectionList = new GDropList(Jamcollab.app, 196, 160, 216, 80, 4);
 		SizeSelectionList.setItems(sizes, 0);
 		SizeSelectionList.setLocalColorScheme(GCScheme.SCHEME_8);
 		SizeSelectionList.setVisible(false);
 
 		String[] positions = {"CIMA / ESQUERDA", "CIMA / DIREITA", 
 				"BAIXO / ESQUERDA" , "BAIXO / DIREITA"};
-		PositionSelectionList = new GDropList(Application.app, 196, 184, 216, 80, 4);
+		PositionSelectionList = new GDropList(Jamcollab.app, 196, 184, 216, 80, 4);
 		PositionSelectionList.setItems(positions, 0);
 		PositionSelectionList.setLocalColorScheme(GCScheme.SCHEME_8);
 		PositionSelectionList.setVisible(false);
 
-		VideoButton = new GButton(Application.app, 36, 320, 96, 30);
-		VideoButton.setText("Video");
-		VideoButton.setTextBold();
-		VideoButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		VideoButton.addEventHandler(this, "VideoButtonClick");
-		VideoButton.setVisible(false);
-		PIPButton = new GButton(Application.app, 144, 320, 96, 30);
-		PIPButton.setText("PIP");
-		PIPButton.setTextBold();
-		PIPButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		PIPButton.addEventHandler(this, "PIPButtonClick");
-		PIPButton.setVisible(false);
-		ResizeButton = new GButton(Application.app, 252, 320, 96, 30);
-		ResizeButton.setText("Redimensionar");
-		ResizeButton.setTextBold();
-		ResizeButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		ResizeButton.addEventHandler(this, "ResizeButtonClick");
-		ResizeButton.setVisible(false);
-		AdvancedButton = new GButton(Application.app, 360, 320, 96, 30);
-		AdvancedButton.setText("Avançado");
-		AdvancedButton.setTextBold();
-		AdvancedButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		AdvancedButton.addEventHandler(this, "AdvancedButtonClick");
-		AdvancedButton.setVisible(false);
-		EmptyButton = new GButton(Application.app, 468, 320, 96, 30);
-		EmptyButton.setText("Vazio");
-		EmptyButton.setTextBold();
-		EmptyButton.setLocalColorScheme(GCScheme.RED_SCHEME);
-		EmptyButton.addEventHandler(this, "EmptyButtonClick");
-		EmptyButton.setVisible(false);
+		view.AddButton(34, 308, 127, 22, "Video", this, "VideoButtonClick");
+		view.AddButton(169, 308, 127, 22, "PIP", this, "PIPButtonClick");
+		view.AddButton(304, 308, 127, 22, "Redimensionar", this, "ResizeButtonClick");
+		view.AddButton(439, 308, 127, 22, "Mouse", this, "MouseButtonClick");
+		view.AddButton(34, 336, 127, 22, "Teclado", this, "KeyboardButtonClick");
+		view.AddButton(169, 336, 127, 22, "Arquivos", this, "FilesButtonClick");
+		view.AddButton(304, 336, 127, 22, "Programas", this, "ProcessButtonClick");
+		view.AddButton(439, 336, 127, 22, "Mapa", this, "MapButtonClick");
 	}
 
 	@Override
 	public void SetViewActive(boolean state) {
-		MainImagePathInput.setVisible(view.isVisible());
-		PIPImagePathInput.setVisible(view.isVisible());
-		OutputPathInput.setVisible(view.isVisible());
 		SizeSelectionList.setVisible(view.isVisible());
 		PositionSelectionList.setVisible(view.isVisible());
-		VideoButton.setVisible(view.isVisible());
-		PIPButton.setVisible(view.isVisible());
-		ResizeButton.setVisible(view.isVisible());
-		AdvancedButton.setVisible(view.isVisible());
-		EmptyButton.setVisible(view.isVisible());
 	}
 
 
 
 	public void GenerateButtonClicked(GButton source, GEvent event) { 
 
-		if(MainImagePathInput.getText().isEmpty() || MainImagePathInput.getText().equals(" ") ||
+		if(SourcePathInput.getText().isEmpty() || SourcePathInput.getText().equals(" ") ||
 				PIPImagePathInput.getText().isEmpty() || PIPImagePathInput.getText().equals(" ")) 
 			return;
 
@@ -155,7 +113,7 @@ public class ViewerPIP extends BaseObject {
 		if(pipThread != null) {
 			if(pipThread.isAlive()) {
 				pipDialog.setVisible(true);
-				pipDialog.setLocationRelativeTo(Application.jframe);  
+				pipDialog.setLocationRelativeTo(Jamcollab.jframe);  
 				return;
 			}
 		}
@@ -166,7 +124,7 @@ public class ViewerPIP extends BaseObject {
 		pipDialog.setResizable(false);
 		pipDialog.getContentPane().add(p1);  
 		pipDialog.setSize(180, 60);  
-		pipDialog.setLocationRelativeTo(Application.jframe);  
+		pipDialog.setLocationRelativeTo(Jamcollab.jframe);  
 		pipDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
 		pipThread = new Thread() {  
@@ -174,7 +132,7 @@ public class ViewerPIP extends BaseObject {
 
 				ArrayList<PIPImage> processPIP = new ArrayList<PIPImage>();
 
-				File source = new File(MainImagePathInput.getText());
+				File source = new File(SourcePathInput.getText());
 				File PIP = new File(PIPImagePathInput.getText());
 				
 				float percent = 0;
@@ -188,8 +146,8 @@ public class ViewerPIP extends BaseObject {
 						for (File fp : PIP.listFiles(Utils.IMAGE_FILTER)) {
 							if(fs.getName().substring(fs.getName().length()-25, fs.getName().length()).equals(
 									fp.getName().substring(fp.getName().length()-25, fp.getName().length()))) {
-								processPIP.add(new PIPImage(Application.app.loadImage(fs.getAbsolutePath()), 
-										Application.app.loadImage(fp.getAbsolutePath()), fs.getName()){});
+								processPIP.add(new PIPImage(Jamcollab.app.loadImage(fs.getAbsolutePath()), 
+										Jamcollab.app.loadImage(fp.getAbsolutePath()), fs.getName()){});
 								break;
 							}
 						}
@@ -252,7 +210,7 @@ public class ViewerPIP extends BaseObject {
 					load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
 					float paddingX = (2.0f*img.getSource().width)/100.0f;
 					float paddingY = (2.0f*img.getSource().height)/100.0f;
-					PGraphics pg = Application.app.createGraphics(img.getSource().width, img.getSource().height);
+					PGraphics pg = Jamcollab.app.createGraphics(img.getSource().width, img.getSource().height);
 					pg.beginDraw();
 					pg.image(img.getSource(), 0, 0);
 					pg.image(img.getPip(), 
@@ -273,7 +231,7 @@ public class ViewerPIP extends BaseObject {
 					public void run(){  
 						p1.remove(load);
 						pipDialog.dispose();
-						JOptionPane.showMessageDialog(Application.jframe, 
+						JOptionPane.showMessageDialog(Jamcollab.jframe, 
 								"PIP gerado com sucesso");
 						Utils.OpenFile(output + File.separator);
 					}  
@@ -288,24 +246,24 @@ public class ViewerPIP extends BaseObject {
 	} 
 
 	public void SearchMainImagePathButtonClick(GButton source, GEvent event) { 
-		Application.app.selectFolder("Selecione uma pasta:", "selectMainImageFolder", null, this);
+		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectMainImageFolder", null, this);
 	} 
 
 
 	public void SearchPIPImagePathButtonClick(GButton source, GEvent event) { 
-		Application.app.selectFolder("Selecione uma pasta:", "selectPIPImageFolder", null, this);
+		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectPIPImageFolder", null, this);
 	} 
 
 
 	public void SearchOutputPathButtonClick(GButton source, GEvent event) { 
-		Application.app.selectFolder("Selecione uma pasta:", "selectOutputFolder", null, this);
+		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectOutputFolder", null, this);
 	} 
 
 	public void selectMainImageFolder(File selection) {
 		if(selection == null)
 			return;
 		String path = selection.getAbsolutePath();
-		MainImagePathInput.setText(path);
+		SourcePathInput.setText(path);
 	}
 
 	public void selectPIPImageFolder(File selection) {
@@ -329,25 +287,36 @@ public class ViewerPIP extends BaseObject {
 
 	}
 
-
-	public void EmptyButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Empty");
+	public void ProcessButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("ProcessViewer");
 	}
 
-	public void AdvancedButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Advanced");
+	public void MapButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("MapViewer");
+	}
+	
+	public void FilesButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("FilesViewer");
+	}
+
+	public void KeyboardButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("KeyboardViewer");
+	}
+
+	public void MouseButtonClick(GButton source, GEvent event) {
+		ViewHandler.Enable("MouseViewer");
 	}
 
 	public void ResizeButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Resize");
+		ViewHandler.Enable("ResizeViewer");
 	} 
 
 	public void PIPButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("PIP");
+		ViewHandler.Enable("PIPViewer");
 	}
 
 	public void VideoButtonClick(GButton source, GEvent event) {
-		ViewHandler.Enable("Video");
+		ViewHandler.Enable("VideoViewer");
 	}
 
 

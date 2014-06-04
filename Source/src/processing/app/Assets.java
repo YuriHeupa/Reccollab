@@ -10,7 +10,10 @@ public class Assets {
 	public static DAO ConfigDAO = new DAO("AppConfig");
 
 	public static String WINDOW_TITLE = "JamCollab - V1.3";
-	public static String WINDOWS_ICON = "resources/sprites/ico.png";
+	public static String WINDOWS_ICON32 = "resources/ico32.png";
+	public static String WINDOWS_ICON64 = "resources/ico64.png";
+	public static String WINDOWS_ICON128 = "resources/ico128.png";
+	public static String WINDOWS_ICON300 = "resources/ico300.png";
 	
 	public static String ACTION_TOGGLE = "resources/sprites/actionToggle.png";
 	
@@ -28,10 +31,10 @@ public class Assets {
 	public static String MAP3LEVEL3 = null;
 
 	public static void loadResources() {
-		mapPIN = ImageManager.loadImage(Application.app, "./resources/maps/MapPin.png");
+		mapPIN = ImageManager.loadImage(Jamcollab.app, "./resources/maps/MapPin.png");
 		//mapPIN = Application.app.loadImage("./resources/maps/MapPin.png");
-		zoomIn = Application.app.loadImage("./resources/maps/ZoomIn.png");
-		zoomOut = Application.app.loadImage("./resources/maps/ZoomOut.png"); 
+		zoomIn = Jamcollab.app.loadImage("./resources/maps/ZoomIn.png");
+		zoomOut = Jamcollab.app.loadImage("./resources/maps/ZoomOut.png"); 
 		MAP1LEVEL1 = "./resources/maps/T/LEVEL1.png";
 		MAP1LEVEL2 = "./resources/maps/T/LEVEL2.png";
 		MAP1LEVEL3 = "./resources/maps/T/LEVEL3.png";

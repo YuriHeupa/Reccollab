@@ -1,6 +1,6 @@
 package processing.app.screens.views;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
 import processing.app.Vector2D;
@@ -33,7 +33,7 @@ public class WebcamStatics extends BaseObject {
 		SubOption3Text.setTextUnderlined();
 
 		if(SubOption3Text.isTooltip()) {
-			TooltipHandler.Show(new Vector2D(Application.app.mouseX, Application.app.mouseY), "Clique para ir para a pasta");
+			TooltipHandler.Show(new Vector2D(Jamcollab.app.mouseX, Jamcollab.app.mouseY), "Clique para ir para a pasta");
 		}
 	}
 
@@ -58,48 +58,48 @@ public class WebcamStatics extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Application.app, 48, 32, 504, 20);
+		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		Title.setText("ESTATÍSTICAS");
 		Title.setTextBold();
 		Title.setOpaque(false);
 		Title.setVisible(false);
-		OptionLabel = new GLabel(Application.app, 64, 88, 72, 16);
+		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		OptionLabel.setText("Webcam");
 		OptionLabel.setOpaque(false);
 		OptionLabel.setVisible(false);
-		SubOptionLabel1 = new GLabel(Application.app, 64, 112, 136, 16);
+		SubOptionLabel1 = new GLabel(Jamcollab.app, 64, 112, 136, 16);
 		SubOptionLabel1.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		SubOptionLabel1.setText("Número imagens:");
 		SubOptionLabel1.setOpaque(false);
 		SubOptionLabel1.setVisible(false);
-		SubOptionLabel2 = new GLabel(Application.app, 64, 128, 136, 16);
+		SubOptionLabel2 = new GLabel(Jamcollab.app, 64, 128, 136, 16);
 		SubOptionLabel2.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		SubOptionLabel2.setText("Resolução:");
 		SubOptionLabel2.setOpaque(false);
 		SubOptionLabel2.setVisible(false);
-		SubOptionLabel3 = new GLabel(Application.app, 64, 144, 136, 16);
+		SubOptionLabel3 = new GLabel(Jamcollab.app, 64, 144, 136, 16);
 		SubOptionLabel3.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		SubOptionLabel3.setText("Pasta:");
 		SubOptionLabel3.setOpaque(false);
 		SubOptionLabel3.setVisible(false);
-		SubOptionLabel4 = new GLabel(Application.app, 64, 160, 136, 16);
+		SubOptionLabel4 = new GLabel(Jamcollab.app, 64, 160, 136, 16);
 		SubOptionLabel4.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		SubOptionLabel4.setText("Última imagem:");
 		SubOptionLabel4.setOpaque(false);
 		SubOptionLabel4.setVisible(false);
-		SubOption1Text = new GLabel(Application.app, 208, 112, 80, 16);
+		SubOption1Text = new GLabel(Jamcollab.app, 208, 112, 80, 16);
 		SubOption1Text.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SubOption1Text.setText("0");
 		SubOption1Text.setOpaque(false);
 		SubOption1Text.setVisible(false);
-		SubOption2Text = new GLabel(Application.app, 208, 128, 300, 16);
+		SubOption2Text = new GLabel(Jamcollab.app, 208, 128, 300, 16);
 		SubOption2Text.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SubOption2Text.setText("Ainda não há imagens capturadas");
 		SubOption2Text.setOpaque(false);
 		SubOption2Text.setVisible(false);
-		SubOption3Text = new GLabel(Application.app, 208, 144, 350, 16);
+		SubOption3Text = new GLabel(Jamcollab.app, 208, 144, 350, 16);
 		SubOption3Text.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SubOption3Text.setText("null");
 		SubOption3Text.setOpaque(false);
@@ -111,7 +111,7 @@ public class WebcamStatics extends BaseObject {
 	@Override
 	public void Mouse(MouseEvent e) {
 		if(e.getAction() == MouseEvent.RELEASE) {
-			if(Application.app.mouseButton == PConstants.LEFT) 
+			if(Jamcollab.app.mouseButton == PConstants.LEFT) 
 				tickClicked++;
 				if(SubOption3Text.isHover() && SubOption3Text.isVisible() &&
 						tickClicked % 2 == 0) {

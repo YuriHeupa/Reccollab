@@ -2,7 +2,7 @@ package processing.app.screen.managers;
 
 import java.util.LinkedList;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.controls.G4P;
 import processing.app.controls.GAbstractControl;
 import processing.app.controls.GButton;
@@ -58,7 +58,7 @@ public abstract class Screen extends GAbstractControl {
 	public abstract void SetActive(boolean active);
 
 	public GButton AddButton(int x, int y, int width, int height, String text, Object objCallback, String funcCallback) {
-		GButton tmp = new GButton(Application.app, x, y, width, height);
+		GButton tmp = new GButton(Jamcollab.app, x, y, width, height);
 		tmp.setText(text);
 		tmp.setTextBold();
 		tmp.setOpaque(false);
@@ -68,7 +68,7 @@ public abstract class Screen extends GAbstractControl {
 	}
 
 	public GLabel AddLabel(int x, int y, int width, int height, String text) {
-		GLabel tmp = new GLabel(Application.app, x, y, width, height);
+		GLabel tmp = new GLabel(Jamcollab.app, x, y, width, height);
 		tmp.setText(text);
 		tmp.setTextBold();
 		tmp.setOpaque(false);
@@ -83,7 +83,7 @@ public abstract class Screen extends GAbstractControl {
 	}
 
 	public GImage AddImage(int x, int y, String sprite) {
-		GImage tmp = new GImage(Application.app, x, y, sprite);
+		GImage tmp = new GImage(Jamcollab.app, x, y, sprite);
 		tmp.setOpaque(false);
 		addControl(tmp);
 		return tmp;

@@ -2,7 +2,7 @@ package processing.app.screens.views;
 
 import java.util.ArrayList;
 
-import processing.app.Application;
+import processing.app.Jamcollab;
 import processing.app.Assets;
 import processing.app.BaseObject;
 import processing.app.Utils;
@@ -31,7 +31,7 @@ public class MapView extends BaseObject {
 	private Vector2D mapLastPos = new Vector2D(0, 0);
 	private MapPIN PIN;
 	public final static Vector2D screenOffsetPos = new Vector2D(5, 10);
-	public final static Vector2D screenOffsetSize = new Vector2D(Application.app.width-5, 294);
+	public final static Vector2D screenOffsetSize = new Vector2D(Jamcollab.app.width-5, 294);
 
 	private Vector2D mouseZoom = new Vector2D(0, 0);
 	private int rectFadeTime = 0;
@@ -60,22 +60,22 @@ public class MapView extends BaseObject {
 
 	@Override
 	public void Init() {
-		Level1Button = new GButton(Application.app, 24, 312, 160, 16);
+		Level1Button = new GButton(Jamcollab.app, 24, 312, 160, 16);
 		Level1Button.setText("Térreo");
 		Level1Button.setLocalColorScheme(GCScheme.RED_SCHEME);
 		Level1Button.addEventHandler(this, "Level1ButtonClick");
 		Level1Button.setVisible(false);
-		Level3Button = new GButton(Application.app, 408, 312, 160, 16);
+		Level3Button = new GButton(Jamcollab.app, 408, 312, 160, 16);
 		Level3Button.setText("2º Andar");
 		Level3Button.setLocalColorScheme(GCScheme.RED_SCHEME);
 		Level3Button.addEventHandler(this, "Level3ButtonClick");
 		Level3Button.setVisible(false);
-		Level2Button = new GButton(Application.app, 216, 312, 160, 16);
+		Level2Button = new GButton(Jamcollab.app, 216, 312, 160, 16);
 		Level2Button.setText("1º Andar");
 		Level2Button.setLocalColorScheme(GCScheme.RED_SCHEME);
 		Level2Button.addEventHandler(this, "Level2ButtonClick");
 		Level2Button.setVisible(false);
-		HintLabel = new GLabel(Application.app, 8, 336, 584, 16);
+		HintLabel = new GLabel(Jamcollab.app, 8, 336, 584, 16);
 		HintLabel.setText("Para definir sua posição no mapa de um duplo clique na posição desejada");
 		HintLabel.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		HintLabel.setOpaque(false);
@@ -94,11 +94,11 @@ public class MapView extends BaseObject {
 		PIN = new MapPIN(new Vector2D(Utils.AppDAO.getIntData("PIN_POS_X", 0),
 				Utils.AppDAO.getIntData("PIN_POS_Y", 0)), Utils.AppDAO.getIntData("PIN_MAP", 0));
 		
-		Application.app.addMouseWheelListener(new java.awt.event.MouseWheelListener() { 
+		Jamcollab.app.addMouseWheelListener(new java.awt.event.MouseWheelListener() { 
 			public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) { 
 				mouseWheel(evt.getWheelRotation());
 			}});
-		Application.app.registerMethod("mouseEvent", this);
+		Jamcollab.app.registerMethod("mouseEvent", this);
 	}
 
 	private void mouseWheel(int i) {
@@ -133,7 +133,7 @@ public class MapView extends BaseObject {
 	}
 
 	public Vector2D mousePosition() {
-		return new Vector2D(Application.app.mouseX, Application.app.mouseY);
+		return new Vector2D(Jamcollab.app.mouseX, Jamcollab.app.mouseY);
 	}
 	
 	public boolean InMapBounds(Vector2D pos) {
@@ -167,20 +167,20 @@ public class MapView extends BaseObject {
 			if(PIN.getPos().x != -1 && PIN.getPos().y != -1 
 					&& InMapBounds(getPinPos()) 
 					&& currentMap == PIN.getMap()) {
-				Application.app.image(Assets.mapPIN, getPinPos().x-(Assets.mapPIN.width/2), 
+				Jamcollab.app.image(Assets.mapPIN, getPinPos().x-(Assets.mapPIN.width/2), 
 						getPinPos().y-Assets.mapPIN.height);
 			}
 
 			if(HoverZoomIn())
-				Application.app.tint(255, 50, 50);
+				Jamcollab.app.tint(255, 50, 50);
 			if(getCurrentMap().getLevel() < getCurrentMap().getLevelsCount()-1)
-				Application.app.image(Assets.zoomIn, screenOffsetPos.x+10, screenOffsetPos.y+10);
-			Application.app.tint(255);
+				Jamcollab.app.image(Assets.zoomIn, screenOffsetPos.x+10, screenOffsetPos.y+10);
+			Jamcollab.app.tint(255);
 			if(HoverZoomOut()) 
-				Application.app.tint(255, 50, 50);
+				Jamcollab.app.tint(255, 50, 50);
 			if(getCurrentMap().getLevel() > 0)
-				Application.app.image(Assets.zoomOut, screenOffsetPos.x+10, screenOffsetPos.y+35);
-			Application.app.tint(255);
+				Jamcollab.app.image(Assets.zoomOut, screenOffsetPos.x+10, screenOffsetPos.y+35);
+			Jamcollab.app.tint(255);
 		}
 		updateCurrentMap();
 		}
@@ -285,14 +285,14 @@ if(show) {
 	}
 
 	private void drawZoomRect(float size) {
-		Application.app.rectMode(PConstants.CENTER);
-		Application.app.stroke(255, 0, 0);
-		Application.app.noFill();
+		Jamcollab.app.rectMode(PConstants.CENTER);
+		Jamcollab.app.stroke(255, 0, 0);
+		Jamcollab.app.noFill();
 		float sizeOffsetW = getCurrentMap().getFirstLevelSize().x/getCurrentMap().getLevelSize(getCurrentMap().getLevel()+1).x;
 		float sizeOffsetH = getCurrentMap().getFirstLevelSize().y/getCurrentMap().getLevelSize(getCurrentMap().getLevel()+1).y;
 		float newWidth = sizeOffsetW*getCurrentMap().getLevelSize(getCurrentMap().getLevel()).x;
 		float newHeight = sizeOffsetH*getCurrentMap().getLevelSize(getCurrentMap().getLevel()).y;
-		Application.app.rect(mouseZoom.x, mouseZoom.y, newWidth*size, newHeight*size);
+		Jamcollab.app.rect(mouseZoom.x, mouseZoom.y, newWidth*size, newHeight*size);
 	}
 
 	private void updateCurrentMap() {
