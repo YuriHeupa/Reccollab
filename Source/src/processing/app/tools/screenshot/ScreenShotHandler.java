@@ -37,14 +37,6 @@ public class ScreenShotHandler extends BaseObject {
 	private static PImage imageTaken = null;
 	private static int startTime;
 
-	public void CanUpdate(boolean state) {
-		if(state)
-			Jamcollab.app.registerMethod("draw", this);
-		else
-			Jamcollab.app.unregisterMethod("draw", this);
-
-	}
-
 	private static PImage[] screenShots;
 	private static boolean recording = false;
 
@@ -62,10 +54,6 @@ public class ScreenShotHandler extends BaseObject {
 	public static void SetActive(boolean state) {
 		recording = state;
 		startTime = Jamcollab.app.millis();
-		if(state)
-			Jamcollab.app.registerMethod("draw", instance);
-		else
-			Jamcollab.app.unregisterMethod("draw", instance);
 	}
 
 	private static void saveScreens(PImage [] screens) {
@@ -146,10 +134,9 @@ public class ScreenShotHandler extends BaseObject {
 
 	@Override
 	public void Init() {
-		recording = String.valueOf(Utils.AppDAO.
+		SetActive(String.valueOf(Utils.AppDAO.
 				getStringData("SCREENSHOT_TOGGLE", "0")).
-				equals("0") ? false : true;
-		startTime = Jamcollab.app.millis();
+				equals("0") ? false : true);
 		
 	}
 

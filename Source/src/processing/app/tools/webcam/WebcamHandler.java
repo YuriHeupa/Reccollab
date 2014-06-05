@@ -3,22 +3,24 @@ package processing.app.tools.webcam;
 import java.awt.Dimension;
 import java.io.File;
 
-import com.github.sarxos.webcam.*;
-
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.Utils;
-import processing.app.controls.GDropList;
-import processing.app.controls.GEvent;
 import processing.app.screens.MainPanel;
-import processing.app.screens.views.WebcamConfig;
+import processing.app.screens.configs.WebcamConfig;
 import processing.core.PImage;
 import processing.event.MouseEvent;
+
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamDiscoveryEvent;
+import com.github.sarxos.webcam.WebcamDiscoveryListener;
+import com.github.sarxos.webcam.WebcamResolution;
+import com.github.sarxos.webcam.WebcamUtils;
 
 
 public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener {
 
-	public static WebcamHandler instance;
+	private static WebcamHandler instance;
 	
 	public static void instantiate() {
 		if(instance == null) {
@@ -26,13 +28,13 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		}
 	}
 
-	private int imageTakenCount = 0;
-	private PImage imageTaken = null;
-	private int startTime;
+	private static int imageTakenCount = 0;
+	private static PImage imageTaken = null;
+	private static int startTime;
 
 	private Webcam selectedCam = null;
 
-	private boolean recording = false;
+	private static boolean recording = false;
 
 	enum Format {
 		BMP, GIF, JPG, PNG
@@ -63,7 +65,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		return recording;
 	}
 
-	public String[] GetActiveCameras() {
+	public static String[] GetActiveCameras() {
 		String[] tmp = new String[Webcam.getWebcams().size()+1];
 		tmp[0] = "Selecione uma camera...";
 		for(int i = 1; i <= Webcam.getWebcams().size(); i++) {
@@ -74,20 +76,22 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 
 	public void SetActiveCamera(int index) {
 		if(index < Webcam.getWebcams().size() && index >= 0) {
-			// First verify if exist an opened webcam than close
-			if(selectedCam != null) {
-				if(selectedCam.isOpen())
-					selectedCam.close();
-				selectedCam.getLock().unlock();
+			if(selectedCam == Webcam.getWebcams().get(index))
+				return;
+			System.out.println("Alterando a webcam");
+
+			// First verify if exist an opened webcam than close and unlock
+			for(Webcam web : Webcam.getWebcams()) {
+				if(web.isOpen())
+					web.close();
 			}
+			
 			// Select the new webcam
 			selectedCam = Webcam.getWebcams().get(index);
-			// If the webcam is not open so do then
-			if(!selectedCam.getLock().isLocked())
-				selectedCam.open();
+			selectedCam.open();
 		} else {
 			if(selectedCam != null)
-				selectedCam.getLock().unlock();
+				selectedCam.close();
 			selectedCam = null;
 		}
 	}
@@ -96,8 +100,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	 * Toggle the state of recording
 	 */
 	public void SetActive(boolean state) {
-		//for (Webcam webcam : Webcam.getWebcams()) {
-		//System.out.println("This webcam has been found in the system: " + webcam.getName());
+		SetActiveCamera(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0));
 		recording = state;
 		startTime = Jamcollab.app.millis();
 	}
@@ -155,7 +158,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		WebcamConfig.UpdateWebcamList();
 	}
 
-	public int getImageTakenCount() {
+	public static int getImageTakenCount() {
 		return imageTakenCount;
 	}
 
@@ -163,7 +166,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		return imageTaken;
 	}
 
-	public String getImageTakenResolution() {
+	public static String getImageTakenResolution() {
 		if(imageTaken == null)
 			return "Ainda não há imagens capturadas";
 		String resolution = imageTaken.width + "x" +imageTaken.height;
@@ -186,23 +189,13 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	public void Init() {
 		Webcam.addDiscoveryListener(this);
 
-		SetActiveCamera(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0));
-
-		recording = String.valueOf(Utils.AppDAO.
+		SetActive(String.valueOf(Utils.AppDAO.
 				getStringData("WEBCAM_TOGGLE", "0")).
-				equals("0") ? false : true;
-
-		startTime = Jamcollab.app.millis();
+				equals("0") ? false : true);
 		
 	}
 
 
-	public void CameraSelectionListClick(GDropList source, GEvent event) { 
-		SetActiveCamera(source.getSelectedIndex()-1);
-		Utils.AppDAO.updateData("WEBCAM_SELECTEDCAM", String.valueOf(source.getSelectedIndex()-1));
-
-		System.out.println("CameraSelectionList - GDropList event occured " + System.currentTimeMillis()%10000000 );
-	}
 	
 
 	@Override

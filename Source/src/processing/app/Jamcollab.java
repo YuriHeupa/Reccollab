@@ -23,7 +23,7 @@ import processing.app.screens.AboutPanel;
 import processing.app.screens.HomePanel;
 import processing.app.screens.LoginPanel;
 import processing.app.screens.MainPanel;
-import processing.app.screens.views.MapView;
+import processing.app.screens.others.MapView;
 import processing.app.tools.encoder.Encoder;
 import processing.app.tools.filechange.FileChangeHandler;
 import processing.app.tools.io.IOHandler;
@@ -232,13 +232,13 @@ public class Jamcollab extends PApplet {
 		icons.add(Toolkit.getDefaultToolkit().getImage(Assets.WINDOWS_ICON300));
 		jframe.setIconImages(icons);
 
-		
+
 		Image icon = Toolkit.getDefaultToolkit().getImage(Assets.WINDOWS_ICON300);
-		
+
 		Class<?> c = null;
 		Method m = null;
 		Object applicationInstance = null;
-		
+
 		if(System.getProperty("os.name").equals("Mac OS X")) {
 			try {
 				c = Class.forName("com.apple.eawt.Application");
@@ -258,38 +258,17 @@ public class Jamcollab extends PApplet {
 
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent ev) {
-				if(Utils.AppDAO.isUnsavedChanges()) {
-					int confirm = JOptionPane.showOptionDialog(jframe,
-							"Você tem alterações não salvas. \n"+
-									"Deseja salvá-las antes de sair?",
-									"Confirmação de saída", JOptionPane.YES_NO_CANCEL_OPTION,
-									JOptionPane.QUESTION_MESSAGE, null, null, null);
-					switch(confirm) {
-					case JOptionPane.YES_OPTION:
-						Utils.AppDAO.saveData();
-						applet.exit();
-						System.exit(0);
-						break;
-					case JOptionPane.NO_OPTION:
-						applet.exit();
-						System.exit(0);
-						break;
-					case JOptionPane.CANCEL_OPTION:
-						break;
-					}
-				} else {
-					int confirm = JOptionPane.showOptionDialog(jframe,
-							"Você tem certeza que deseja sair?",
-							"Confirmação de saída", JOptionPane.YES_NO_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null, null, null);
-					switch(confirm) {
-					case JOptionPane.YES_OPTION:
-						applet.exit();
-						System.exit(0);
-						break;
-					case JOptionPane.NO_OPTION:
-						break;
-					}
+				int confirm = JOptionPane.showOptionDialog(jframe,
+						"Você tem certeza que deseja sair?",
+						"Confirmação de saída", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, null, null);
+				switch(confirm) {
+				case JOptionPane.YES_OPTION:
+					applet.exit();
+					System.exit(0);
+					break;
+				case JOptionPane.NO_OPTION:
+					break;
 				}
 			}
 		});

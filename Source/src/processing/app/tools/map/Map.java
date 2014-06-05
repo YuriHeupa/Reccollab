@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import processing.app.Jamcollab;
 import processing.app.PImageThread;
 import processing.app.Vector2D;
-import processing.app.screens.views.MapView;
+import processing.app.screens.others.MapView;
 import processing.core.PImage;
 
 public class Map {

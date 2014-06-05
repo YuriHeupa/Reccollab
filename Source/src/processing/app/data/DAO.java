@@ -26,7 +26,6 @@ public class DAO implements DataDao {
 	Random randomGenerator;
 	
 	List<Data> buffer = new ArrayList<Data>();
-	private boolean unsavedChanges = false;
 
 
 	public DAO(String name) {
@@ -40,7 +39,7 @@ public class DAO implements DataDao {
 		int index = findIndexByTag(tag);
 		if(index != -1) {
 			buffer.remove(index);
-			unsavedChanges  = true;
+			saveData();
 		}
 	}
 
@@ -93,12 +92,27 @@ public class DAO implements DataDao {
 	public void updateData(String tag, String value) {
 		updateDataAtList(tag, value, buffer);
 	}
+	
+	@Override
+	public void updateData(String tag, Boolean value) {
+		updateDataAtList(tag, Boolean.toString(value), buffer);
+	}
+	
+	@Override
+	public void updateData(String tag, float value) {
+		updateDataAtList(tag, String.valueOf(value), buffer);
+	}
+	
+	@Override
+	public void updateData(String tag, int value) {
+		updateDataAtList(tag, String.valueOf(value), buffer);
+	}
 
 	private void updateDataAtList(String tag, String value, List<Data> list) {
 		int index = findIndexByTag(tag);
 		if(index != -1) {
 			list.get(index).setValue(value);
-			unsavedChanges = true;
+			saveData();
 		}
 	}
 
@@ -171,18 +185,11 @@ public class DAO implements DataDao {
 				DOMSource source = new DOMSource(doc);
 				StreamResult result = new StreamResult(new File(basePath));
 
-
 				transformer.transform(source, result);
-
-				unsavedChanges = false;
 			} catch (TransformerException e) {
 
 			}
 		}
-	}
-
-	public boolean isUnsavedChanges() {
-		return unsavedChanges;
 	}
 
 

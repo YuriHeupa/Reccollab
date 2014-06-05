@@ -13,7 +13,7 @@ import org.jnativehook.mouse.NativeMouseWheelListener;
 import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
-import processing.app.screens.views.MouseConfig;
+import processing.app.screens.configs.MouseConfig;
 import processing.event.MouseEvent;
 
 

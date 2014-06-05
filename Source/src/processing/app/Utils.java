@@ -7,6 +7,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,8 @@ import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import javax.swing.JOptionPane;
 
 import processing.app.data.DAO;
 import processing.app.data.Data;
@@ -39,9 +43,52 @@ public class Utils {
             e.printStackTrace();  
         }  
     }
+
+    public static void LogInfo(String msg) {
+    	logger.info(msg);
+    }
+    
+    public static void LogWarning(String msg) {
+    	logger.warning(msg);
+    }
     
     public static void LogError(String msg) {
-    	logger.info(msg);
+    	logger.severe(msg);
+    }
+    
+    public static boolean ShowQuestion(String title, String message) {
+		int confirm = JOptionPane.showOptionDialog(Jamcollab.jframe,
+				message,
+				title, JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, null, null);
+		switch(confirm) {
+		case JOptionPane.YES_OPTION:
+			return true;
+		case JOptionPane.NO_OPTION:
+			return false;
+			default:
+				return false;
+		}
+    }
+
+    public static void ShowWarningMessage(String title, String message) {
+		JOptionPane.showMessageDialog(Jamcollab.jframe,
+				message, title, JOptionPane.WARNING_MESSAGE);
+    }
+    
+    public static void ShowErrorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(Jamcollab.jframe,
+				message, title, JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public static void ShowInfoMessage(String title, String message) {
+		JOptionPane.showMessageDialog(Jamcollab.jframe,
+				message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public static void ShowPlainMessage(String title, String message) {
+		JOptionPane.showMessageDialog(Jamcollab.jframe,
+				message, title, JOptionPane.PLAIN_MESSAGE);
     }
     
 	public static String dateFormat() {
@@ -221,6 +268,21 @@ public class Utils {
 		dir.mkdirs();
 	}
 
+	public static boolean MoveFolder(String currentPath, String newPath) {
+		File currentFile = new File(currentPath);
+		Path currentFilePath = currentFile.toPath();		
+		File newFile = new File(newPath);
+		Path newFilePath = newFile.toPath();
+		try {
+			Files.move(currentFilePath, newFilePath, StandardCopyOption.REPLACE_EXISTING);
+			return true;
+		} catch (IOException e1) {
+			Utils.LogError("An error ocurred while moving data from " + 
+					currentPath + " to " + newPath + " " + e1.getStackTrace());
+			return false;
+		}
+	}
+	
 	private static void DirectoryCheck(String DAOkey, String pathDefault) {
 		if(!isFilenameValid(Utils.AppDAO.getStringData(DAOkey, ""))) {
 			Utils.AppDAO.updateData(DAOkey, getDefaultSavePath()+ 

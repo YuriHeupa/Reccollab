@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import processing.app.Utils;
-import processing.app.screens.views.FilechangeStatics;
+import processing.app.screens.statics.FilechangeStatics;
 
 class DirectoryWatcher implements Runnable {
 

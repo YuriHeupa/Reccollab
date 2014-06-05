@@ -12,5 +12,8 @@ public interface DataDao {
 	   public void saveData();
 	   public void insertData(Data data);
 	   public void updateData(String tag, String value);
+	   public void updateData(String tag, Boolean value);
+	   public void updateData(String tag, int value);
+	   public void updateData(String tag, float value);
 	   public void deleteData(String tag);
 }

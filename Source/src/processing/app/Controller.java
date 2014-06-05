@@ -32,7 +32,7 @@ public class Controller {
 	}
 
 	public void mouseEvent(MouseEvent e) {
-		if(instance == null)
+		if(instance == null || !Jamcollab.READY)
 			return;
 		for(BaseObject bo : instance.objects) {
 			bo.Mouse(e);

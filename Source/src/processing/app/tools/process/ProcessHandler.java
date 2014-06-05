@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import processing.app.Jamcollab;
 import processing.app.BaseObject;
-import processing.app.screens.views.ProgressStatics;
-import processing.app.screens.views.Statics;
+import processing.app.screens.statics.ProgressStatics;
+import processing.app.screens.statics.Statics;
 import processing.event.MouseEvent;
 
 import com.sun.jna.Platform;

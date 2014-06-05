@@ -11,7 +11,7 @@ import processing.app.BaseObject;
 import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.screens.MainPanel;
-import processing.app.screens.views.KeyboardConfig;
+import processing.app.screens.configs.KeyboardConfig;
 import processing.event.MouseEvent;
 
 
