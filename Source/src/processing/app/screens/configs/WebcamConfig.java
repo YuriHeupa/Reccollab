@@ -13,7 +13,6 @@ import processing.app.controls.GDropList;
 import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
 import processing.app.controls.GTextField;
-import processing.app.screen.managers.ViewHandler;
 import processing.app.tools.webcam.WebcamHandler;
 import processing.event.MouseEvent;
 
@@ -32,6 +31,7 @@ public class WebcamConfig extends BaseObject {
 
 	public WebcamConfig() {
 		super();
+		setParent("Master");
 	}
 
 
@@ -48,16 +48,16 @@ public class WebcamConfig extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());
-		Option1Label.setVisible(view.isActive());
-		CaptureTimeInput.setVisible(view.isActive());
-		Option2Label.setVisible(view.isActive());
-		SavePathInput.setVisible(view.isActive());
-		SearchPathButton.setVisible(view.isActive());
-		Option3Label.setVisible(view.isActive());
-		CameraSelectionList.setVisible(view.isActive());
-		BackButton.setVisible(view.isActive());
-		SaveButton.setVisible(view.isActive());
+		Title.setVisible(state);
+		Option1Label.setVisible(state);
+		CaptureTimeInput.setVisible(state);
+		Option2Label.setVisible(state);
+		SavePathInput.setVisible(state);
+		SearchPathButton.setVisible(state);
+		Option3Label.setVisible(state);
+		CameraSelectionList.setVisible(state);
+		BackButton.setVisible(state);
+		SaveButton.setVisible(state);
 
 
 		CaptureTimeInput.setText(Utils.AppDAO.getStringData("WB_CAPTURE_INTERVAL", "0"));
@@ -82,7 +82,7 @@ public class WebcamConfig extends BaseObject {
 
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	public void BackButtonClicked(GButton source, GEvent event) { 		
@@ -93,7 +93,7 @@ public class WebcamConfig extends BaseObject {
 				saveChanges();
 			}
 		}
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 

@@ -1,7 +1,7 @@
 package processing.app.screens.statics;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
@@ -52,25 +52,26 @@ public class KeyboardStatics extends BaseObject {
 	
 	public KeyboardStatics() {
 		super();
+		setParent("Master");
 	}
 
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());  
-		OptionLabel.setVisible(view.isActive()); 
-		SubOptionLabel1.setVisible(view.isActive()); 
-		SubOptionLabel2.setVisible(view.isActive()); 
-		SubOptionLabel3.setVisible(view.isActive()); 
-		SubOptionLabel4.setVisible(view.isActive()); 
-		SubOptionLabel5.setVisible(view.isActive()); 
-		SubOptionLabel6.setVisible(view.isActive()); 
-		SubOption1Text.setVisible(view.isActive()); 
-		SubOption2Text.setVisible(view.isActive()); 
-		SubOption4Text.setVisible(view.isActive()); 
-		SubOption3Text.setVisible(view.isActive()); 
-		WordsMinuteTypedNumber.setVisible(view.isActive());  
-		KeysMinuteTypedNumber.setVisible(view.isActive());  
+		Title.setVisible(state);  
+		OptionLabel.setVisible(state); 
+		SubOptionLabel1.setVisible(state); 
+		SubOptionLabel2.setVisible(state); 
+		SubOptionLabel3.setVisible(state); 
+		SubOptionLabel4.setVisible(state); 
+		SubOptionLabel5.setVisible(state); 
+		SubOptionLabel6.setVisible(state); 
+		SubOption1Text.setVisible(state); 
+		SubOption2Text.setVisible(state); 
+		SubOption4Text.setVisible(state); 
+		SubOption3Text.setVisible(state); 
+		WordsMinuteTypedNumber.setVisible(state);  
+		KeysMinuteTypedNumber.setVisible(state);  
 	}
 
 

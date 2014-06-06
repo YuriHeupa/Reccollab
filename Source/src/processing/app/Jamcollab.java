@@ -17,17 +17,15 @@ import javax.swing.WindowConstants;
 
 import processing.app.controls.G4P;
 import processing.app.controls.GCScheme;
-import processing.app.screen.managers.TooltipHandler;
-import processing.app.screen.managers.ViewHandler;
-import processing.app.screens.AboutPanel;
-import processing.app.screens.HomePanel;
-import processing.app.screens.LoginPanel;
-import processing.app.screens.MainPanel;
-import processing.app.screens.others.MapView;
+import processing.app.screen.managers.*;
+import processing.app.screens.*;
+import processing.app.screens.configs.*;
+import processing.app.screens.others.*;
+import processing.app.screens.statics.*;
+import processing.app.screens.viewer.*;
 import processing.app.tools.encoder.Encoder;
 import processing.app.tools.filechange.FileChangeHandler;
-import processing.app.tools.io.IOHandler;
-import processing.app.tools.io.IOListener;
+import processing.app.tools.io.*;
 import processing.app.tools.process.ProcessHandler;
 import processing.app.tools.screenshot.ScreenShotHandler;
 import processing.app.tools.webcam.WebcamHandler;
@@ -139,11 +137,61 @@ public class Jamcollab extends PApplet {
 		case 84:
 			loadingStatus = "Inicializando interface";
 			// Final GUI Setup section
-			ViewHandler.instantiate();
+			/*ViewHandler.instantiate();
 			ViewHandler.addView("Main", new MainPanel());
 			ViewHandler.addView("About", new AboutPanel());
 			ViewHandler.addView("Home", new HomePanel());
 			ViewHandler.addView("Login", new LoginPanel());
+			
+			ViewHandler.addView("MainConfig", new MainConfig());
+			ViewHandler.addView("ScreenshotConfig", new ScreenshotConfig());
+			ViewHandler.addView("WebcamConfig", new WebcamConfig());
+			ViewHandler.addView("FilechangeConfig", new FilechangeConfig());
+			ViewHandler.addView("Warning", new Warning());
+			ViewHandler.addView("MouseConfig", new MouseConfig());
+			ViewHandler.addView("HotkeysConfig", new KeyboardConfig());
+			ViewHandler.addView("Statics", new Statics());
+			ViewHandler.addView("KeyboardStatics", new KeyboardStatics());
+			ViewHandler.addView("ScreenshotStatics", new ScreenshotStatics());
+			ViewHandler.addView("WebcamStatics", new WebcamStatics());
+			ViewHandler.addView("MouseStatics", new MouseStatics());
+			ViewHandler.addView("FilechangeStatics", new FilechangeStatics());
+			ViewHandler.addView("ProgressStatics", new ProgressStatics());
+			ViewHandler.addView("VideoViewer", new ViewerVideo());
+			ViewHandler.addView("PIPViewer", new ViewerPIP());
+			ViewHandler.addView("ResizeViewer", new ViewerResize());
+			ViewHandler.addView("MouseViewer", new ViewerMouse());
+			ViewHandler.addView("KeyboardViewer", new ViewerKeyboard());
+			ViewHandler.addView("FilesViewer", new ViewerFiles());
+			ViewHandler.addView("ProcessViewer", new ViewerProcess());
+			ViewHandler.addView("MapViewer", new ViewerMap());*/
+			new Master();
+			new About();
+			new Home();
+			new Login();
+			new MainConfig();
+			new ScreenshotConfig();
+			new WebcamConfig();
+			new FilechangeConfig();
+			new Warning();
+			new MouseConfig();
+			new KeyboardConfig();
+			new Statics();
+			new KeyboardStatics();
+			new ScreenshotStatics();
+			new WebcamStatics();
+			new MouseStatics();
+			new FilechangeStatics();
+			new ProgressStatics();
+			new VideoViewer();
+			new PIPViewer();
+			new ResizeViewer();
+			new MouseViewer();
+			new KeyboardViewer();
+			new FilesViewer();
+			new ProcessViewer();
+			new MapViewer();
+			new Map();
 			break;
 		case 92:
 			loadingStatus = "Carregando configurações padrões";
@@ -154,7 +202,7 @@ public class Jamcollab extends PApplet {
 			break;
 		case 100:
 			loadingStatus = "Definindo configurações finais";
-			ViewHandler.Enable("Home");
+			Controller.EnableView("Home");
 			loadingStatus = "Programa carregado com sucesso!";  
 			//loadingAnim.dispose();
 			break;
@@ -186,7 +234,7 @@ public class Jamcollab extends PApplet {
 
 	public void exit() {
 		Controller.Exit();
-		MapView.SavePinsLog();
+		Map.SavePinsLog();
 	}
 
 	public static void main(String _args[]) {

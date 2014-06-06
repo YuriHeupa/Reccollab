@@ -294,8 +294,7 @@ public class Utils {
 	public static void ValidateDirectories() {
 		DirectoryCheck("SCREENSHOT_PATH", "Screenshot");
 		DirectoryCheck("WEBCAM_PATH", "Webcam");
-		DirectoryCheck("MIC_PATH", "Mic");
-		DirectoryCheck("FILECHANGE_PATH", "FileLogs");
+		DirectoryCheck("FILELOGS_PATH", "FileLogs");
 	}
 	
 	public static long getFileFolderSize(File dir) {

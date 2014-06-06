@@ -12,7 +12,6 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
 import processing.app.controls.GTextField;
-import processing.app.screen.managers.ViewHandler;
 import processing.event.MouseEvent;
 
 public class FilechangeConfig extends BaseObject {
@@ -30,6 +29,7 @@ public class FilechangeConfig extends BaseObject {
 
 	public FilechangeConfig() {
 		super();
+		setParent("Master");
 	}
 
 
@@ -59,7 +59,7 @@ public class FilechangeConfig extends BaseObject {
 		SearchPathButton1.setLocalColorScheme(GCScheme.SCHEME_15);
 		SearchPathButton1.addEventHandler(this, "SearchWatchPathButtonClick");
 		SearchPathButton1.setVisible(false);
-
+		
 		Option2Label = new GLabel(Jamcollab.app, 64, 112, 192, 16);
 		Option2Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		Option2Label.setText("Pasta de Salvamento:");
@@ -96,7 +96,7 @@ public class FilechangeConfig extends BaseObject {
 
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	private void saveChanges() {
@@ -120,7 +120,7 @@ public class FilechangeConfig extends BaseObject {
 				saveChanges();
 			}
 		}
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	public void SearchWatchPathButtonClick(GButton source, GEvent event) {
@@ -153,15 +153,15 @@ public class FilechangeConfig extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());
-		Option1Label.setVisible(view.isActive());
-		Option2Label.setVisible(view.isActive());
-		WatchFolderInput.setVisible(view.isActive());
-		LogFolderInput.setVisible(view.isActive());
-		SearchPathButton1.setVisible(view.isActive());
-		SearchPathButton2.setVisible(view.isActive());
-		BackButton.setVisible(view.isActive());
-		SaveButton.setVisible(view.isActive());
+		Title.setVisible(state);
+		Option1Label.setVisible(state);
+		Option2Label.setVisible(state);
+		WatchFolderInput.setVisible(state);
+		LogFolderInput.setVisible(state);
+		SearchPathButton1.setVisible(state);
+		SearchPathButton2.setVisible(state);
+		BackButton.setVisible(state);
+		SaveButton.setVisible(state);
 
 		WatchFolderInput.setText(Utils.AppDAO.getStringData("FILECHANGE_PATH", ""));
 		LogFolderInput.setText(Utils.AppDAO.getStringData("FILELOGS_PATH", ""));

@@ -8,17 +8,26 @@ import processing.event.MouseEvent;
 public abstract class BaseObject {
 
 	public View view = new View(this);
+	private String identifier = "";
+	private String parent = "";
 	
 	public BaseObject () {
+		this.identifier = this.getClass().getSimpleName();
 		Controller.registerObject(this);
 		view.setVisible(false);
 	}
-
+/*
+	public BaseObject (String identifier) {
+		this.identifier = identifier;
+		Controller.registerObject(this);
+		view.setVisible(false);
+	}*/
 
 	public void draw() {
 		Update();
 	}
 
+	
 
 
 	/*
@@ -43,6 +52,37 @@ public abstract class BaseObject {
 
 	public void SendEventAll(String methodName, Object... params) {
 		Controller.EventAll(methodName, params);
+	}
+
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+
+	public boolean IsViewActive(String identifier) {
+		return Controller.IsViewActive(identifier);
+	}
+
+	public void EnableView(String identifier) {
+		Controller.EnableView(identifier);
+	}
+
+	public void DisableView(String identifier) {
+		Controller.DisableView(identifier);
+	}
+
+	public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
 	}
 
 

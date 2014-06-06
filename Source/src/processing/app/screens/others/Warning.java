@@ -1,7 +1,7 @@
 package processing.app.screens.others;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
@@ -9,8 +9,7 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
 import processing.app.controls.GTextArea;
-import processing.app.screen.managers.ViewHandler;
-import processing.app.screens.MainPanel;
+import processing.app.screens.Master;
 import processing.event.MouseEvent;
 
 public class Warning extends BaseObject {
@@ -23,6 +22,7 @@ public class Warning extends BaseObject {
 	
 	public Warning() {
 		super();
+		setParent("Master");
 	}
 
 
@@ -55,8 +55,8 @@ public class Warning extends BaseObject {
 	}
 
 	public void BackToConfigButtonClicked(GButton source, GEvent event) { 
-		ViewHandler.DisableAll();
-		ViewHandler.Enable("MainConfig");
+		//DisableAll();
+		EnableView("MainConfig");
 		
 	} 
 
@@ -68,7 +68,7 @@ public class Warning extends BaseObject {
 	public void Warn(String warning) {
 		if(warning.isEmpty())
 			return;
-		MainPanel.WarningButton.setText(warning);
+		Master.WarningButton.setText(warning);
 		String tmpStr = WarningArea.getText();
 		WarningArea.setText(warning + "\n" + tmpStr);
 	}
@@ -82,10 +82,10 @@ public class Warning extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());
-		BackToConfigButton.setVisible(view.isActive());
-		WarningArea.setVisible(view.isActive());
-		WarningLabel.setVisible(view.isActive());
+		Title.setVisible(state);
+		BackToConfigButton.setVisible(state);
+		WarningArea.setVisible(state);
+		WarningLabel.setVisible(state);
 	}
 
 

@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
 import processing.app.Utils;
-import processing.app.screens.MainPanel;
+import processing.app.screens.Master;
 import processing.app.screens.configs.KeyboardConfig;
 import processing.event.MouseEvent;
 
@@ -160,7 +160,7 @@ public class IOHandler extends BaseObject {
 			return;
 		if(KeyboardConfig.IsKeysTyped()) {
 			keysTypedCount++;
-			MainPanel.KBFlash.Flash();	
+			Master.KBFlash.Flash();	
 			keys.add(new Keyword(key));
 		}
 	}
@@ -170,7 +170,7 @@ public class IOHandler extends BaseObject {
 			return;
 		if(KeyboardConfig.IsWordsTyped()) {
 			wordsTypedCount++;
-			MainPanel.KBFlash.Flash();	
+			Master.KBFlash.Flash();	
 			words.add(new Keyword(word));
 		}
 	}
@@ -194,16 +194,16 @@ public class IOHandler extends BaseObject {
 	public void addMouseClick(int x, int y, int button) {
 		if(!listeningMouse)
 			return;
-		if(MainPanel.MSFlash != null)
-			MainPanel.MSFlash.Flash();
+		if(Master.MSFlash != null)
+			Master.MSFlash.Flash();
 		IOHandler.mouseClicks.add(new MouseInfo(x, y, button));
 	}
 
 	public void addMouseMovement(int x, int y) {
 		if(!listeningMouse)
 			return;
-		if(MainPanel.MSFlash != null)
-			MainPanel.MSFlash.Flash();
+		if(Master.MSFlash != null)
+			Master.MSFlash.Flash();
 		IOHandler.mousePositions.add(new MouseInfo(x, y));
 		distanceMouseTravel++;
 	}

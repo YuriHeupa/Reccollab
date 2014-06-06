@@ -50,23 +50,24 @@ public class Statics extends BaseObject {
 
 	public Statics() {
 		super();
+		setParent("Master");
 	}
 
 
 	@Override
 	public void SetViewActive(boolean state) {
-		ScreenshotImagesNumber.setVisible(view.isActive());  
-		ScreenshotImageResolution.setVisible(view.isActive());  
-		WebcamImagesNumber.setVisible(view.isActive());  
-		WebcamImageResolution.setVisible(view.isActive());  
-		MouseClicksNumber.setVisible(view.isActive());  
-		DistanceMouseTravelNumber.setVisible(view.isActive());  
-		WordsTypedNumber.setVisible(view.isActive());  
-		KeysTypedNumber.setVisible(view.isActive());  
-		FilesDataSizeNumber.setVisible(view.isActive());  
-		ProcessMostOpenWord.setVisible(view.isActive());  
-		WordsMinuteTypedNumber.setVisible(view.isActive());  
-		KeysMinuteTypedNumber.setVisible(view.isActive());    
+		ScreenshotImagesNumber.setVisible(state);  
+		ScreenshotImageResolution.setVisible(state);  
+		WebcamImagesNumber.setVisible(state);  
+		WebcamImageResolution.setVisible(state);  
+		MouseClicksNumber.setVisible(state);  
+		DistanceMouseTravelNumber.setVisible(state);  
+		WordsTypedNumber.setVisible(state);  
+		KeysTypedNumber.setVisible(state);  
+		FilesDataSizeNumber.setVisible(state);  
+		ProcessMostOpenWord.setVisible(state);  
+		WordsMinuteTypedNumber.setVisible(state);  
+		KeysMinuteTypedNumber.setVisible(state);    
 	}
 
 

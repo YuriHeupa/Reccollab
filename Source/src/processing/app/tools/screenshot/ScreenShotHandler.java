@@ -24,7 +24,7 @@ import java.awt.image.BufferedImage;
 import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Utils;
-import processing.app.screens.MainPanel;
+import processing.app.screens.Master;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.MouseEvent;
@@ -110,7 +110,7 @@ public class ScreenShotHandler extends BaseObject {
 			int elapsed = Jamcollab.app.millis() - startTime;
 			if(((float)(elapsed) / 1000) > Utils.AppDAO.getIntData("SS_CAPTURE_INTERVAL", 0)) {
 				startTime = Jamcollab.app.millis();
-				MainPanel.SSFlash.Flash();
+				Master.SSFlash.Flash();
 				screenShots = getScreens();
 				saveScreens(screenShots);
 				imageTaken = screenShots[0];

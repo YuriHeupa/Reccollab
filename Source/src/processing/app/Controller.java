@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import processing.app.screen.managers.View;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 
@@ -38,7 +39,7 @@ public class Controller {
 			bo.Mouse(e);
 		}
 	}
-	
+
 	public static void Exit() {
 		if(instance == null)
 			return;
@@ -103,6 +104,85 @@ public class Controller {
 		} catch (InvocationTargetException e) {}
 		return;
 
+	}
+
+	public static BaseObject FindByIdentifier(String identifier) {
+		if(instance == null)
+			return null;
+		for(BaseObject bo : instance.objects) {
+			if(bo.getIdentifier().equals(identifier))
+				return bo;
+		}
+		return null;
+	}
+
+	public static boolean IsViewActive(String identifier) {
+		if(instance == null)
+			return false;
+		BaseObject target = FindByIdentifier(identifier);
+		if(target == null)
+			return false;
+		else
+			return target.view.isVisible();
+	}
+	/*
+	public static void EnableView(String... identifiers) {
+		if(instance == null)
+			return;
+		ArrayList<View> targetViews = new ArrayList<View>();
+		for(String id : identifiers) {
+			View tmp = GetView(id);
+			if(tmp == null) {
+				System.out.println("ViewEnable: The view " + id +" couldn´t be found.");
+			} else {
+				targetViews.add(tmp);
+			}
+		}
+		if(targetViews.size() > 0) {
+			// If there's a view on the array, means that a view exist, so disable all first
+			for(BaseObject bo : instance.objects) {
+				if(bo.view.isVisible())
+					bo.view.setVisible(false);
+			}
+			// Then enable all on the list
+			for(View viewToEnable : targetViews) {
+				if(!viewToEnable.isVisible())
+					viewToEnable.setVisible(true);
+			}
+
+		}
+	}*/
+	public static void EnableView(String identifier) {
+		if(instance == null)
+			return;
+		BaseObject target = FindByIdentifier(identifier);
+		if(target.view == null) {
+			System.out.println("ViewEnable: The view " + identifier +" couldn´t be found.");
+			return;
+		}
+		for(BaseObject bo : instance.objects) {
+			if(bo.view.isVisible())
+				bo.view.setVisible(false);
+		}
+		if(!target.view.isVisible())
+			target.view.setVisible(true);
+		if(!target.getParent().isEmpty()) {
+			View parent = FindByIdentifier(target.getParent()).view;
+			if(!parent.isVisible())
+				parent.setVisible(true);
+		}
+			
+		
+	}
+
+	public static void DisableView(String identifier) {
+		if(instance == null)
+			return;
+		if(FindByIdentifier(identifier).view == null) {
+			System.out.println("Disable: The view " + identifier +" couldn´t be found.");
+			return;
+		}
+		FindByIdentifier(identifier).view.setVisible(false);
 	}
 
 }

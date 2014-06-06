@@ -17,18 +17,17 @@ import processing.app.controls.GTextField;
 
 public class View extends GAbstractControl {
 
-	private boolean isAlwaysActive = false;
-	private boolean active = false;
-	private BaseObject parent;
+	//private boolean isAlwaysActive = false;
+	private BaseObject owner;
 	
-	
+	/*
 	public void SetAlwaysActive(boolean active) {
 		isAlwaysActive = active;
-	}
+	}*/
 	
-	public View (BaseObject parent) {
+	public View (BaseObject owner) {
 		super(Jamcollab.app, 0, 0, 1, 1);
-		this.parent = parent;
+		this.owner = owner;
 		// Create the list of children
 		children = new LinkedList<GAbstractControl>();
 		G4P.addControl(this);
@@ -54,11 +53,10 @@ public class View extends GAbstractControl {
 	}
 	
 	public void setVisible(boolean active) {
-		if(isAlwaysActive && !active)
-			return;
+		//if(isAlwaysActive && !active)
+		//	return;
 		super.setVisible(active);
-		setActive(active);
-		parent.SetViewActive(active);
+		owner.SetViewActive(active);
 	}
 
 	public void AddControl(GAbstractControl control) {
@@ -165,12 +163,5 @@ public class View extends GAbstractControl {
 		return tmp;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 	
 }

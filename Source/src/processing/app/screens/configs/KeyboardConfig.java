@@ -1,14 +1,13 @@
 package processing.app.screens.configs;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
 import processing.app.controls.GCheckbox;
 import processing.app.controls.GEvent;
-import processing.app.screen.managers.ViewHandler;
 import processing.event.MouseEvent;
 
 public class KeyboardConfig extends BaseObject {
@@ -22,6 +21,7 @@ public class KeyboardConfig extends BaseObject {
 
 	public KeyboardConfig() {
 		super();
+		setParent("Master");
 	}
 
 	@Override
@@ -90,12 +90,12 @@ public class KeyboardConfig extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		WordsTypedToggle.setVisible(view.isActive());
-		WordsMinuteToggle.setVisible(view.isActive());
-		KeysTypedToggle.setVisible(view.isActive());
-		KeysMinuteToggle.setVisible(view.isActive());
-		BackButton.setVisible(view.isActive());
-		SaveButton.setVisible(view.isActive());
+		WordsTypedToggle.setVisible(state);
+		WordsMinuteToggle.setVisible(state);
+		KeysTypedToggle.setVisible(state);
+		KeysMinuteToggle.setVisible(state);
+		BackButton.setVisible(state);
+		SaveButton.setVisible(state);
 
 		WordsTypedToggle.setSelected(Utils.AppDAO.getBooleanData("WORDS_TYPED", false));
 		WordsMinuteToggle.setSelected(Utils.AppDAO.getBooleanData("WORDS_PM", false));
@@ -105,7 +105,7 @@ public class KeyboardConfig extends BaseObject {
 
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	public void BackButtonClicked(GButton source, GEvent event) {
@@ -117,7 +117,7 @@ public class KeyboardConfig extends BaseObject {
 				saveChanges();
 			}
 		}
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	private void saveChanges() {

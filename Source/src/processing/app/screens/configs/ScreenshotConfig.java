@@ -12,7 +12,6 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
 import processing.app.controls.GTextField;
-import processing.app.screen.managers.ViewHandler;
 import processing.event.MouseEvent;
 
 public class ScreenshotConfig extends BaseObject {
@@ -28,6 +27,7 @@ public class ScreenshotConfig extends BaseObject {
 
 	public ScreenshotConfig() {
 		super();
+		setParent("Master");
 	}
 
 
@@ -89,14 +89,14 @@ public class ScreenshotConfig extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());
-		Option1Label.setVisible(view.isActive());
-		Option2Label.setVisible(view.isActive());
-		CaptureTimeInput.setVisible(view.isActive());
-		SavePathInput.setVisible(view.isActive());
-		SearchPathButton.setVisible(view.isActive());
-		BackButton.setVisible(view.isActive());
-		SaveButton.setVisible(view.isActive());
+		Title.setVisible(state);
+		Option1Label.setVisible(state);
+		Option2Label.setVisible(state);
+		CaptureTimeInput.setVisible(state);
+		SavePathInput.setVisible(state);
+		SearchPathButton.setVisible(state);
+		BackButton.setVisible(state);
+		SaveButton.setVisible(state);
 
 		CaptureTimeInput.setText(Utils.AppDAO.getStringData("SS_CAPTURE_INTERVAL", "0"));
 		SavePathInput.setText(Utils.AppDAO.getStringData("SCREENSHOT_PATH", ""));
@@ -117,7 +117,7 @@ public class ScreenshotConfig extends BaseObject {
 
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	public void BackButtonClicked(GButton source, GEvent event) { 		
@@ -127,7 +127,7 @@ public class ScreenshotConfig extends BaseObject {
 				saveChanges();
 			}
 		}
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	public void CaptureTimeInputChanged(GTextField source, GEvent event) { 

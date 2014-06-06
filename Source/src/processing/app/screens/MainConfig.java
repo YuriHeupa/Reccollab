@@ -1,8 +1,8 @@
 package processing.app.screens;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
 import processing.app.Controller;
+import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.Vector2D;
 import processing.app.controls.GAlign;
@@ -12,7 +12,6 @@ import processing.app.controls.GEvent;
 import processing.app.controls.GImageToggleButton;
 import processing.app.controls.GLabel;
 import processing.app.screen.managers.TooltipHandler;
-import processing.app.screen.managers.ViewHandler;
 import processing.app.tools.filechange.FileChangeHandler;
 import processing.app.tools.io.IOHandler;
 import processing.app.tools.process.ProcessHandler;
@@ -45,6 +44,7 @@ public class MainConfig extends BaseObject {
 
 	public MainConfig() {
 		super();
+		setParent("Master");
 	}
 
 	
@@ -150,46 +150,46 @@ public class MainConfig extends BaseObject {
 	@Override
 	public void SetViewActive(boolean state) {
 		User.setText(Utils.AppDAO.getStringData("USERNAME", ""));
-		Title.setVisible(view.isActive());
-		Title2.setVisible(view.isActive());
-		Option1Label.setVisible(view.isActive());
-		Option2Label.setVisible(view.isActive());
-		Option3Label.setVisible(view.isActive());
-		Option4Label.setVisible(view.isActive());
-		Option6Label.setVisible(view.isActive());
-		Option7Label.setVisible(view.isActive());
-		ScreenshotButtonConfig.setVisible(view.isActive());
-		FilechangeConfigButton.setVisible(view.isActive());
-		HotkeysConfigButton.setVisible(view.isActive());
-		MouseConfigButton.setVisible(view.isActive());
-		WebcamConfigButton.setVisible(view.isActive());
-		ScreenshotToggleButton.setVisible(view.isActive());
-		ProcessToggleButton.setVisible(view.isActive());
-		FilechangeToggleButton.setVisible(view.isActive());
-		HotkeysToggleButton.setVisible(view.isActive());
-		MouseToggleButton.setVisible(view.isActive());
-		WebcamToggleButton.setVisible(view.isActive());
+		Title.setVisible(state);
+		Title2.setVisible(state);
+		Option1Label.setVisible(state);
+		Option2Label.setVisible(state);
+		Option3Label.setVisible(state);
+		Option4Label.setVisible(state);
+		Option6Label.setVisible(state);
+		Option7Label.setVisible(state);
+		ScreenshotButtonConfig.setVisible(state);
+		FilechangeConfigButton.setVisible(state);
+		HotkeysConfigButton.setVisible(state);
+		MouseConfigButton.setVisible(state);
+		WebcamConfigButton.setVisible(state);
+		ScreenshotToggleButton.setVisible(state);
+		ProcessToggleButton.setVisible(state);
+		FilechangeToggleButton.setVisible(state);
+		HotkeysToggleButton.setVisible(state);
+		MouseToggleButton.setVisible(state);
+		WebcamToggleButton.setVisible(state);
 	}
 
 	
 	public void ScreenshotButtonConfigClicked(GButton source, GEvent event) {
-		ViewHandler.Enable("ScreenshotConfig");
+		EnableView("ScreenshotConfig");
 	} 
 
 	public void FilechangeConfigButtonClicked(GButton source, GEvent event) {
-		ViewHandler.Enable("FilechangeConfig");
+		EnableView("FilechangeConfig");
 	} 
 
 	public void HotkeysConfigButtonClicked(GButton source, GEvent event) { 
-		ViewHandler.Enable("HotkeysConfig");
+		EnableView("KeyboardConfig");
 	} 
 
 	public void MouseConfigButtonClicked(GButton source, GEvent event) { 
-		ViewHandler.Enable("MouseConfig");
+		EnableView("MouseConfig");
 	} 
 
 	public void WebcamConfigButtonClicked(GButton source, GEvent event) { 
-		ViewHandler.Enable("WebcamConfig");
+		EnableView("WebcamConfig");
 	}
 
 	public void ScreenshotToggleButtonClick(GImageToggleButton source, GEvent event) { 

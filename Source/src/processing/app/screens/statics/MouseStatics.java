@@ -1,7 +1,7 @@
 package processing.app.screens.statics;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
 import processing.app.tools.io.IOHandler;
@@ -25,18 +25,19 @@ public class MouseStatics extends BaseObject {
 
 	public MouseStatics() {
 		super();
+		setParent("Master");
 	}
 
 
 	@Override
 	public void SetViewActive(boolean state) {
 
-		Title.setVisible(view.isActive());  
-		OptionLabel.setVisible(view.isActive()); 
-		SubOptionLabel1.setVisible(view.isActive()); 
-		SubOptionLabel2.setVisible(view.isActive()); 
-		SubOption1Text.setVisible(view.isActive()); 
-		SubOption2Text.setVisible(view.isActive()); 
+		Title.setVisible(state);  
+		OptionLabel.setVisible(state); 
+		SubOptionLabel1.setVisible(state); 
+		SubOptionLabel2.setVisible(state); 
+		SubOption1Text.setVisible(state); 
+		SubOption2Text.setVisible(state); 
 	}
 
 	@Override

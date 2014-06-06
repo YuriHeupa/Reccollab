@@ -2,8 +2,8 @@ package processing.app.screens.statics;
 
 import java.util.List;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
@@ -20,6 +20,7 @@ public class ProgressStatics extends BaseObject {
 
 	public ProgressStatics() {
 		super();
+		setParent("Master");
 	}
 
 	@Override
@@ -64,10 +65,10 @@ public class ProgressStatics extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());  
-		OptionLabel.setVisible(view.isActive()); 
-		SubOptionLabel1.setVisible(view.isActive()); 
-		SubOption1Text.setVisible(view.isActive()); 
+		Title.setVisible(state);  
+		OptionLabel.setVisible(state); 
+		SubOptionLabel1.setVisible(state); 
+		SubOption1Text.setVisible(state); 
 		
 	}
 

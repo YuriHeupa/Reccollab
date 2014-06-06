@@ -1,7 +1,7 @@
 package processing.app.screens.statics;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.Vector2D;
 import processing.app.controls.GAlign;
@@ -41,6 +41,7 @@ public class FilechangeStatics extends BaseObject {
 
 	public FilechangeStatics() {
 		super();
+		setParent("Master");
 	}
 
 
@@ -113,18 +114,18 @@ public class FilechangeStatics extends BaseObject {
 	@Override
 	public void SetViewActive(boolean state) {
 
-		Title.setVisible(view.isActive());  
-		OptionLabel.setVisible(view.isActive()); 
-		SubOptionLabel1.setVisible(view.isActive()); 
-		SubOptionLabel2.setVisible(view.isActive()); 
-		SubOptionLabel3.setVisible(view.isActive()); 
-		SubOptionLabel4.setVisible(view.isActive()); 
-		SubOptionLabel5.setVisible(view.isActive()); 
-		CreatedText.setVisible(view.isActive()); 
-		ModifiedText.setVisible(view.isActive()); 
-		DataSizeText.setVisible(view.isActive()); 
-		DeletedText.setVisible(view.isActive()); 
-		FolderText.setVisible(view.isActive()); 
+		Title.setVisible(state);  
+		OptionLabel.setVisible(state); 
+		SubOptionLabel1.setVisible(state); 
+		SubOptionLabel2.setVisible(state); 
+		SubOptionLabel3.setVisible(state); 
+		SubOptionLabel4.setVisible(state); 
+		SubOptionLabel5.setVisible(state); 
+		CreatedText.setVisible(state); 
+		ModifiedText.setVisible(state); 
+		DataSizeText.setVisible(state); 
+		DeletedText.setVisible(state); 
+		FolderText.setVisible(state); 
 		
 	}
 

@@ -9,7 +9,6 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GCheckbox;
 import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
-import processing.app.screen.managers.ViewHandler;
 import processing.event.MouseEvent;
 
 public class MouseConfig extends BaseObject {
@@ -24,6 +23,7 @@ public class MouseConfig extends BaseObject {
 
 	public MouseConfig() {
 		super();
+		setParent("Master");
 	}
 
 
@@ -79,20 +79,20 @@ public class MouseConfig extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(view.isActive());
-		Option1Label.setVisible(view.isActive());
-		Option2Label.setVisible(view.isActive());
-		SaveMouseMovementsToggle.setVisible(view.isActive());
-		SaveMouseClicksToggle.setVisible(view.isActive());
-		BackButton.setVisible(view.isActive());
-		SaveButton.setVisible(view.isActive());
+		Title.setVisible(state);
+		Option1Label.setVisible(state);
+		Option2Label.setVisible(state);
+		SaveMouseMovementsToggle.setVisible(state);
+		SaveMouseClicksToggle.setVisible(state);
+		BackButton.setVisible(state);
+		SaveButton.setVisible(state);
 		SaveMouseMovementsToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_MOVEMENTS", false));
 		SaveMouseClicksToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_CLICKS", false));
 	}
 	
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 
 	public void BackButtonClicked(GButton source, GEvent event) { 
@@ -102,7 +102,7 @@ public class MouseConfig extends BaseObject {
 				saveChanges();
 			}
 		}
-		ViewHandler.Enable("MainConfig");
+		EnableView("MainConfig");
 	} 
 	
 	private void saveChanges() {
@@ -111,10 +111,14 @@ public class MouseConfig extends BaseObject {
 	}
 
 	public static boolean IsMouseClicks() {
+		if(SaveMouseClicksToggle == null)
+			return false;
 		return SaveMouseClicksToggle.isSelected();
 	}
 
 	public static boolean IsMouseMovement() {
+		if(SaveMouseMovementsToggle == null)
+			return false;
 		return SaveMouseMovementsToggle.isSelected();
 	}
 	

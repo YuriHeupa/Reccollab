@@ -6,7 +6,7 @@ import java.io.File;
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
 import processing.app.Utils;
-import processing.app.screens.MainPanel;
+import processing.app.screens.Master;
 import processing.app.screens.configs.WebcamConfig;
 import processing.core.PImage;
 import processing.event.MouseEvent;
@@ -122,7 +122,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 					WebcamUtils.capture(selectedCam, path+ File.separator+"(Cam-" +selectedCam.getName()+ ") At-"+ Utils.dateFormat(), "png");
 					break;
 				}
-				MainPanel.WBFlash.Flash();
+				Master.WBFlash.Flash();
 				imageTakenCount++;
 			}
 		}
