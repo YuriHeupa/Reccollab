@@ -229,7 +229,7 @@ public abstract class GAbstractControl implements PConstants, GConstants,
 	 * Calculate all the variables that determine the position and size of the
 	 * control. This depends on <pre>control_mode</pre>
 	 */
-	private void setPositionAndSize(float n0, float n1, float n2, float n3) {
+	protected void setPositionAndSize(float n0, float n1, float n2, float n3) {
 		switch (G4P.control_mode) {
 		case CORNER: // (x,y,w,h)
 			x = n0;

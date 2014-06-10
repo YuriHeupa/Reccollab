@@ -2,10 +2,12 @@ package processing.app.tools.encoder;
 
 import java.util.Comparator;
 
-public class TimeComparator implements Comparator<BufferedImagePlus> {
+import processing.app.FileTime;
+
+public class TimeComparator implements Comparator<FileTime> {
 
 	@Override
-	public int compare(BufferedImagePlus bip1, BufferedImagePlus bip2) {
+	public int compare(FileTime bip1, FileTime bip2) {
         return (bip1.getTime() < bip2.getTime() ) ? -1: (bip1.getTime() > bip2.getTime()) ? 1:0 ;
 
 	}

@@ -105,7 +105,7 @@ public abstract class GTextIconAlignBase extends GTextAlign {
 	 * @param nbrImages
 	 *            number of tiled images in the icon
 	 * @param horz
-	 *            LEFT or RIGHT
+	 *            LEFT, CENTER, RIGHT
 	 * @param vert
 	 *            TOP, MIDDLE, BOTTOM
 	 */
@@ -124,7 +124,7 @@ public abstract class GTextIconAlignBase extends GTextAlign {
 			}
 
 			// We have loaded the image so validate alignment
-			if (horz != null && horz.isHorzAlign() && horz != GAlign.CENTER) {
+			if (horz != null && horz.isHorzAlign()) {
 				iconAlignH = horz;
 			}
 			if (vert != null && vert.isVertAlign()) {
@@ -164,6 +164,9 @@ public abstract class GTextIconAlignBase extends GTextAlign {
 		super.calcAlignment(); // calculate the text alignment
 		if (iconW != 0) {
 			switch (iconAlignH) {
+			case CENTER:
+				// alterar alinhamento do texto aqui
+				break;
 			case LEFT:
 				siX = TPAD;
 				if (textAlignH != GAlign.RIGHT)

@@ -2,7 +2,10 @@ package processing.app.screens.viewer;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JDialog;
@@ -20,8 +23,11 @@ import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
 import processing.app.controls.GCheckbox;
 import processing.app.controls.GEvent;
+import processing.app.controls.GOption;
 import processing.app.controls.GTextField;
-import processing.app.tools.encoder.PIPImage;
+import processing.app.controls.GToggleGroup;
+import processing.app.tools.io.MouseInfo;
+import processing.core.PGraphics;
 import processing.event.MouseEvent;
 
 public class MouseViewer extends BaseObject {
@@ -31,12 +37,13 @@ public class MouseViewer extends BaseObject {
 	GTextField OutputPathInput; 
 	Thread generateThread;
 	JDialog generatingDialog = new JDialog();  
-	
-	GCheckbox heatMapPos;
-	GCheckbox heatMapClicks;
+
+	GOption heatMapPos;
+	GOption heatMapClicks;
+	GCheckbox heatMap;
 	GCheckbox accumulate;
 	GCheckbox generalInfo;
-	
+
 	public MouseViewer() {
 		super();
 		setParent("Master");
@@ -50,34 +57,41 @@ public class MouseViewer extends BaseObject {
 		view.AddLabel(4, 88, 192, 16, "Logs de mouse:", GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 112, 192, 16, "Destino:", GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 136, 192, 16, "Acumular rastro:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 160, 192, 16, "Heatmap de posição:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 184, 192, 16, "Heatmap de cliques:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 208, 192, 16, "Informações gerais:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		
+		view.AddLabel(4, 160, 192, 16, "Heatmap:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 184, 192, 16, "Informações gerais:", GAlign.RIGHT, GAlign.MIDDLE, false);
+
 		accumulate = new GCheckbox(Jamcollab.app, 196, 136, 24, 20);
 		accumulate.setOpaque(false);
 		view.AddControl(accumulate);
-		
-		heatMapPos = new GCheckbox(Jamcollab.app, 196, 160, 24, 20);
+
+		GToggleGroup group = new GToggleGroup();
+
+		heatMap = new GCheckbox(Jamcollab.app, 196, 160, 24, 20);
+		heatMap.setOpaque(false);
+		view.AddControl(heatMap);
+
+		heatMapPos = new GOption(Jamcollab.app, 220, 160, 80, 20);
 		heatMapPos.setOpaque(false);
-		heatMapPos.addEventHandler(this, "heatMapPosToggleClicked");
+		heatMapPos.setText("Posição");
 		view.AddControl(heatMapPos);
-		
-		heatMapClicks = new GCheckbox(Jamcollab.app, 196, 184, 24, 20);
+		group.addControl(heatMapPos);
+
+		heatMapClicks = new GOption(Jamcollab.app, 290, 160, 80, 20);
 		heatMapClicks.setOpaque(false);
-		heatMapClicks.addEventHandler(this, "heatMapClicksToggleClicked");
+		heatMapClicks.setText("Clicks");
 		view.AddControl(heatMapClicks);
-		
-		generalInfo = new GCheckbox(Jamcollab.app, 196, 208, 24, 20);
+		group.addControl(heatMapClicks);
+
+		generalInfo = new GCheckbox(Jamcollab.app, 196, 184, 24, 20);
 		generalInfo.setOpaque(false);
 		view.AddControl(generalInfo);
 
-		
+
 		SourcePathInput = view.AddTextField(196, 88, 216, 16, G4P.SCROLLBARS_NONE);
 		SourcePathInput.setEnabled(false);
 		OutputPathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
-		
+
 		view.AddButton(420, 88, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
 				"SearchSourcePathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
@@ -125,57 +139,86 @@ public class MouseViewer extends BaseObject {
 		generateThread = new Thread() {  
 			public void run() {  
 
-				ArrayList<PIPImage> generateProcess = new ArrayList<PIPImage>();
-
 				File source = new File(SourcePathInput.getText());
-
+				File[] listTxtFiles = source.listFiles(Utils.TEXT_FILTER);
+				
+				ArrayList<MouseInfo> mouseInfos = new ArrayList<MouseInfo>();
+				
 				float percent = 0;
-				float factorPercentLoad = 50.0f/source.listFiles(Utils.IMAGE_FILTER).length;
-
-				if (source.isDirectory()) { // make sure it's a directory
-					for (File fs : source.listFiles(Utils.IMAGE_FILTER)) {
-						if(percent+factorPercentLoad < 50)
-							percent += factorPercentLoad;
-						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-						generateProcess.add(new PIPImage(Jamcollab.app.loadImage(fs.getAbsolutePath()), null, fs.getName()) {});
-
-					}
-				}
-
-				load.setText("Aguarde, gerando 50%");
-
-				float factorPercentSave = 50.0f/generateProcess.size();
-
+				float factorPercentLoad = 50.0f/listTxtFiles.length;
+				
 				final String output = (!OutputPathInput.getText().isEmpty() 
 						&& !OutputPathInput.getText().equals(" ")) ? 
-								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";;
-
-								for (PIPImage img : generateProcess) {
-									if(percent+factorPercentSave < 100)
-										percent += factorPercentSave;
-									load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-									
-									//Remover
-									img.getName();
-									/*PGraphics pg = Jamcollab.app.createGraphics(Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
-									pg.beginDraw();
-									pg.image(img.getSource(), 0, 0, Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
-									pg.endDraw();
-									pg.save(output + File.separator + img.getName());*/
-								}
-
-								load.setText("Aguarde, gerando 100%");
+								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";
 
 
-								SwingUtilities.invokeLater(new Runnable(){ 
-									public void run(){  
-										p1.remove(load);
-										generatingDialog.dispose();
-										JOptionPane.showMessageDialog(Jamcollab.jframe, 
-												"Gerado com sucesso!");
-										Utils.OpenFile(output + File.separator);
-									}  
-								});  
+				if (source.isDirectory()) { // make sure it's a directory
+					for (File f : source.listFiles(Utils.TEXT_FILTER)) {
+						if(percent < 50)
+							percent += factorPercentLoad;
+						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
+						
+						BufferedReader br = null;
+						 
+						try {
+				 
+							String currentLine;
+				 
+							br = new BufferedReader(new FileReader(f.getAbsolutePath()));
+				 
+							while ((currentLine = br.readLine()) != null) {
+								String handleTime = currentLine.substring(0, 26);
+								int button = Integer.valueOf(currentLine.substring(29, 30));
+								int x = Integer.valueOf(currentLine.substring(32, currentLine.indexOf("x")));
+								int y = Integer.valueOf(currentLine.substring(currentLine.indexOf("x")+1, currentLine.indexOf("y")));
+								int w = Integer.valueOf(currentLine.substring(currentLine.indexOf("R")+2, currentLine.indexOf("w")));
+								int h = Integer.valueOf(currentLine.substring(currentLine.indexOf("w")+1, currentLine.length()-2));
+								mouseInfos.add(new MouseInfo(x, y, w, h, button, handleTime));
+							}
+				 
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								if (br != null)br.close();
+							} catch (IOException ex) {
+								ex.printStackTrace();
+							}
+						}
+					}
+				}
+				
+				load.setText("Aguarde, gerando 50%");
+
+				for (MouseInfo m : mouseInfos) {
+					if(percent < 100)
+						percent += factorPercentLoad;
+					load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
+					
+					PGraphics pg = Jamcollab.app.createGraphics(100, 100);
+					pg.beginDraw();
+					pg.text(m.getInfo(), 0, 0);
+					pg.endDraw();
+					pg.save(output + File.separator + "mouse_"+Utils.dateFormat()+".jpg");
+					
+				}
+
+				
+				
+				load.setText("Aguarde, gerando 100%");
+
+
+				SwingUtilities.invokeLater(new Runnable(){ 
+					public void run(){  
+						p1.remove(load);
+						generatingDialog.dispose();
+						JOptionPane.showMessageDialog(Jamcollab.jframe, 
+								"Gerado com sucesso!");
+						
+										
+						Utils.OpenFile(output + File.separator);
+					}  
+				});  
 			}  
 		};  
 
@@ -210,24 +253,16 @@ public class MouseViewer extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		
+
 	}
 
 
 	@Override
 	public void Update() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void heatMapPosToggleClicked(GCheckbox source, GEvent event) { 
-		heatMapClicks.setSelected(false);
-	} 
-	
-	public void heatMapClicksToggleClicked(GCheckbox source, GEvent event) { 
-		heatMapPos.setSelected(false);
-	} 
-	
+
 	public void ProcessButtonClick(GButton source, GEvent event) {
 		EnableView("ProcessViewer");
 	}
@@ -235,7 +270,7 @@ public class MouseViewer extends BaseObject {
 	public void MapButtonClick(GButton source, GEvent event) {
 		EnableView("MapViewer");
 	}
-	
+
 	public void FilesButtonClick(GButton source, GEvent event) {
 		EnableView("FilesViewer");
 	}
@@ -264,7 +299,7 @@ public class MouseViewer extends BaseObject {
 	@Override
 	public void Mouse(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -272,7 +307,7 @@ public class MouseViewer extends BaseObject {
 	@Override
 	public void Exit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

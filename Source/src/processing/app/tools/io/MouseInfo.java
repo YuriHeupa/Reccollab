@@ -1,6 +1,5 @@
 package processing.app.tools.io;
 
-import processing.app.Utils;
 import processing.app.Vector2D;
 
 public class MouseInfo {
@@ -8,17 +7,17 @@ public class MouseInfo {
 	private Vector2D pos = new Vector2D(0, 0);
 	private int button;
 	private String handleTime;
+	private int height;
+	private int width;
 	
 	
-	public MouseInfo(int x, int y) {
+	
+	public MouseInfo(int x, int y, int width, int height, int button, String handleTime) {
 		setPosition(x, y);
-		handleTime = Utils.dateFormat();
-	}
-	
-	public MouseInfo(int x, int y, int button) {
-		setPosition(x, y);
+		this.width = width;
+		this.height = height;
 		setButton(button);
-		handleTime = Utils.dateFormat();
+		this.handleTime = handleTime;
 	}
 	
 
@@ -34,7 +33,11 @@ public class MouseInfo {
 		pos.set(x, y);
 	}
 
-	public String getButton() {
+	public int getButton() {
+		return button;
+	}
+	
+	public String getButtonName() {
 		String buttonName = "";
 		switch (button) {
 		case 1:
@@ -60,6 +63,26 @@ public class MouseInfo {
 	public String getHandleTime() {
 		return handleTime;
 	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setResolution(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+	
+	public String getInfo() {
+		return getHandleTime() + " - " + getButton() +
+		" (" + getY()+ "x" + getX()+"y)" +
+		" R(" + getWidth() + "w" + getHeight()+"h)";
+	}
+
 
 
 }

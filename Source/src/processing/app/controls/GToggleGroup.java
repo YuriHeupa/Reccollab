@@ -65,6 +65,10 @@ public class GToggleGroup {
 			tc.setToggleGroup(this);
 	}
 
+	public GToggleControl getSelected() {
+		return selected;
+	}
+	
 	/**
 	 * Used internally to change selection
 	 */

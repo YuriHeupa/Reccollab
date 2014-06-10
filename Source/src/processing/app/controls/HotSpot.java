@@ -9,7 +9,7 @@ import processing.core.PImage;
  * @author Peter Lager
  * 
  */
-abstract class HotSpot implements GConstants, Comparable<HotSpot> {
+public abstract class HotSpot implements GConstants, Comparable<HotSpot> {
 
 	public final Integer id;
 	public float x, y;
@@ -32,7 +32,7 @@ abstract class HotSpot implements GConstants, Comparable<HotSpot> {
 	 * 
 	 * @author Peter Lager
 	 */
-	static class HSrect extends HotSpot {
+	public static class HSrect extends HotSpot {
 		public float w, h;
 
 		public HSrect(int id, float x, float y, float w, float h) {

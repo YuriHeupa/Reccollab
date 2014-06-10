@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JLabel;
 
+import processing.app.FileTime;
+
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
@@ -82,11 +84,11 @@ public class Encoder {
 		return availableCodecs.get(index);
 	}
 
-	public static void Encode(JLabel load, ArrayList<BufferedImagePlus> imgs, String fileName, int fps, ID codec) {
+	public static void Encode(JLabel load, ArrayList<FileTime> imgs, String fileName, int fps, ID codec) {
 		if(codec == null || imgs.size() <= 0)
 			return;
 		
-		BufferedImage openStrem = imgs.get(0).getImage();
+		BufferedImage openStrem = imgs.get(0).getFileAsImage();
 		
 		writer = ToolFactory.makeWriter(fileName);
 		writer.addVideoStream(0, 0, codec, 
@@ -98,13 +100,13 @@ public class Encoder {
 
 		BufferedImage buffer = null;
 		for(int i = 0; i < imgs.size(); i++) {
-			buffer = imgs.get(i).getImage();
+			buffer = imgs.get(i).getFileAsImage();
 			if(buffer == null)
 				continue;
 			if(buffer.getHeight() !=openStrem.getHeight() ||
 					buffer.getWidth() != openStrem.getWidth() )
 				continue;
-			BufferedImage frame = convertToType(imgs.get(i).getImage(), BufferedImage.TYPE_3BYTE_BGR);
+			BufferedImage frame = convertToType(imgs.get(i).getFileAsImage(), BufferedImage.TYPE_3BYTE_BGR);
 			writer.encodeVideo(0, frame, (int)(i*(1000.0f/(float)(fps))), 
 					TimeUnit.MILLISECONDS);
 

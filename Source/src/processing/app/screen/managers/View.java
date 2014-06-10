@@ -12,19 +12,15 @@ import processing.app.controls.GDropList;
 import processing.app.controls.GImage;
 import processing.app.controls.GImageToggleButton;
 import processing.app.controls.GLabel;
+import processing.app.controls.GSlider;
 import processing.app.controls.GTextField;
 
 
 public class View extends GAbstractControl {
 
-	//private boolean isAlwaysActive = false;
 	private BaseObject owner;
-	
-	/*
-	public void SetAlwaysActive(boolean active) {
-		isAlwaysActive = active;
-	}*/
-	
+
+
 	public View (BaseObject owner) {
 		super(Jamcollab.app, 0, 0, 1, 1);
 		this.owner = owner;
@@ -51,10 +47,8 @@ public class View extends GAbstractControl {
 		winApp.popMatrix();
 		winApp.popStyle();
 	}
-	
+
 	public void setVisible(boolean active) {
-		//if(isAlwaysActive && !active)
-		//	return;
 		super.setVisible(active);
 		owner.SetViewActive(active);
 	}
@@ -62,12 +56,12 @@ public class View extends GAbstractControl {
 	public void AddControl(GAbstractControl control) {
 		addControl(control);
 	}
-	
+
 	public GButton AddButton(int x, int y, int width, int height, 
 			String text, Object objCallback, String funcCallback) {
 		return AddButton(x, y, width, height, text, -1, objCallback, funcCallback, GAlign.CENTER, GAlign.CENTER);
 	}
-	
+
 	public GButton AddButton(int x, int y, int width, int height, 
 			String text, int GCScheme, Object objCallback, String funcCallback) {
 		GButton tmp = AddButton(x, y, width, height, text, 
@@ -85,7 +79,7 @@ public class View extends GAbstractControl {
 			tmp.setIcon(iconPath, iconImages, iconHorz, iconVert);
 		return tmp;
 	}
-	
+
 	public GButton AddButton(int x, int y, int width, int height, 
 			String text, int GCScheme, Object objCallback, String funcCallback,
 			GAlign horz, GAlign vert) {
@@ -101,7 +95,38 @@ public class View extends GAbstractControl {
 		return tmp;
 	}
 
-	
+	public GSlider AddSlider(int x, int y, int width, int height, int barWidth, 
+			int startValue, int minValue, int maxValue,
+			boolean showTicks, boolean showValue, boolean showLimits) {
+		return AddSlider(x, y, width, height, barWidth, 
+				startValue, minValue, maxValue, -1,
+				showTicks, showValue, showLimits, null, "");
+	}
+
+	public GSlider AddSlider(int x, int y, int width, int height, int barWidth, 
+			int startValue, int minValue, int maxValue, 
+			boolean showTicks, boolean showValue, boolean showLimits, Object objCallback, String funcCallback) {
+		return AddSlider(x, y, width, height, barWidth, 
+				startValue, minValue, maxValue, -1, 
+				showTicks, showValue, showLimits, 
+				objCallback, funcCallback);
+	}
+
+	public GSlider AddSlider(int x, int y, int width, int height, int barWidth, 
+			int startValue, int minValue, int maxValue, int GCScheme, 
+			boolean showTicks, boolean showValue, boolean showLimits,
+			Object objCallback, String funcCallback) {
+		GSlider tmp = new GSlider(Jamcollab.app, x, y, width, height, barWidth);
+		tmp.setLimits(startValue, minValue, maxValue);
+		tmp.setShowDecor(false, showTicks,  showValue, showLimits);
+		if(objCallback != null)
+			tmp.addEventHandler(objCallback, funcCallback);
+		if(GCScheme != -1)
+			tmp.setLocalColorScheme(GCScheme);
+		addControl(tmp);
+		return tmp;
+	}
+
 	public GImageToggleButton AddImageToggleButton(int x, int y, String sprite, int cols, int rows) {
 		GImageToggleButton tmp = new GImageToggleButton(Jamcollab.app, x, y, sprite, cols, rows);
 		addControl(tmp);
@@ -111,13 +136,21 @@ public class View extends GAbstractControl {
 
 	public GDropList AddDropList(int x, int y, int width, int height, int elements, 
 			int GCScheme, String[] itens, int selected) {
+		return AddDropList(x, y, width, height, elements, GCScheme, itens, selected, null, "");
+	}
+	
+	public GDropList AddDropList(int x, int y, int width, int height, int elements, 
+			int GCScheme, String[] itens, int selected,
+			Object objCallback, String funcCallback) {
 		GDropList tmp = new GDropList(Jamcollab.app, x, y, width, height, elements);
 		tmp.setItems(itens, selected);
 		tmp.setLocalColorScheme(GCScheme);
+		if(objCallback != null)
+			tmp.addEventHandler(objCallback, funcCallback);
 		addControl(tmp);
 		return tmp;
 	}
-	
+
 	public GLabel AddLabel(int x, int y, int width, int height, 
 			String text, GAlign horz, GAlign vert, boolean bold, int GCScheme) {
 		GLabel tmp = new GLabel(Jamcollab.app, x, y, width, height);
@@ -137,7 +170,7 @@ public class View extends GAbstractControl {
 		return AddLabel(x, y, width, height, 
 				text, bold, -1);
 	}
-	
+
 	public GLabel AddLabel(int x, int y, int width, int height, 
 			String text, boolean bold, int GCScheme) {
 		return AddLabel(x, y, width, height, 
@@ -157,11 +190,17 @@ public class View extends GAbstractControl {
 	}
 
 	public GTextField AddTextField(int x, int y, int width, int height, int scrollbar) {
+		return AddTextField(x, y, width, height, scrollbar, "");
+	}
+	
+	public GTextField AddTextField(int x, int y, int width, int height, int scrollbar, String defaultText) {
 		GTextField tmp = new GTextField(Jamcollab.app, x, y, width, height, scrollbar);
 		tmp.setOpaque(false);
+		tmp.setDefaultText(defaultText);
 		addControl(tmp);
 		return tmp;
 	}
 
-	
+
+
 }

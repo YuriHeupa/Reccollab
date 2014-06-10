@@ -1,7 +1,5 @@
 package processing.app.tools.io;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,23 +63,16 @@ public class IOHandler extends BaseObject {
 			Utils.saveLog("logs/mouse", mouseGeneralLog, "MLog");
 		}
 
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int screenWidth = gd.getDisplayMode().getWidth();
-		int screnHeight = gd.getDisplayMode().getHeight();
-
 		// Save mouse click logs
 		ArrayList<String> clicksLog = new ArrayList<String>();
-		clicksLog.add("Resolucao: (" + screenWidth + "," + screnHeight+")");
 		for(MouseInfo m : mouseClicks)
-			clicksLog.add("[" +m.getHandleTime() + "] - " + m.getButton() +
-					" (" + (int)m.getY()+ "," + (int)m.getX()+")");
+			clicksLog.add(m.getInfo());
 		Utils.saveLog("logs/mouse/clicks", clicksLog, "MCLog");
 
 		// Save mouse move logs
 		ArrayList<String> movesLog = new ArrayList<String>();
-		movesLog.add("Resolucao: (" + screenWidth + "," + screnHeight+")");
 		for(MouseInfo m : mousePositions)
-			movesLog.add("[" +m.getHandleTime() + "] - (" + (int)m.getY()+ "," + (int)m.getX()+")");
+			movesLog.add(m.getInfo());
 		Utils.saveLog("logs/mouse/moves", movesLog, "MMLog");	
 
 		// Save keyboard general log
@@ -98,13 +89,13 @@ public class IOHandler extends BaseObject {
 		// Save keyboard word hits log
 		ArrayList<String> wordsLog = new ArrayList<String>();
 		for(Keyword word : words) 
-			wordsLog.add("[" +word.getHandleTime() + "] - " + word.getKeyword());
+			wordsLog.add(word.getInfo());
 		Utils.saveLog("logs/keyboard/words", wordsLog, "KWLog");
 
 		// Save keyboard keys hits log
 		ArrayList<String> keysLog = new ArrayList<String>();
 		for(Keyword key : keys) 
-			keysLog.add("[" +key.getHandleTime() + "] - " + key.getKeyword());
+			keysLog.add(key.getInfo());
 		Utils.saveLog("logs/keyboard/keys", keysLog, "KKLog");
 
 	}
@@ -161,7 +152,7 @@ public class IOHandler extends BaseObject {
 		if(KeyboardConfig.IsKeysTyped()) {
 			keysTypedCount++;
 			Master.KBFlash.Flash();	
-			keys.add(new Keyword(key));
+			keys.add(new Keyword(key, Utils.dateFormat()));
 		}
 	}
 
@@ -171,7 +162,7 @@ public class IOHandler extends BaseObject {
 		if(KeyboardConfig.IsWordsTyped()) {
 			wordsTypedCount++;
 			Master.KBFlash.Flash();	
-			words.add(new Keyword(word));
+			words.add(new Keyword(word, Utils.dateFormat()));
 		}
 	}
 
@@ -196,7 +187,7 @@ public class IOHandler extends BaseObject {
 			return;
 		if(Master.MSFlash != null)
 			Master.MSFlash.Flash();
-		IOHandler.mouseClicks.add(new MouseInfo(x, y, button));
+		IOHandler.mouseClicks.add(new MouseInfo(x, y, Utils.GetScreenWidth(), Utils.GetScreenHeight(), button, Utils.dateFormat()));
 	}
 
 	public void addMouseMovement(int x, int y) {
@@ -204,7 +195,7 @@ public class IOHandler extends BaseObject {
 			return;
 		if(Master.MSFlash != null)
 			Master.MSFlash.Flash();
-		IOHandler.mousePositions.add(new MouseInfo(x, y));
+		IOHandler.mousePositions.add(new MouseInfo(x, y, Utils.GetScreenWidth(), Utils.GetScreenHeight(), 0, Utils.dateFormat()));
 		distanceMouseTravel++;
 	}
 

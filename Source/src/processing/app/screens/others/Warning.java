@@ -28,26 +28,26 @@ public class Warning extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
+		Title = new GLabel(Jamcollab.app, 48, 82, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		Title.setText("QUADRO DE AVISOS");
 		Title.setTextBold();
 		Title.setOpaque(false);
 		Title.setVisible(false);
-		BackToConfigButton = new GButton(Jamcollab.app, 480, 32, 80, 24);
+		BackToConfigButton = new GButton(Jamcollab.app, 480, 42, 80, 24);
 		BackToConfigButton.setText("Voltar");
 		BackToConfigButton.setTextBold();
 		BackToConfigButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		BackToConfigButton.addEventHandler(this, "BackToConfigButtonClicked");
 		BackToConfigButton.setVisible(false);
-		WarningArea = new GTextArea(Jamcollab.app, 24, 80, 552, 316, G4P.SCROLLBARS_VERTICAL_ONLY | G4P.SCROLLBARS_AUTOHIDE);
+		WarningArea = new GTextArea(Jamcollab.app, 24, 130, 552, 316, G4P.SCROLLBARS_VERTICAL_ONLY | G4P.SCROLLBARS_AUTOHIDE);
 		WarningArea.setLocalColorScheme(GCScheme.RED_SCHEME);
 		WarningArea.setOpaque(true);
 		WarningArea.addEventHandler(this, "WarningChanged");
 		WarningArea.setVisible(false);
 		WarningArea.setTextEditEnabled(false);
 		WarningArea.setText("Programa inicializado com sucesso");
-		WarningLabel = new GLabel(Jamcollab.app, 0, 348, 600, 18);
+		WarningLabel = new GLabel(Jamcollab.app, 0, 398, 600, 18);
 		WarningLabel.setText("QUADRO DE AVISOS: (Clique para expandir)");
 		WarningLabel.setLocalColorScheme(GCScheme.RED_SCHEME);
 		WarningLabel.setOpaque(false);

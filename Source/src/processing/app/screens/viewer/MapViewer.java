@@ -3,7 +3,6 @@ package processing.app.screens.viewer;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -21,7 +20,7 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GCheckbox;
 import processing.app.controls.GEvent;
 import processing.app.controls.GTextField;
-import processing.app.tools.encoder.PIPImage;
+import processing.core.PGraphics;
 import processing.event.MouseEvent;
 
 public class MapViewer extends BaseObject {
@@ -105,57 +104,44 @@ public class MapViewer extends BaseObject {
 		generateThread = new Thread() {  
 			public void run() {  
 
-				ArrayList<PIPImage> generateProcess = new ArrayList<PIPImage>();
-
 				File source = new File(SourcePathInput.getText());
-
+				File[] listTxtFiles = source.listFiles(Utils.TEXT_FILTER);
+				
 				float percent = 0;
-				float factorPercentLoad = 50.0f/source.listFiles(Utils.IMAGE_FILTER).length;
+				float factorPercentLoad = 100.0f/listTxtFiles.length;
+
+
+				final String output = (!OutputPathInput.getText().isEmpty() 
+						&& !OutputPathInput.getText().equals(" ")) ? 
+								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";
 
 				if (source.isDirectory()) { // make sure it's a directory
-					for (File fs : source.listFiles(Utils.IMAGE_FILTER)) {
-						if(percent+factorPercentLoad < 50)
-							percent += factorPercentLoad;
+					for (File f : source.listFiles(Utils.TEXT_FILTER)) {
+						percent += factorPercentLoad;
 						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-						generateProcess.add(new PIPImage(Jamcollab.app.loadImage(fs.getAbsolutePath()), null, fs.getName()) {});
+
+						PGraphics pg = Jamcollab.app.createGraphics(0, 0);
+						pg.beginDraw();
+						pg.endDraw();
+						pg.save(output + File.separator + f.getName());
 
 					}
 				}
 
-				load.setText("Aguarde, gerando 50%");
 
-				float factorPercentSave = 50.0f/generateProcess.size();
-
-				final String output = (!OutputPathInput.getText().isEmpty() 
-						&& !OutputPathInput.getText().equals(" ")) ? 
-								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";;
-
-								for (PIPImage img : generateProcess) {
-									if(percent+factorPercentSave < 100)
-										percent += factorPercentSave;
-									load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-									
-									//Remover
-									img.getName();
-									/*PGraphics pg = Jamcollab.app.createGraphics(Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
-									pg.beginDraw();
-									pg.image(img.getSource(), 0, 0, Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
-									pg.endDraw();
-									pg.save(output + File.separator + img.getName());*/
-								}
-
-								load.setText("Aguarde, gerando 100%");
+				load.setText("Aguarde, gerando 100%");
 
 
-								SwingUtilities.invokeLater(new Runnable(){ 
-									public void run(){  
-										p1.remove(load);
-										generatingDialog.dispose();
-										JOptionPane.showMessageDialog(Jamcollab.jframe, 
-												"Gerado com sucesso!");
-										Utils.OpenFile(output + File.separator);
-									}  
-								});  
+				SwingUtilities.invokeLater(new Runnable(){ 
+					public void run(){  
+						p1.remove(load);
+						generatingDialog.dispose();
+						JOptionPane.showMessageDialog(Jamcollab.jframe, 
+								"Gerado com sucesso!");
+										
+						Utils.OpenFile(output + File.separator);
+					}  
+				});  
 			}  
 		};  
 
@@ -163,7 +149,6 @@ public class MapViewer extends BaseObject {
 		generatingDialog.setVisible(true);  
 
 	} 
-
 	public void SearchSourcePathButtonClick(GButton source, GEvent event) { 
 		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectSourceFolder", null, this);
 	} 

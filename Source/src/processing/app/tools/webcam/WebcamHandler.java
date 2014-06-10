@@ -88,7 +88,8 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 			
 			// Select the new webcam
 			selectedCam = Webcam.getWebcams().get(index);
-			selectedCam.open();
+			if(!selectedCam.getLock().isLocked())
+				selectedCam.open();
 		} else {
 			if(selectedCam != null)
 				selectedCam.close();

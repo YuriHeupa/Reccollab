@@ -1,15 +1,14 @@
 package processing.app.tools.io;
 
-import processing.app.Utils;
 
 public class Keyword {
 
 	private String word;
 	private String handleTime;
 	
-	public Keyword(String text) {
+	public Keyword(String text, String handleTime) {
 		word = text;
-		handleTime = Utils.dateFormat();
+		this.handleTime = handleTime;
 	}
 
 	public String getKeyword() {
@@ -22,5 +21,9 @@ public class Keyword {
 
 	public String getHandleTime() {
 		return handleTime;
+	}
+
+	public String getInfo() {
+		return "[" +getHandleTime() + "] - " + getKeyword();
 	}
 }

@@ -1,6 +1,8 @@
 package processing.app;
 
 import java.awt.Desktop;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -30,33 +32,43 @@ public class Utils {
 
 	private static Logger logger = Logger.getLogger("errorLog");  
 	private static FileHandler fh;  
-    
-    public static void Load() {
-    	try {   
-            fh = new FileHandler("./error.log");  
-            logger.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter();  
-            fh.setFormatter(formatter);  
-        } catch (SecurityException e) {  
-            e.printStackTrace();  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
-    }
 
-    public static void LogInfo(String msg) {
-    	logger.info(msg);
-    }
-    
-    public static void LogWarning(String msg) {
-    	logger.warning(msg);
-    }
-    
-    public static void LogError(String msg) {
-    	logger.severe(msg);
-    }
-    
-    public static boolean ShowQuestion(String title, String message) {
+	public static void Load() {
+		try {   
+			fh = new FileHandler("./error.log");  
+			logger.addHandler(fh);
+			SimpleFormatter formatter = new SimpleFormatter();  
+			fh.setFormatter(formatter);  
+		} catch (SecurityException e) {  
+			e.printStackTrace();  
+		} catch (IOException e) {  
+			e.printStackTrace();  
+		}  
+	}
+
+	public static void LogInfo(String msg) {
+		logger.info(msg);
+	}
+
+	public static void LogWarning(String msg) {
+		logger.warning(msg);
+	}
+
+	public static void LogError(String msg) {
+		logger.severe(msg);
+	}
+	
+	public static int GetScreenWidth() {
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		return gd.getDisplayMode().getWidth();
+	}
+	
+	public static int GetScreenHeight() {
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		return gd.getDisplayMode().getHeight();
+	}
+
+	public static boolean ShowQuestion(String title, String message) {
 		int confirm = JOptionPane.showOptionDialog(Jamcollab.jframe,
 				message,
 				title, JOptionPane.YES_NO_OPTION,
@@ -66,61 +78,61 @@ public class Utils {
 			return true;
 		case JOptionPane.NO_OPTION:
 			return false;
-			default:
-				return false;
+		default:
+			return false;
 		}
-    }
+	}
 
-    public static void ShowWarningMessage(String title, String message) {
+	public static void ShowWarningMessage(String title, String message) {
 		JOptionPane.showMessageDialog(Jamcollab.jframe,
 				message, title, JOptionPane.WARNING_MESSAGE);
-    }
-    
-    public static void ShowErrorMessage(String title, String message) {
+	}
+
+	public static void ShowErrorMessage(String title, String message) {
 		JOptionPane.showMessageDialog(Jamcollab.jframe,
 				message, title, JOptionPane.ERROR_MESSAGE);
-    }
-    
-    public static void ShowInfoMessage(String title, String message) {
+	}
+
+	public static void ShowInfoMessage(String title, String message) {
 		JOptionPane.showMessageDialog(Jamcollab.jframe,
 				message, title, JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public static void ShowPlainMessage(String title, String message) {
+	}
+
+	public static void ShowPlainMessage(String title, String message) {
 		JOptionPane.showMessageDialog(Jamcollab.jframe,
 				message, title, JOptionPane.PLAIN_MESSAGE);
-    }
-    
+	}
+
 	public static String dateFormat() {
 		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("HH.mm.ss(dd-MM-yyyy)");
+		DateFormat dateFormat = new SimpleDateFormat("HH.mm.ss.SSS(dd-MM-yyyy)");
 		String tmpDate = dateFormat.format(date).toString();
 		String finalDate = tmpDate.substring(0, 2) + "h" +
 				tmpDate.substring(3, 5) + "m" +
 				tmpDate.substring(6, 8) + "s" +
-				tmpDate.substring(8);
+				tmpDate.substring(9, 12) + "ms" +
+				tmpDate.substring(12);
 		return finalDate;
 	}
 
 
+	public static Date revertFileDateFormat(File file) {
+		String dateFormat = file.getName().substring(file.getName().length()-30, file.getName().length()-4); // -4 because of extension .xxx
+		return revertDateFormat(dateFormat);
+	}
+
 	public static Date revertDateFormat(String dateFormat) {
 		String finalDate = dateFormat.substring(0, 2) + "."+
 				dateFormat.substring(3, 5) + "."+
-				dateFormat.substring(6, 8) +
-				dateFormat.substring(9);
+				dateFormat.substring(6, 8) + "."+
+				dateFormat.substring(9, 12) +
+				dateFormat.substring(14);
 		try {
-			return new SimpleDateFormat("HH.mm.ss(dd-MM-yyyy)").parse(finalDate);
+			return new SimpleDateFormat("HH.mm.ss.SSS(dd-MM-yyyy)").parse(finalDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return null;
+			return new Date();
 		}
-	}
-
-
-	public static String warnDateFormat() {
-		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("HH.mm.ss dd.MM.yyyy");
-		return dateFormat.format(date).toString();
 	}
 
 	public static void LoadUserDefaultData() {
@@ -153,7 +165,7 @@ public class Utils {
 				File.separator + "FileLogs"));
 
 	}
-	
+
 	// array of supported extensions (use a List if you prefer)
 	public static final String[] IMAGE_EXTENSIONS = new String[]{
 		"gif", "png", "bmp", "jpg", // and other formats you need
@@ -172,7 +184,19 @@ public class Utils {
 			return (false);
 		}
 	};
-	
+
+	// filter to identify text based on their extension
+	public static final FilenameFilter TEXT_FILTER = new FilenameFilter() {
+
+		@Override
+		public boolean accept(final File dir, final String name) {
+			if (name.endsWith(".txt")) {
+				return (true);
+			}
+			return (false);
+		}
+	};
+
 
 	/**
 	 * Save the Log in text format file
@@ -282,7 +306,7 @@ public class Utils {
 			return false;
 		}
 	}
-	
+
 	private static void DirectoryCheck(String DAOkey, String pathDefault) {
 		if(!isFilenameValid(Utils.AppDAO.getStringData(DAOkey, ""))) {
 			Utils.AppDAO.updateData(DAOkey, getDefaultSavePath()+ 
@@ -296,28 +320,28 @@ public class Utils {
 		DirectoryCheck("WEBCAM_PATH", "Webcam");
 		DirectoryCheck("FILELOGS_PATH", "FileLogs");
 	}
-	
+
 	public static long getFileFolderSize(File dir) {
-        long size = 0;
-        if (dir.isDirectory()) {
-            for (File file : dir.listFiles()) {
-                if (file.isFile()) {
-                    size += file.length();
-                } else
-                    size += getFileFolderSize(file);
-            }
-        } else if (dir.isFile()) {
-            size += dir.length();
-        }
-        return size;
-    }
+		long size = 0;
+		if (dir.isDirectory()) {
+			for (File file : dir.listFiles()) {
+				if (file.isFile()) {
+					size += file.length();
+				} else
+					size += getFileFolderSize(file);
+			}
+		} else if (dir.isFile()) {
+			size += dir.length();
+		}
+		return size;
+	}
 
 
 	public static String humanReadableByteCount(long bytes) {
-	    if (bytes < 1000) return bytes + " B";
-	    int exp = (int) (Math.log(bytes) / Math.log(1000));
-	    String pre = ("kMGTPE").charAt(exp-1)+"";
-	    return String.format("%.1f %sB", bytes / Math.pow(1000, exp), pre);
+		if (bytes < 1000) return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(1000));
+		String pre = ("kMGTPE").charAt(exp-1)+"";
+		return String.format("%.1f %sB", bytes / Math.pow(1000, exp), pre);
 	}
 
 }

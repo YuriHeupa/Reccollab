@@ -62,6 +62,7 @@ public abstract class GToggleControl extends GTextIconAlignBase {
 																		// surface
 		};
 	}
+	
 
 	// This method is called if this control is added to a toggle group. A
 	// toggle group

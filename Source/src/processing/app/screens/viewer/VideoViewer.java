@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import processing.app.BaseObject;
+import processing.app.FileTime;
 import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.controls.G4P;
@@ -22,7 +23,6 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GDropList;
 import processing.app.controls.GEvent;
 import processing.app.controls.GTextField;
-import processing.app.tools.encoder.BufferedImagePlus;
 import processing.app.tools.encoder.Encoder;
 import processing.app.tools.encoder.TimeComparator;
 import processing.event.MouseEvent;
@@ -60,6 +60,7 @@ public class VideoViewer extends BaseObject {
 		MainImagePathInput.setEnabled(false);
 		OutputPathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
+
 
 		FrameRateInput = view.AddTextField(196, 184, 26, 16, G4P.SCROLLBARS_NONE);
 		FrameRateInput.setText("25");
@@ -122,7 +123,7 @@ public class VideoViewer extends BaseObject {
 		encodeThread = new Thread() {  
 			public void run() {  
 
-				ArrayList<BufferedImagePlus> images = new ArrayList<BufferedImagePlus>();
+				ArrayList<FileTime> images = new ArrayList<FileTime>();
 
 
 				// File representing the folder that you select using a FileChooser
@@ -134,7 +135,7 @@ public class VideoViewer extends BaseObject {
 
 				if (dir.isDirectory()) { // make sure it's a directory
 					for (final File f : dir.listFiles(Utils.IMAGE_FILTER)) {
-						images.add(new BufferedImagePlus(f, f.getName()){});
+						images.add(new FileTime(f));
 					}
 				}
 

@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import processing.app.BaseObject;
+import processing.app.FileTime;
 import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.controls.G4P;
@@ -22,8 +23,8 @@ import processing.app.controls.GDropList;
 import processing.app.controls.GEvent;
 import processing.app.controls.GSlider;
 import processing.app.controls.GTextField;
-import processing.app.tools.encoder.PIPImage;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.event.MouseEvent;
 
 public class PIPViewer extends BaseObject {
@@ -34,6 +35,14 @@ public class PIPViewer extends BaseObject {
 
 	GDropList SizeSelectionList; 
 	GDropList PositionSelectionList; 
+
+	GSlider alphaSlider;
+
+	GTextField widthSize;
+	GTextField heightSize;
+
+	GTextField widthPos;
+	GTextField heightPos;
 
 	Thread pipThread;
 	JDialog pipDialog = new JDialog();
@@ -51,15 +60,21 @@ public class PIPViewer extends BaseObject {
 		view.AddLabel(4, 88, 192, 16, "Imagens:", GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 112, 192, 16, "PIP Imagens:", GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 136, 192, 16, "Destino:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 160, 192, 16, "Tamanho:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 184, 192, 16, "Posição:", GAlign.RIGHT, GAlign.MIDDLE, false);
-
+		view.AddLabel(4, 168, 192, 16, "Transparência:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 192, 192, 16, "Tamanho:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 216, 192, 16, "Posição:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		widthSize = view.AddTextField(366, 192, 50, 16, G4P.SCROLLBARS_NONE, "Largura");
+		heightSize = view.AddTextField(420, 192, 50, 16, G4P.SCROLLBARS_NONE, "Altura");
+		widthPos = view.AddTextField(366, 216, 50, 16, G4P.SCROLLBARS_NONE, "X");
+		heightPos = view.AddTextField(420, 216, 50, 16, G4P.SCROLLBARS_NONE, "Y");
+		view.AddLabel(364, 168, 160, 16, "(Porcentagem)", GAlign.LEFT, GAlign.MIDDLE, false);
 		SourcePathInput = view.AddTextField(196, 88, 216, 16, G4P.SCROLLBARS_NONE);
 		SourcePathInput.setEnabled(false);
 		PIPImagePathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
 		PIPImagePathInput.setEnabled(false);
 		OutputPathInput = view.AddTextField(196, 136, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
+		alphaSlider = view.AddSlider(196, 152, 160, 50, 10, 0, 0, 100, false, true, false);
 
 		view.AddButton(420, 88, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
 				"SearchMainImagePathButtonClick", "resources/sprites/folderIcon.png", 
@@ -73,24 +88,15 @@ public class PIPViewer extends BaseObject {
 
 		view.AddButton(480, 32, 80, 24, "Gerar", GCScheme.SCHEME_15, 
 				this, "GenerateButtonClicked");
-		
-		GSlider slider = new GSlider(Jamcollab.app, 196, 160, 160, 50, 10);
-		slider.addEventHandler(this, "Teste");
-		slider.setLimits(255, 255, 0);
-		
-		
+
+
+
 		String[] sizes = {"PEQUENO", "MEDIO", "GRANDE", "TELA INTEIRA", "CUSTOMIZADO"};
-		SizeSelectionList = new GDropList(Jamcollab.app, 196, 184, 160, 80, 4);
-		SizeSelectionList.setItems(sizes, 0);
-		SizeSelectionList.setLocalColorScheme(GCScheme.SCHEME_8);
-		SizeSelectionList.setVisible(false);
+		SizeSelectionList = view.AddDropList(196, 192, 160, 80, 4, GCScheme.SCHEME_8, sizes, 0, this, "SizeChanged");
 
 		String[] positions = {"CIMA / ESQUERDA", "CIMA / DIREITA", 
 				"BAIXO / ESQUERDA" , "BAIXO / DIREITA", "CUSTOMIZADO"};
-		PositionSelectionList = new GDropList(Jamcollab.app, 196, 208, 160, 40, 4);
-		PositionSelectionList.setItems(positions, 0);
-		PositionSelectionList.setLocalColorScheme(GCScheme.SCHEME_8);
-		PositionSelectionList.setVisible(false);
+		PositionSelectionList = view.AddDropList(196, 216, 160, 80, 4, GCScheme.SCHEME_8, positions, 0, this, "PosChanged");
 
 		view.AddButton(34, 308, 127, 22, "Video", this, "VideoButtonClick");
 		view.AddButton(169, 308, 127, 22, "PIP", this, "PIPButtonClick");
@@ -101,25 +107,27 @@ public class PIPViewer extends BaseObject {
 		view.AddButton(304, 336, 127, 22, "Programas", this, "ProcessButtonClick");
 		view.AddButton(439, 336, 127, 22, "Mapa", this, "MapButtonClick");
 	}
-	public void Teste(GSlider source, GEvent event) {
-		int valueInPercent = (int)((source.getValueF()*100.0f)/-255.0f)+100;
-		System.out.println(String.valueOf(valueInPercent) + "%");
+
+	private int GetTransparency() {
+		return (int)((alphaSlider.getValueF()*-255.0f)/100.0f)+255;
 	}
+
 	@Override
 	public void SetViewActive(boolean state) {
-		SizeSelectionList.setVisible(view.isVisible());
-		PositionSelectionList.setVisible(view.isVisible());
+		widthSize.setVisible((SizeSelectionList.getSelectedIndex() == 4));
+		heightSize.setVisible((SizeSelectionList.getSelectedIndex() == 4));
+		widthPos.setVisible((PositionSelectionList.getSelectedIndex() == 4));
+		heightPos.setVisible((PositionSelectionList.getSelectedIndex() == 4));
 	}
 
 
 
 	public void GenerateButtonClicked(GButton source, GEvent event) { 
-
 		if(SourcePathInput.getText().isEmpty() || SourcePathInput.getText().equals(" ") ||
 				PIPImagePathInput.getText().isEmpty() || PIPImagePathInput.getText().equals(" ")) 
 			return;
 
-		
+
 		if(pipThread != null) {
 			if(pipThread.isAlive()) {
 				pipDialog.setVisible(true);
@@ -140,103 +148,142 @@ public class PIPViewer extends BaseObject {
 		pipThread = new Thread() {  
 			public void run() {  
 
-				ArrayList<PIPImage> processPIP = new ArrayList<PIPImage>();
+
+				ArrayList<FileTime> backgroundList = new ArrayList<FileTime>();
+				ArrayList<FileTime> foregroundList = new ArrayList<FileTime>();
 
 				File source = new File(SourcePathInput.getText());
 				File PIP = new File(PIPImagePathInput.getText());
-				
-				float percent = 0;
-				float factorPercentLoad = 50.0f/source.listFiles(Utils.IMAGE_FILTER).length;
-				
-				if (source.isDirectory() && PIP.isDirectory()) { // make sure it's a directory
-					for (File fs : source.listFiles(Utils.IMAGE_FILTER)) {
-						if(percent+factorPercentLoad < 50)
-							percent += factorPercentLoad;
-						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-						for (File fp : PIP.listFiles(Utils.IMAGE_FILTER)) {
-							if(fs.getName().substring(fs.getName().length()-25, fs.getName().length()).equals(
-									fp.getName().substring(fp.getName().length()-25, fp.getName().length()))) {
-								processPIP.add(new PIPImage(Jamcollab.app.loadImage(fs.getAbsolutePath()), 
-										Jamcollab.app.loadImage(fp.getAbsolutePath()), fs.getName()){});
-								break;
-							}
-						}
-					}
-				}
-				
-				load.setText("Aguarde, gerando 50%");
-				
 
-				float factorPercentSave = 50.0f/processPIP.size();
-				
+				float percent = 0;
+				float factorPercentLoad = 100.0f/source.listFiles(Utils.IMAGE_FILTER).length;
+
+
 				final String output = (!OutputPathInput.getText().isEmpty() 
 						&& !OutputPathInput.getText().equals(" ")) ? 
-								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab" ;
-				
-				int sizeFactor = 0;
-				
-				switch (SizeSelectionList.getSelectedIndex()) {
-				case 0: // PEQUENO
-					sizeFactor = 20;
-					break;
-				case 1: // MEDIO
-					sizeFactor = 30;
-					break;
-				case 2: // GRANDE
-					sizeFactor = 40;
-					break;
-				default:
-					sizeFactor = 0;
-					break;
-				}
+						OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";
+						
+				if (source.isDirectory() && PIP.isDirectory()) { // make sure it's a directory
+					// Get time of all background files
+					for (File f : source.listFiles(Utils.IMAGE_FILTER))
+						backgroundList.add(new FileTime(f));
+					// Get time of all foreground files
+					for (File f : PIP.listFiles(Utils.IMAGE_FILTER))
+						foregroundList.add(new FileTime(f));
 
-				int paddingXFactor = 1;
-				int paddingYFactor = 1;
-				
-				switch (PositionSelectionList.getSelectedIndex()) {
-				case 0: // CIMA / ESQUERDA
-					paddingXFactor = 1;
-					paddingYFactor = 1;
-					break;
-				case 1: // CIMA / DIREITA
-					paddingXFactor = -1;
-					paddingYFactor = 1;
-					break;
-				case 2: // BAIXO / ESQUERDA
-					paddingXFactor = 1;
-					paddingYFactor = -1;
-					break;
-				case 3: // BAIXO / DIREITA
-					paddingXFactor = -1;
-					paddingYFactor = -1;
-					break;
-				default:
-					
-					break;
+					PImage backgroundBuffer = null;
+					PImage foregroundBuffer = null;
+
+					// Process images by background source
+					for(FileTime f : backgroundList) {
+						//Progress dialog
+						percent += factorPercentLoad;
+						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
+
+						// Assign the nearest foreground to the background
+						File assignForeground = null;
+						for(int i = 0; i < foregroundList.size(); i++) {
+							if(foregroundList.get(i).getTime() < f.getTime())
+								assignForeground = foregroundList.get(i).getFile();
+						}
+
+						backgroundBuffer = Jamcollab.app.loadImage(f.getFile().getAbsolutePath());
+						if(assignForeground != null)
+							foregroundBuffer = Jamcollab.app.loadImage(assignForeground.getAbsolutePath());
+
+
+						int x = 0;
+						int y = 0;
+						int height = 0;
+						int width = 0;
+						int sizeFactor = 0;
+
+						switch (SizeSelectionList.getSelectedIndex()) {
+						case 0: // PEQUENO
+						sizeFactor = 20;
+						break;
+						case 1: // MEDIO
+							sizeFactor = 30;
+							break;
+						case 2: // GRANDE
+							sizeFactor = 40;
+							break;
+						case 3: // TELA INTEIRA
+							sizeFactor = 100;
+							break;
+						}
+
+						int paddingXFactor = 1;
+						int paddingYFactor = 1;
+
+
+						if(SizeSelectionList.getSelectedIndex() == 4) {
+							try {
+								width = Integer.valueOf(widthSize.getText());
+							} catch (NumberFormatException ex) {
+								width = 0;
+							}
+							try {
+								height = Integer.valueOf(heightSize.getText());
+							} catch (NumberFormatException ex) {
+								height = 0;
+							}
+						} else {
+							width =  (sizeFactor*backgroundBuffer.width)/100;
+							height =  (sizeFactor*backgroundBuffer.height)/100;
+						}
+
+						switch (PositionSelectionList.getSelectedIndex()) {
+						case 0: // CIMA / ESQUERDA 0, 0
+							paddingXFactor = 0;
+							paddingYFactor = 0;
+							break;
+						case 1: // CIMA / DIREITA -WIDTH, 0
+							paddingXFactor = -1;
+							paddingYFactor = 0;
+							break;
+						case 2: // BAIXO / ESQUERDA 0, -HEIGHT
+							paddingXFactor = 0;
+							paddingYFactor = -1;
+							break;
+						case 3: // BAIXO / DIREITA -WIDTH, -HEIGHT
+							paddingXFactor = -1;
+							paddingYFactor = -1;
+							break;
+						}
+
+						if(PositionSelectionList.getSelectedIndex() == 4) {
+							try {
+								x =  Integer.valueOf(widthPos.getText());
+							} catch (NumberFormatException ex) {
+								x = 0;
+							}
+							try {
+								y =  Integer.valueOf(heightPos.getText());
+							} catch (NumberFormatException ex) {
+								y = 0;
+							}
+						} else {
+							x =  ((paddingXFactor == 0) ? 0 : backgroundBuffer.width)+ // First pad by background
+									(paddingXFactor*width); // Then by foreground
+							y =  ((paddingYFactor == 0) ? 0 : backgroundBuffer.height)+  // First pad by background
+									(paddingYFactor*height); // Then by foreground
+						}
+
+						PGraphics pg = Jamcollab.app.createGraphics(backgroundBuffer.width, backgroundBuffer.height);
+						pg.beginDraw();
+						pg.image(backgroundBuffer, 0, 0);
+						pg.tint(255, GetTransparency());
+						if(foregroundBuffer != null)
+							pg.image(foregroundBuffer, x, y, width, height);
+						pg.endDraw();
+						pg.save(output + File.separator + f.getFile().getName()); // Save with the name of the background
+
+					}
 				}
-				for (PIPImage img : processPIP) {
-					if(percent+factorPercentSave < 100)
-						percent += factorPercentSave;
-					load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-					float paddingX = (2.0f*img.getSource().width)/100.0f;
-					float paddingY = (2.0f*img.getSource().height)/100.0f;
-					PGraphics pg = Jamcollab.app.createGraphics(img.getSource().width, img.getSource().height);
-					pg.beginDraw();
-					pg.image(img.getSource(), 0, 0);
-					pg.image(img.getPip(), 
-							((paddingXFactor == 1) ? 0 : 1*img.getSource().width)+(paddingX*paddingXFactor)+
-							((paddingXFactor == 1) ? 0 : ((sizeFactor*img.getSource().width)/100)*-1), 
-							((paddingYFactor == 1) ? 0 : 1*img.getSource().height)+(paddingY*paddingYFactor)+
-							((paddingYFactor == 1) ? 0 : ((sizeFactor*img.getSource().height)/100)*-1), 
-							(sizeFactor*img.getSource().width)/100, 
-							(sizeFactor*img.getSource().height)/100);
-					pg.endDraw();
-					pg.save(output + File.separator + img.getName());
-				}
-				
 				load.setText("Aguarde, gerando 100%");
-				
-				 
+
+
 				SwingUtilities.invokeLater(new Runnable(){ 
 					public void run(){  
 						p1.remove(load);
@@ -253,6 +300,17 @@ public class PIPViewer extends BaseObject {
 		pipDialog.setVisible(true);  
 
 
+	} 
+
+
+	public void SizeChanged(GDropList source, GEvent event) { 
+		widthSize.setVisible((source.getSelectedIndex() == 4));
+		heightSize.setVisible((source.getSelectedIndex() == 4));
+	} 
+
+	public void PosChanged(GDropList source, GEvent event) { 
+		widthPos.setVisible((source.getSelectedIndex() == 4));
+		heightPos.setVisible((source.getSelectedIndex() == 4));
 	} 
 
 	public void SearchMainImagePathButtonClick(GButton source, GEvent event) { 
@@ -304,7 +362,7 @@ public class PIPViewer extends BaseObject {
 	public void MapButtonClick(GButton source, GEvent event) {
 		EnableView("MapViewer");
 	}
-	
+
 	public void FilesButtonClick(GButton source, GEvent event) {
 		EnableView("FilesViewer");
 	}
@@ -333,12 +391,12 @@ public class PIPViewer extends BaseObject {
 	@Override
 	public void Mouse(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void Exit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

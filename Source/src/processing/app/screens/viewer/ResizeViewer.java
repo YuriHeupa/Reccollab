@@ -3,7 +3,6 @@ package processing.app.screens.viewer;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -20,13 +19,13 @@ import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
 import processing.app.controls.GTextField;
-import processing.app.tools.encoder.PIPImage;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.event.MouseEvent;
 
 public class ResizeViewer extends BaseObject {
 
-	
+
 	GTextField SourcePathInput; 
 	GTextField OutputPathInput; 
 
@@ -83,8 +82,9 @@ public class ResizeViewer extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		
+
 	}
+
 
 	public void ResizeButtonClicked(GButton source, GEvent event) { 
 
@@ -112,54 +112,43 @@ public class ResizeViewer extends BaseObject {
 		resizeThread = new Thread() {  
 			public void run() {  
 
-				ArrayList<PIPImage> processResize = new ArrayList<PIPImage>();
-
 				File source = new File(SourcePathInput.getText());
+				File[] listImageFiles = source.listFiles(Utils.IMAGE_FILTER);
 
 				float percent = 0;
-				float factorPercentLoad = 50.0f/source.listFiles(Utils.IMAGE_FILTER).length;
+				float factorPercentLoad = 100.0f/listImageFiles.length;
 
+				final String output = (!OutputPathInput.getText().isEmpty() 
+						&& !OutputPathInput.getText().equals(" ")) ? 
+						OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";
+
+				PImage buffer = null;
 				if (source.isDirectory()) { // make sure it's a directory
-					for (File fs : source.listFiles(Utils.IMAGE_FILTER)) {
-						if(percent+factorPercentLoad < 50)
-							percent += factorPercentLoad;
+					for (File f : listImageFiles) {
+						percent += factorPercentLoad;
 						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-						processResize.add(new PIPImage(Jamcollab.app.loadImage(fs.getAbsolutePath()), null, fs.getName()) {});
+
+						buffer = Jamcollab.app.loadImage(f.getAbsolutePath());
+						PGraphics pg = Jamcollab.app.createGraphics(Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
+						pg.beginDraw();
+						pg.image(buffer, 0, 0, Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
+						pg.endDraw();
+						pg.save(output + File.separator + f.getName());
 
 					}
 				}
 
-				load.setText("Aguarde, gerando 50%");
+				load.setText("Aguarde, gerando 100%");
 
-				float factorPercentSave = 50.0f/processResize.size();
-
-				final String output = (!OutputPathInput.getText().isEmpty() 
-						&& !OutputPathInput.getText().equals(" ")) ? 
-								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";;
-
-								for (PIPImage img : processResize) {
-									if(percent+factorPercentSave < 100)
-										percent += factorPercentSave;
-									load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
-									PGraphics pg = Jamcollab.app.createGraphics(Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
-									pg.beginDraw();
-									pg.image(img.getSource(), 0, 0, Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
-									pg.endDraw();
-									pg.save(output + File.separator + img.getName());
-								}
-
-								load.setText("Aguarde, gerando 100%");
-
-
-								SwingUtilities.invokeLater(new Runnable(){ 
-									public void run(){  
-										p1.remove(load);
-										resizeDialog.dispose();
-										JOptionPane.showMessageDialog(Jamcollab.jframe, 
-												"Redimensionamento gerado com sucesso");
-										Utils.OpenFile(output + File.separator);
-									}  
-								});  
+				SwingUtilities.invokeLater(new Runnable(){ 
+					public void run(){  
+						p1.remove(load);
+						resizeDialog.dispose();
+						JOptionPane.showMessageDialog(Jamcollab.jframe, 
+								"Redimensionamento gerado com sucesso");
+						Utils.OpenFile(output + File.separator);
+					}  
+				});  
 			}  
 		};  
 
@@ -205,7 +194,7 @@ public class ResizeViewer extends BaseObject {
 	public void MapButtonClick(GButton source, GEvent event) {
 		EnableView("MapViewer");
 	}
-	
+
 	public void FilesButtonClick(GButton source, GEvent event) {
 		EnableView("FilesViewer");
 	}
@@ -235,12 +224,12 @@ public class ResizeViewer extends BaseObject {
 	@Override
 	public void Mouse(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void Exit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
