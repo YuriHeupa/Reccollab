@@ -2,6 +2,7 @@ package processing.app.screen.managers;
 
 import processing.app.Jamcollab;
 import processing.app.controls.GAlign;
+import processing.app.controls.GCScheme;
 import processing.app.controls.GOption;
 import processing.app.controls.HotSpot;
 import processing.app.controls.HotSpot.HSrect;
@@ -17,6 +18,7 @@ public class GTab extends GOption {
 		this.text = text;
 		setText(text);
 		setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		setLocalColorScheme(GCScheme.SCHEME_15);
 		tabImage = Jamcollab.app.loadImage("resources/sprites/tab.png");
 		tabImage.resize(width, 30);
 		setIcon(tabImage, 2, GAlign.CENTER, GAlign.MIDDLE);
