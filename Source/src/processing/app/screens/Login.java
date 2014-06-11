@@ -2,6 +2,7 @@ package processing.app.screens;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
@@ -41,7 +42,7 @@ public class Login extends BaseObject {
 		LoginInput.setText("");
 		PasswordInput.setVisible(needPass);
 		PasswordLabel.setVisible(needPass);
-		SM(needPass ? "Informe o seu nome e senha" : "Informe o seu nome");
+		SM(needPass ? "Informe o seu nome e senha" : Lang.TYPE_USER);
 
 	}
 
@@ -74,7 +75,7 @@ public class Login extends BaseObject {
 		PasswordInput.addEventHandler(this, "PasswordInputChanged");
 		PasswordInput.setVisible(false);
 		LoginButton = new GButton(Jamcollab.app, 250, 280, 80, 30);
-		LoginButton.setText("Entrar");
+		LoginButton.setText(Lang.LOGIN);
 		LoginButton.setTextBold();
 		LoginButton.addEventHandler(this, "LoginButtonClick");
 		LoginButton.setVisible(false);
@@ -98,16 +99,16 @@ public class Login extends BaseObject {
 		String user = LoginInput.getText();
 
 		if(user.isEmpty()) {
-			SM("Digite seu nome de usuário");
+			SM(Lang.TYPE_USER);
 			return;
 		} else {
 
 			if(user.length() < 3) {
-				SM("Utilize um mínimo de 3 caracteres");
+				SM(Lang.NEED_MIN_3_CHARS);
 				return;
 			}
 			if(!Utils.isAlphanumeric(user)) {
-				SM("O nome de usuarios deve conter apenas letras e numeros");
+				SM(Lang.ONLY_CHAR_AND_NUMBERS);
 				return;
 			} else {
 				if(needPass) {

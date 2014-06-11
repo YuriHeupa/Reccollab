@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import processing.app.screen.managers.View;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 
@@ -125,34 +124,8 @@ public class Controller {
 		else
 			return target.view.isVisible();
 	}
-	/*
-	public static void EnableView(String... identifiers) {
-		if(instance == null)
-			return;
-		ArrayList<View> targetViews = new ArrayList<View>();
-		for(String id : identifiers) {
-			View tmp = GetView(id);
-			if(tmp == null) {
-				System.out.println("ViewEnable: The view " + id +" couldn´t be found.");
-			} else {
-				targetViews.add(tmp);
-			}
-		}
-		if(targetViews.size() > 0) {
-			// If there's a view on the array, means that a view exist, so disable all first
-			for(BaseObject bo : instance.objects) {
-				if(bo.view.isVisible())
-					bo.view.setVisible(false);
-			}
-			// Then enable all on the list
-			for(View viewToEnable : targetViews) {
-				if(!viewToEnable.isVisible())
-					viewToEnable.setVisible(true);
-			}
 
-		}
-	}*/
-	public static void EnableView(String identifier) {
+	public static void EnableView(String identifier, boolean disableAll) {
 		if(instance == null)
 			return;
 		BaseObject target = FindByIdentifier(identifier);
@@ -160,19 +133,19 @@ public class Controller {
 			System.out.println("ViewEnable: The view " + identifier +" couldn´t be found.");
 			return;
 		}
-		for(BaseObject bo : instance.objects) {
-			if(bo.view.isVisible())
-				bo.view.setVisible(false);
+		if(disableAll) {
+			for(BaseObject bo : instance.objects) { 
+				if(bo.view.isVisible())
+					bo.view.setVisible(false);
+			}
 		}
 		if(!target.view.isVisible())
 			target.view.setVisible(true);
 		if(!target.getParent().isEmpty()) {
-			View parent = FindByIdentifier(target.getParent()).view;
-			if(!parent.isVisible())
-				parent.setVisible(true);
+			EnableView(target.getParent(), false);
 		}
-			
-		
+
+
 	}
 
 	public static void DisableView(String identifier) {

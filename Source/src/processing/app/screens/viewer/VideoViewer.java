@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import processing.app.BaseObject;
 import processing.app.FileTime;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
@@ -49,46 +50,36 @@ public class VideoViewer extends BaseObject {
 	@Override
 	public void Init() {
 
-		view.AddLabel(48, 32, 504, 20, "Video", GAlign.LEFT, GAlign.MIDDLE, true);
-		view.AddLabel(4, 88, 192, 16, "Imagens:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 112, 192, 16, "Destino:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 136, 192, 16, "Formato:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 160, 192, 16, "Codec:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 184, 192, 16, "Frame rate:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 138, 192, 16, Lang.IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 162, 192, 16, Lang.SAVE_PATH, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 186, 192, 16, Lang.FORMAT, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 210, 192, 16, "Codec:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 234, 192, 16, "Frame rate:", GAlign.RIGHT, GAlign.MIDDLE, false);
 
-		MainImagePathInput = view.AddTextField(196, 88, 216, 16, G4P.SCROLLBARS_NONE);
+		MainImagePathInput = view.AddTextField(196, 138, 216, 16, G4P.SCROLLBARS_NONE);
 		MainImagePathInput.setEnabled(false);
-		OutputPathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
+		OutputPathInput = view.AddTextField(196, 162, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
 
 
-		FrameRateInput = view.AddTextField(196, 184, 26, 16, G4P.SCROLLBARS_NONE);
+		FrameRateInput = view.AddTextField(196, 234, 26, 16, G4P.SCROLLBARS_NONE);
 		FrameRateInput.setText("25");
 
 
-		view.AddButton(420, 88, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
+		view.AddButton(420, 138, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
 				"SearchMainImagePathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
-		view.AddButton(420, 112, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
+		view.AddButton(420, 162, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
 				"SearchOutputPathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
-		view.AddButton(480, 32, 80, 24, "Gerar", GCScheme.SCHEME_15, 
+		view.AddButton(482, 52, 80, 24, Lang.GENERATE, GCScheme.SCHEME_15, 
 				this, "GenerateButtonClicked");
 
-		CodecSelectionList = view.AddDropList(196, 160, 216, 80, 4, 
+		CodecSelectionList = view.AddDropList(196, 210, 216, 80, 4, 
 				GCScheme.SCHEME_8, Encoder.codecList(), 3);
 
-		FormatSelectionList = view.AddDropList(196, 136, 216, 80, 4, 
+		FormatSelectionList = view.AddDropList(196, 186, 216, 80, 4, 
 				GCScheme.SCHEME_8, Encoder.formatList(), 0);
-
-		view.AddButton(34, 308, 127, 22, "Video", this, "VideoButtonClick");
-		view.AddButton(169, 308, 127, 22, "PIP", this, "PIPButtonClick");
-		view.AddButton(304, 308, 127, 22, "Redimensionar", this, "ResizeButtonClick");
-		view.AddButton(439, 308, 127, 22, "Mouse", this, "MouseButtonClick");
-		view.AddButton(34, 336, 127, 22, "Teclado", this, "KeyboardButtonClick");
-		view.AddButton(169, 336, 127, 22, "Arquivos", this, "FilesButtonClick");
-		view.AddButton(304, 336, 127, 22, "Programas", this, "ProcessButtonClick");
-		view.AddButton(439, 336, 127, 22, "Mapa", this, "MapButtonClick");
 	}
 
 	@Override
@@ -111,7 +102,7 @@ public class VideoViewer extends BaseObject {
 		}
 
 		JPanel p1 = new JPanel(new GridBagLayout());  
-		p1.add(new JLabel("Gerando "), new GridBagConstraints());  
+		p1.add(new JLabel(Lang.GENERATING), new GridBagConstraints());  
 		final JLabel load = new JLabel("0%");
 		p1.add(load, new GridBagConstraints());  
 		encodingDialog.setResizable(false);
@@ -163,7 +154,7 @@ public class VideoViewer extends BaseObject {
 					public void run(){  
 						encodingDialog.dispose();
 						JOptionPane.showMessageDialog(Jamcollab.jframe, 
-								"Video gerado com sucesso");
+								Lang.VIDEO_SUCCESS);
 						Utils.OpenFile(new File(fileName).getAbsolutePath());
 					}  
 				});  
@@ -179,12 +170,12 @@ public class VideoViewer extends BaseObject {
 	} 
 
 	public void SearchMainImagePathButtonClick(GButton source, GEvent event) { 
-		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectMainImageFolder", null, this);
+		Jamcollab.app.selectFolder(Lang.SELECT_FOLDER, "selectMainImageFolder", null, this);
 	} 
 
 
 	public void SearchOutputPathButtonClick(GButton source, GEvent event) { 
-		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectOutputFolder", null, this);
+		Jamcollab.app.selectFolder(Lang.SELECT_FOLDER, "selectOutputFolder", null, this);
 	} 
 
 	public void selectMainImageFolder(File selection) {
@@ -207,38 +198,6 @@ public class VideoViewer extends BaseObject {
 		// TODO Auto-generated method stub
 
 	}
-	public void ProcessButtonClick(GButton source, GEvent event) {
-		EnableView("ProcessViewer");
-	}
-
-	public void MapButtonClick(GButton source, GEvent event) {
-		EnableView("MapViewer");
-	}
-	
-	public void FilesButtonClick(GButton source, GEvent event) {
-		EnableView("FilesViewer");
-	}
-
-	public void KeyboardButtonClick(GButton source, GEvent event) {
-		EnableView("KeyboardViewer");
-	}
-
-	public void MouseButtonClick(GButton source, GEvent event) {
-		EnableView("MouseViewer");
-	}
-
-	public void ResizeButtonClick(GButton source, GEvent event) {
-		EnableView("ResizeViewer");
-	} 
-
-	public void PIPButtonClick(GButton source, GEvent event) {
-		EnableView("PIPViewer");
-	}
-
-	public void VideoButtonClick(GButton source, GEvent event) {
-		EnableView("VideoViewer");
-	}
-
 
 	@Override
 	public void Mouse(MouseEvent e) {

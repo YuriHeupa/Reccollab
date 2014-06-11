@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage;
 
 import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.screens.Master;
 import processing.core.PApplet;
@@ -92,7 +93,7 @@ public class ScreenShotHandler extends BaseObject {
 
 	public static String getImageTakenResolution() {
 		if(imageTaken == null)
-			return "Ainda não há imagens capturadas";
+			return Lang.NO_IMAGE_CAPTURED;
 		String resolution = imageTaken.width + "x" +imageTaken.height;
 		return resolution;
 	}

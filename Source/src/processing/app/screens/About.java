@@ -4,6 +4,7 @@ import java.awt.Font;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
@@ -21,14 +22,13 @@ public class About extends BaseObject {
 
 	@Override
 	public void Init() {
-		//AddImage(30, 144, "./resources/sprites/logo.png");
 		view.AddImage(0, 0, "./resources/sprites/border.png");
-		aboutText = view.AddLabel(20, 50, 560, 500, "Criado como projeto de iniciação científica por Yuri Heupa sob orientação de Bruno Campagnolo, a partir de recursos da Fundação Araucária. Versão 1.3", false);
+		aboutText = view.AddLabel(20, 50, 560, 500, Lang.ABOUT_DESC, false);
 		aboutText.setFont(new Font("Verdana", Font.PLAIN, 22));
 		view.AddLabel(160, 160, 260, 20, "", false, GCScheme.GREEN_SCHEME);
 		view.AddButton((Jamcollab.app.width/2)-60, 
 				Jamcollab.app.height-60, 
-				120, 30, "Voltar", this,"ButtonBackClicked");
+				120, 30, Lang.BACK, this,"ButtonBackClicked");
 	}
 
 

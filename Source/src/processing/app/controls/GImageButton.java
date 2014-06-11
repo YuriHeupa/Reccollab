@@ -274,7 +274,7 @@ public class GImageButton extends GAbstractControl {
 		if (!visible || !enabled || !available)
 			return;
 
-		calcTransformedOrigin(winApp.mouseX, winApp.mouseY);
+		calcTransformedOrigin(event.getX(), event.getY());
 		currSpot = whichHotSpot(ox, oy);
 		if (currSpot >= 0 || focusIsWith == this)
 			cursorIsOver = this;

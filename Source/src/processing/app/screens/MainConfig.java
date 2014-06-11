@@ -13,6 +13,7 @@ import processing.app.AppZip;
 import processing.app.BaseObject;
 import processing.app.Controller;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
@@ -54,24 +55,24 @@ public class MainConfig extends BaseObject {
 	@Override
 	public void Init() {
 
-		view.AddLabel(48, 82, 504, 20, "CONFIGURAÇÃO", GAlign.LEFT, GAlign.MIDDLE, true);
-		view.AddLabel(48, 272, 504, 20, "AVANÇADO (BETA)", GAlign.LEFT, GAlign.MIDDLE, true);
+		view.AddLabel(48, 82, 504, 20, Lang.CONFIGURATION, GAlign.LEFT, GAlign.MIDDLE, true);
+		view.AddLabel(48, 272, 504, 20, Lang.ADVANCED, GAlign.LEFT, GAlign.MIDDLE, true);
 		view.AddLabel(64, 138, 192, 16, "Screenshot", GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(64, 162, 192, 16, "Webcam", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 186, 192, 16, "Rastro do Mouse", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 210, 192, 16, "Estatisticas de Teclado", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 312, 192, 16, "Alteração de Arquivos", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 336, 192, 16, "Programas Abertos", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 186, 192, 16, Lang.MOUSE_TRACK, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 210, 192, 16, Lang.KEYBOARD_STATICS, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 312, 192, 16, Lang.FILE_CHANGE, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 336, 192, 16, Lang.PROCESS_OPENED, GAlign.RIGHT, GAlign.MIDDLE, false);
 
-		view.AddButton(340, 135, 80, 22, "Configurar", GCScheme.ORANGE_SCHEME, this, "ScreenshotButtonConfigClicked");
-		view.AddButton(340, 159, 80, 22, "Configurar", GCScheme.ORANGE_SCHEME, this, "WebcamConfigButtonClicked");
-		view.AddButton(340, 183, 80, 22, "Configurar", GCScheme.ORANGE_SCHEME, this, "MouseConfigButtonClicked");
-		view.AddButton(340, 207, 80, 22, "Configurar", GCScheme.ORANGE_SCHEME, this, "HotkeysConfigButtonClicked");
-		view.AddButton(340, 309, 80, 22, "Configurar", GCScheme.ORANGE_SCHEME, this, "FilechangeConfigButtonClicked");
+		view.AddButton(340, 135, 80, 22, Lang.CONFIGURE, GCScheme.ORANGE_SCHEME, this, "ScreenshotButtonConfigClicked");
+		view.AddButton(340, 159, 80, 22, Lang.CONFIGURE, GCScheme.ORANGE_SCHEME, this, "WebcamConfigButtonClicked");
+		view.AddButton(340, 183, 80, 22, Lang.CONFIGURE, GCScheme.ORANGE_SCHEME, this, "MouseConfigButtonClicked");
+		view.AddButton(340, 207, 80, 22, Lang.CONFIGURE, GCScheme.ORANGE_SCHEME, this, "HotkeysConfigButtonClicked");
+		view.AddButton(340, 309, 80, 22, Lang.CONFIGURE, GCScheme.ORANGE_SCHEME, this, "FilechangeConfigButtonClicked");
 
 
-		view.AddButton(400, 52, 80, 24, "Exportar", GCScheme.SCHEME_15, this, "ExportButton");
-		view.AddButton(482, 52, 80, 24, "Importar", GCScheme.SCHEME_15, this, "ImportButton");
+		view.AddButton(400, 52, 80, 24, Lang.EXPORT, GCScheme.SCHEME_15, this, "ExportButton");
+		view.AddButton(482, 52, 80, 24, Lang.IMPORT, GCScheme.SCHEME_15, this, "ImportButton");
 
 		
 
@@ -81,6 +82,7 @@ public class MainConfig extends BaseObject {
 		ScreenshotToggle = new GImageToggleButton(Jamcollab.app, 262, 136, "resources/sprites/toggleonoff.png", 2, 1);
 		ScreenshotToggle.setEnabled(false);
 		ScreenshotToggle.setVisible(false);
+		ScreenshotToggle.stateValue(Utils.AppDAO.getIntData("SCREENSHOT_TOGGLE", 0));
 
 
 		WebcamModule = new ModuleButton(260, 159, Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0);
@@ -89,6 +91,7 @@ public class MainConfig extends BaseObject {
 		WebcamToggle = new GImageToggleButton(Jamcollab.app, 262, 160, "resources/sprites/toggleonoff.png", 2, 1);
 		WebcamToggle.setEnabled(false);
 		WebcamToggle.setVisible(false);
+		WebcamToggle.stateValue(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0));
 
 		MouseModule = new ModuleButton(260, 183, Utils.AppDAO.getIntData("MOUSE_TOGGLE", 0) == 0);
 		MouseModule.addEventHandler(this, "SwitchMouse");
@@ -96,6 +99,7 @@ public class MainConfig extends BaseObject {
 		MouseToggle = new GImageToggleButton(Jamcollab.app, 262, 182, "resources/sprites/toggleonoff.png", 2, 1);
 		MouseToggle.setEnabled(false);
 		MouseToggle.setVisible(false);
+		MouseToggle.stateValue(Utils.AppDAO.getIntData("MOUSE_TOGGLE", 0));
 
 		KeyboardModule = new ModuleButton(260, 207, Utils.AppDAO.getIntData("HOTKEY_TOGGLE", 0) == 0);
 		KeyboardModule.addEventHandler(this, "SwitchKeyboard");
@@ -103,6 +107,7 @@ public class MainConfig extends BaseObject {
 		KeyboardToggle = new GImageToggleButton(Jamcollab.app, 262, 208, "resources/sprites/toggleonoff.png", 2, 1);
 		KeyboardToggle.setEnabled(false);
 		KeyboardToggle.setVisible(false);
+		KeyboardToggle.stateValue(Utils.AppDAO.getIntData("HOTKEY_TOGGLE", 0));
 
 		FilesModule = new ModuleButton(260, 309, Utils.AppDAO.getIntData("FILECHANGE_TOGGLE", 0) == 0);
 		FilesModule.addEventHandler(this, "SwitchFiles");
@@ -110,6 +115,7 @@ public class MainConfig extends BaseObject {
 		FilesToggle = new GImageToggleButton(Jamcollab.app, 262, 310, "resources/sprites/toggleonoff.png", 2, 1);
 		FilesToggle.setEnabled(false);
 		FilesToggle.setVisible(false);
+		FilesToggle.stateValue(Utils.AppDAO.getIntData("FILECHANGE_TOGGLE", 0));
 
 		ProcessModule = new ModuleButton(260, 333, Utils.AppDAO.getIntData("PROCESS_TOGGLE", 0) == 0);
 		ProcessModule.addEventHandler(this, "SwitchProcess");
@@ -117,6 +123,7 @@ public class MainConfig extends BaseObject {
 		ProcessToggle = new GImageToggleButton(Jamcollab.app, 262, 334, "resources/sprites/toggleonoff.png", 2, 1);
 		ProcessToggle.setEnabled(false);
 		ProcessToggle.setVisible(false);
+		ProcessToggle.stateValue(Utils.AppDAO.getIntData("PROCESS_TOGGLE", 0));
 	}
 
 	@Override
@@ -138,7 +145,7 @@ public class MainConfig extends BaseObject {
 				return;
 			}
 		}
-		Jamcollab.app.selectFolder("Selecione uma pasta para exportar:", "selectExportFolder", null, this);
+		Jamcollab.app.selectFolder(Lang.SELECT_EXPORT_FOLDER, "selectExportFolder", null, this);
 	} 
 
 	public void selectExportFolder(File selection) {
@@ -157,7 +164,7 @@ public class MainConfig extends BaseObject {
 
 
 		JPanel p1 = new JPanel(new GridBagLayout());  
-		p1.add(new JLabel("Empacotando, aguarde..."), new GridBagConstraints());  
+		p1.add(new JLabel(Lang.EXPORTING), new GridBagConstraints());  
 		loadingZipDialog.setResizable(false);
 		loadingZipDialog.getContentPane().add(p1);  
 		loadingZipDialog.setSize(180, 60);  
@@ -210,7 +217,7 @@ public class MainConfig extends BaseObject {
 
 	public void SwitchWebcam(ModuleButton source, GEvent event) {
 		Utils.AppDAO.updateData("WEBCAM_TOGGLE", Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? 1 : 0);
-		Controller.Event("WebcamHandler", "SetActive", String.valueOf(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? false : true));
+		Controller.Event("WebcamHandler", "SetActive", Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? false : true);
 		source.Switch(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0);
 		WebcamToggle.stateValue(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0));
 	} 

@@ -16,12 +16,6 @@ public abstract class BaseObject {
 		Controller.registerObject(this);
 		view.setVisible(false);
 	}
-/*
-	public BaseObject (String identifier) {
-		this.identifier = identifier;
-		Controller.registerObject(this);
-		view.setVisible(false);
-	}*/
 
 	public void draw() {
 		Update();
@@ -70,7 +64,7 @@ public abstract class BaseObject {
 	}
 
 	public void EnableView(String identifier) {
-		Controller.EnableView(identifier);
+		Controller.EnableView(identifier, true);
 	}
 
 	public void DisableView(String identifier) {

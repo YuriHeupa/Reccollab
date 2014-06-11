@@ -4,6 +4,7 @@ import java.util.List;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
@@ -12,8 +13,7 @@ import processing.event.MouseEvent;
 
 public class ProgressStatics extends BaseObject {
 
-
-	GLabel Title; 
+	
 	GLabel OptionLabel; 
 	GLabel SubOptionLabel1; 
 	static GTextArea SubOption1Text; 
@@ -25,20 +25,14 @@ public class ProgressStatics extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
-		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		Title.setText("ESTATÍSTICAS");
-		Title.setTextBold();
-		Title.setOpaque(false);
-		Title.setVisible(false);
 		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		OptionLabel.setText("Programas");
+		OptionLabel.setText(Lang.PROCESS);
 		OptionLabel.setOpaque(false);
 		OptionLabel.setVisible(false);
 		SubOptionLabel1 = new GLabel(Jamcollab.app, 64, 112, 136, 16);
 		SubOptionLabel1.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel1.setText("Mais usados:");
+		SubOptionLabel1.setText(Lang.MORE_USED);
 		SubOptionLabel1.setOpaque(false);
 		SubOptionLabel1.setVisible(false);
 		SubOption1Text = new GTextArea(Jamcollab.app, 204, 112, 350, 200, G4P.SCROLLBARS_NONE);
@@ -65,7 +59,6 @@ public class ProgressStatics extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(state);  
 		OptionLabel.setVisible(state); 
 		SubOptionLabel1.setVisible(state); 
 		SubOption1Text.setVisible(state); 

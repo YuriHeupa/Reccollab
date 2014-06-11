@@ -1,6 +1,7 @@
 package processing.app.screen.managers;
 
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
@@ -16,10 +17,10 @@ public class ModuleButton extends GButton {
 
 	public void Switch(boolean state) {
 		if(state) {
-			setText("Ligar");
+			setText(Lang.TURN_ON);
 			setLocalColorScheme(GCScheme.RED_SCHEME);
 		} else {
-			setText("Desligar");
+			setText(Lang.TURN_OFF);
 			setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		}
 	}

@@ -17,15 +17,41 @@ import javax.swing.WindowConstants;
 
 import processing.app.controls.G4P;
 import processing.app.controls.GCScheme;
-import processing.app.screen.managers.*;
-import processing.app.screens.*;
-import processing.app.screens.configs.*;
-import processing.app.screens.others.*;
-import processing.app.screens.statics.*;
-import processing.app.screens.viewer.*;
+import processing.app.screen.managers.TooltipHandler;
+import processing.app.screens.About;
+import processing.app.screens.Home;
+import processing.app.screens.Login;
+import processing.app.screens.MainConfig;
+import processing.app.screens.Master;
+import processing.app.screens.configs.FilechangeConfig;
+import processing.app.screens.configs.KeyboardConfig;
+import processing.app.screens.configs.MouseConfig;
+import processing.app.screens.configs.ScreenshotConfig;
+import processing.app.screens.configs.WebcamConfig;
+import processing.app.screens.others.Map;
+import processing.app.screens.others.Warning;
+import processing.app.screens.statics.FilechangeStatics;
+import processing.app.screens.statics.KeyboardStatics;
+import processing.app.screens.statics.MouseStatics;
+import processing.app.screens.statics.ProgressStatics;
+import processing.app.screens.statics.ScreenshotStatics;
+import processing.app.screens.statics.Statics;
+import processing.app.screens.statics.WebcamStatics;
+import processing.app.screens.viewer.FilesViewer;
+import processing.app.screens.viewer.GenerateImages;
+import processing.app.screens.viewer.KeyboardViewer;
+import processing.app.screens.viewer.MapViewer;
+import processing.app.screens.viewer.MouseViewer;
+import processing.app.screens.viewer.MouseZoomViewer;
+import processing.app.screens.viewer.PIPViewer;
+import processing.app.screens.viewer.ProcessViewer;
+import processing.app.screens.viewer.ResizeViewer;
+import processing.app.screens.viewer.TreatImages;
+import processing.app.screens.viewer.VideoViewer;
 import processing.app.tools.encoder.Encoder;
 import processing.app.tools.filechange.FileChangeHandler;
-import processing.app.tools.io.*;
+import processing.app.tools.io.IOHandler;
+import processing.app.tools.io.IOListener;
 import processing.app.tools.process.ProcessHandler;
 import processing.app.tools.screenshot.ScreenShotHandler;
 import processing.app.tools.webcam.WebcamHandler;
@@ -46,7 +72,7 @@ public class Jamcollab extends PApplet {
 	private Gif loadingAnim;
 	public static boolean READY = false;
 	private static int loading = 0;
-	private static String loadingStatus = "Inicializando";
+	private static String loadingStatus;
 
 
 	public void setup() {
@@ -56,6 +82,7 @@ public class Jamcollab extends PApplet {
 		app = this;
 		loadingAnim = new Gif(this, "./resources/sprites/loading.gif");
 		loadingAnim.play();
+		loadingStatus = Lang.INITIALIZING;
 		Controller.Init(this);
 	}
 
@@ -68,103 +95,65 @@ public class Jamcollab extends PApplet {
 			GUISetup();
 			Utils.Load();
 			break;
-		case 10:
-			loadingStatus = "Definindo configurações do programa";
+		case 28:
+			loadingStatus = Lang.SETTING_APP_CONFIG;
 			// Load App Config
 			Assets.LoadAppDefaultConfig();
 			break;
-		case 20:
-			loadingStatus = "Carregando arquivo de configuração";
+		case 32:
+			loadingStatus = Lang.LOADING_CONFIG_FILE;
 			// Load Save Config File
 			Assets.ConfigDAO.loadData("AppConfig.xml");
 			break;
-		case 26:
-			loadingStatus = "Carregando imagens";
+		case 38:
+			loadingStatus = Lang.LOADING_IMAGES;
 			// Load Resources
 			Assets.loadResources();
 			break;
-		case 35:
-			loadingStatus = "Definindo dados do usuárido";
-			// Load User Data
-			Utils.LoadUserDefaultData();
-			break;
-		case 40:
-			loadingStatus = "Carregando arquivo de dados do usuário";
-			// Load Save User File
-			Utils.AppDAO.loadData("UserPreferences.xml");
-			break;
 		case 45:
-			loadingStatus = "Validando dados dos usuário";
+			loadingStatus = Lang.VALIDATING_USER_DATA;
 			// Validate directories
 			Utils.ValidateDirectories();
 			break;
 		case 48:
-			loadingStatus = "Inicializando sistema de captura de video";
+			loadingStatus = Lang.INITIALIZING_WEBCAM;
 			// Init Webcam Handler
 			WebcamHandler.instantiate();
 			break;
 		case 52:
-			loadingStatus = "Inicializando sistema de captura de processos";
+			loadingStatus = Lang.INITIALIZING_PROCESS;
 			// Init Webcam Handler
 			ProcessHandler.instantiate();
 			break;
 		case 54:
-			loadingStatus = "Inicializando sistema de captura de imagem";
+			loadingStatus = Lang.INITIALIZING_SCREENSHOT;
 			// Init Screenshot Handler
 			ScreenShotHandler.instantiate();
 			break;
 		case 60:
-			loadingStatus = "Inicializando sistema de alteração de arquivos";
+			loadingStatus = Lang.INITIALIZING_FILECHANGE;
 			// Init Filechange Handler
 			FileChangeHandler.instantiate();
 			break;
 		case 68:
-			loadingStatus = "Inicializando sistema de ajuda";
+			loadingStatus = Lang.INITIALIZING_HELP;
 			// Init Tooltip Handler
 			TooltipHandler.instantiate();
 			break;
 		case 72:
-			loadingStatus = "Inicializando sistema de comunicação";
+			loadingStatus = Lang.INITIALIZING_IO;
 			// Init IO Handler
 			IOHandler.instantiate();
 			IOListener.instantiate();
 			break;
 		case 78:
-			loadingStatus = "Inicializando encoder";
+			loadingStatus = Lang.INITIALIZING_ENCODER;
 			// Init Tooltip Handler
 			Encoder.instantiate();
 			break;
 		case 84:
-			loadingStatus = "Inicializando interface";
+			loadingStatus = Lang.INITIALIZING_INTERFACE;
 			// Final GUI Setup section
-			/*ViewHandler.instantiate();
-			ViewHandler.addView("Main", new MainPanel());
-			ViewHandler.addView("About", new AboutPanel());
-			ViewHandler.addView("Home", new HomePanel());
-			ViewHandler.addView("Login", new LoginPanel());
-			
-			ViewHandler.addView("MainConfig", new MainConfig());
-			ViewHandler.addView("ScreenshotConfig", new ScreenshotConfig());
-			ViewHandler.addView("WebcamConfig", new WebcamConfig());
-			ViewHandler.addView("FilechangeConfig", new FilechangeConfig());
-			ViewHandler.addView("Warning", new Warning());
-			ViewHandler.addView("MouseConfig", new MouseConfig());
-			ViewHandler.addView("HotkeysConfig", new KeyboardConfig());
-			ViewHandler.addView("Statics", new Statics());
-			ViewHandler.addView("KeyboardStatics", new KeyboardStatics());
-			ViewHandler.addView("ScreenshotStatics", new ScreenshotStatics());
-			ViewHandler.addView("WebcamStatics", new WebcamStatics());
-			ViewHandler.addView("MouseStatics", new MouseStatics());
-			ViewHandler.addView("FilechangeStatics", new FilechangeStatics());
-			ViewHandler.addView("ProgressStatics", new ProgressStatics());
-			ViewHandler.addView("VideoViewer", new ViewerVideo());
-			ViewHandler.addView("PIPViewer", new ViewerPIP());
-			ViewHandler.addView("ResizeViewer", new ViewerResize());
-			ViewHandler.addView("MouseViewer", new ViewerMouse());
-			ViewHandler.addView("KeyboardViewer", new ViewerKeyboard());
-			ViewHandler.addView("FilesViewer", new ViewerFiles());
-			ViewHandler.addView("ProcessViewer", new ViewerProcess());
-			ViewHandler.addView("MapViewer", new ViewerMap());*/
 			new Master();
 			new About();
 			new Home();
@@ -176,6 +165,8 @@ public class Jamcollab extends PApplet {
 			new Warning();
 			new MouseConfig();
 			new KeyboardConfig();
+			new TreatImages();
+			new GenerateImages();
 			new Statics();
 			new KeyboardStatics();
 			new ScreenshotStatics();
@@ -191,19 +182,20 @@ public class Jamcollab extends PApplet {
 			new FilesViewer();
 			new ProcessViewer();
 			new MapViewer();
+			new MouseZoomViewer();
 			new Map();
 			break;
 		case 92:
-			loadingStatus = "Carregando configurações padrões";
+			loadingStatus = Lang.LOADING_DEFAULT_CONFIG;
 			// Create config DAO file if not exists
 			Assets.ConfigDAO.saveData();
 			// Create app DAO file if not exists
 			Utils.AppDAO.saveData();
 			break;
 		case 100:
-			loadingStatus = "Definindo configurações finais";
-			Controller.EnableView("Home");
-			loadingStatus = "Programa carregado com sucesso!";  
+			loadingStatus = Lang.SETTING_FINAL_CONFIG;
+			Controller.EnableView("Home", true);
+			loadingStatus = Lang.APP_SUCCESS_LOAD;  
 			//loadingAnim.dispose();
 			break;
 		}
@@ -244,6 +236,15 @@ public class Jamcollab extends PApplet {
 		//make sure to shut down the application, when the frame is closed
 		jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
+		
+
+		// Load User Data
+		Utils.LoadUserDefaultData();
+		// Load Save User File
+		Utils.AppDAO.loadData("UserPreferences.xml");
+		// Set language
+		Lang.setLanguage(Lang.LANGUAGES.values()[Utils.AppDAO.getIntData("LANGUAGE", 0)]);
+		
 		//create a panel for the applet
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -307,8 +308,8 @@ public class Jamcollab extends PApplet {
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent ev) {
 				int confirm = JOptionPane.showOptionDialog(jframe,
-						"Você tem certeza que deseja sair?",
-						"Confirmação de saída", JOptionPane.YES_NO_OPTION,
+						Lang.ARE_YOU_SURE_TO_EXIT,
+						Lang.EXIT_CONFIRMATION_TITLE, JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, null, null);
 				switch(confirm) {
 				case JOptionPane.YES_OPTION:
@@ -332,7 +333,7 @@ public class Jamcollab extends PApplet {
 					loading = selection;
 					applet.load(selection);
 					try {  
-						Thread.sleep(30);  
+						Thread.sleep(20);  
 					}  
 					catch (InterruptedException e) {e.printStackTrace();} 
 				}  

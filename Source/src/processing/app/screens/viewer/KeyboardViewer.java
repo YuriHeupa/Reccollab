@@ -16,6 +16,7 @@ import javax.swing.SwingUtilities;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
@@ -45,65 +46,58 @@ public class KeyboardViewer extends BaseObject {
 	
 	public KeyboardViewer() {
 		super();
-		setParent("Master");
+		setParent("GenerateImages");
 	}
 
 
 	@Override
 	public void Init() {
-		view.AddLabel(48, 32, 504, 20, "Teclado", GAlign.LEFT, GAlign.MIDDLE, true);
+		int y = 70;
 
-		view.AddLabel(4, 88, 192, 16, "Logs de teclado:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 112, 192, 16, "Destino:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 136, 192, 16, "TagCloud:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 160, 192, 16, "Sequencia de teclas:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 184, 192, 16, "Sequencia de palavras:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 208, 192, 16, "Informações gerais:", GAlign.RIGHT, GAlign.MIDDLE, false);
+
+		view.AddLabel(4, 88+y, 192, 16, Lang.KEYBOARD_LOG, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 112+y, 192, 16, Lang.SAVE_PATH, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 136+y, 192, 16, "TagCloud:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 160+y, 192, 16, Lang.KEYS_SEQUENCE, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 184+y, 192, 16, Lang.WORDS_SEQUENCE, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 208+y, 192, 16, Lang.GENERAL_INFO, GAlign.RIGHT, GAlign.MIDDLE, false);
 
 		
-		tagCloud = new GCheckbox(Jamcollab.app, 196, 136, 24, 20);
+		tagCloud = new GCheckbox(Jamcollab.app, 196, 136+y, 24, 20);
 		tagCloud.setOpaque(false);
 		view.AddControl(tagCloud);
 
-		keysSequence = new GCheckbox(Jamcollab.app, 196, 160, 24, 20);
+		keysSequence = new GCheckbox(Jamcollab.app, 196, 160+y, 24, 20);
 		keysSequence.setOpaque(false);
 		keysSequence.addEventHandler(this, "keysSequenceToggleClicked");
 		view.AddControl(keysSequence);
 		
 		
-		wordSequence = new GCheckbox(Jamcollab.app, 196, 184, 24, 20);
+		wordSequence = new GCheckbox(Jamcollab.app, 196, 184+y, 24, 20);
 		wordSequence.setOpaque(false);
 		wordSequence.addEventHandler(this, "wordSequenceToggleClicked");
 		view.AddControl(wordSequence);
 		
-		generalInfo = new GCheckbox(Jamcollab.app, 196, 208, 24, 20);
+		generalInfo = new GCheckbox(Jamcollab.app, 196, 208+y, 24, 20);
 		generalInfo.setOpaque(false);
 		view.AddControl(generalInfo);
 
-		SourcePathInput = view.AddTextField(196, 88, 216, 16, G4P.SCROLLBARS_NONE);
+		SourcePathInput = view.AddTextField(196, 88+y, 216, 16, G4P.SCROLLBARS_NONE);
 		SourcePathInput.setEnabled(false);
-		OutputPathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
+		OutputPathInput = view.AddTextField(196, 112+y, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
 
 		
-		view.AddButton(420, 88, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
+		view.AddButton(420, 88+y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
 				"SearchSourcePathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
-		view.AddButton(420, 112, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
+		view.AddButton(420, 112+y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
 				"SearchOutputPathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
 
-		view.AddButton(480, 32, 80, 24, "Gerar", GCScheme.SCHEME_15, 
+		view.AddButton(480, 22+y, 80, 24, Lang.GENERATE, GCScheme.SCHEME_15, 
 				this, "GenerateButtonClicked");
 
-		view.AddButton(34, 308, 127, 22, "Video", this, "VideoButtonClick");
-		view.AddButton(169, 308, 127, 22, "PIP", this, "PIPButtonClick");
-		view.AddButton(304, 308, 127, 22, "Redimensionar", this, "ResizeButtonClick");
-		view.AddButton(439, 308, 127, 22, "Mouse", this, "MouseButtonClick");
-		view.AddButton(34, 336, 127, 22, "Teclado", this, "KeyboardButtonClick");
-		view.AddButton(169, 336, 127, 22, "Arquivos", this, "FilesButtonClick");
-		view.AddButton(304, 336, 127, 22, "Programas", this, "ProcessButtonClick");
-		view.AddButton(439, 336, 127, 22, "Mapa", this, "MapButtonClick");
 	}
 
 	public void GenerateButtonClicked(GButton source, GEvent event) { 
@@ -121,7 +115,8 @@ public class KeyboardViewer extends BaseObject {
 		}
 
 		final JPanel p1 = new JPanel(new GridBagLayout());  
-		final JLabel load = new JLabel("Aguarde, gerando 0%");
+		p1.add(new JLabel(Lang.GENERATING), new GridBagConstraints());
+		final JLabel load = new JLabel("0%");
 		p1.add(load, new GridBagConstraints());  
 		generatingDialog.setResizable(false);
 		generatingDialog.getContentPane().add(p1);  
@@ -149,7 +144,7 @@ public class KeyboardViewer extends BaseObject {
 					for (File f : source.listFiles(Utils.TEXT_FILTER)) {
 						if(percent < 50)
 							percent += factorPercentLoad;
-						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
+						load.setText(String.valueOf((int)(percent))+"%");
 						
 						BufferedReader br = null;
 						 
@@ -177,24 +172,24 @@ public class KeyboardViewer extends BaseObject {
 					}
 				}
 				
-				load.setText("Aguarde, gerando 50%");
+				load.setText("50%");
 
 				for (Keyword k : keywords) {
 					if(percent < 100)
 						percent += factorPercentLoad;
-					load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
+					load.setText(String.valueOf((int)(percent))+"%");
 					
 					PGraphics pg = Jamcollab.app.createGraphics(100, 100);
 					pg.beginDraw();
 					pg.text(k.getInfo(), 0, 0);
 					pg.endDraw();
-					pg.save(output + File.separator + "mouse_"+Utils.dateFormat()+".jpg");
+					pg.save(output + File.separator + "keyboard_"+Utils.dateFormat()+".jpg");
 					
 				}
 
 				
 				
-				load.setText("Aguarde, gerando 100%");
+				load.setText("100%");
 
 
 				SwingUtilities.invokeLater(new Runnable(){ 
@@ -202,7 +197,7 @@ public class KeyboardViewer extends BaseObject {
 						p1.remove(load);
 						generatingDialog.dispose();
 						JOptionPane.showMessageDialog(Jamcollab.jframe, 
-								"Gerado com sucesso!");
+								Lang.GENERATE_SUCCES);
 						
 										
 						Utils.OpenFile(output + File.separator);
@@ -218,12 +213,12 @@ public class KeyboardViewer extends BaseObject {
 
 	
 	public void SearchSourcePathButtonClick(GButton source, GEvent event) { 
-		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectSourceFolder", null, this);
+		Jamcollab.app.selectFolder(Lang.SELECT_FOLDER, "selectSourceFolder", null, this);
 	} 
 
 
 	public void SearchOutputPathButtonClick(GButton source, GEvent event) { 
-		Jamcollab.app.selectFolder("Selecione uma pasta:", "selectOutputFolder", null, this);
+		Jamcollab.app.selectFolder(Lang.SELECT_FOLDER, "selectOutputFolder", null, this);
 	} 
 
 	public void selectSourceFolder(File selection) {
@@ -260,38 +255,6 @@ public class KeyboardViewer extends BaseObject {
 	public void wordSequenceToggleClicked(GCheckbox source, GEvent event) { 
 		keysSequence.setSelected(false);
 	} 
-	
-	public void ProcessButtonClick(GButton source, GEvent event) {
-		EnableView("ProcessViewer");
-	}
-
-	public void MapButtonClick(GButton source, GEvent event) {
-		EnableView("MapViewer");
-	}
-	
-	public void FilesButtonClick(GButton source, GEvent event) {
-		EnableView("FilesViewer");
-	}
-
-	public void KeyboardButtonClick(GButton source, GEvent event) {
-		EnableView("KeyboardViewer");
-	}
-
-	public void MouseButtonClick(GButton source, GEvent event) {
-		EnableView("MouseViewer");
-	}
-
-	public void ResizeButtonClick(GButton source, GEvent event) {
-		EnableView("ResizeViewer");
-	} 
-
-	public void PIPButtonClick(GButton source, GEvent event) {
-		EnableView("PIPViewer");
-	}
-
-	public void VideoButtonClick(GButton source, GEvent event) {
-		EnableView("VideoViewer");
-	}
 
 
 	@Override

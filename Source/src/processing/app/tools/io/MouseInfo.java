@@ -1,5 +1,6 @@
 package processing.app.tools.io;
 
+import processing.app.Utils;
 import processing.app.Vector2D;
 
 public class MouseInfo {
@@ -63,6 +64,10 @@ public class MouseInfo {
 	public String getHandleTime() {
 		return handleTime;
 	}
+	
+	public long getTime() {
+		return Utils.revertDateFormat(handleTime).getTime();
+	}
 
 	public int getHeight() {
 		return height;
@@ -79,7 +84,7 @@ public class MouseInfo {
 	
 	public String getInfo() {
 		return getHandleTime() + " - " + getButton() +
-		" (" + getY()+ "x" + getX()+"y)" +
+		" (" + getX()+ "x" + getY()+"y)" +
 		" R(" + getWidth() + "w" + getHeight()+"h)";
 	}
 

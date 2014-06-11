@@ -2,6 +2,7 @@ package processing.app.screens.statics;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
 import processing.app.tools.io.IOHandler;
@@ -10,7 +11,6 @@ import processing.event.MouseEvent;
 public class MouseStatics extends BaseObject {
 
 
-	GLabel Title; 
 	GLabel OptionLabel; 
 	GLabel SubOptionLabel1; 
 	GLabel SubOptionLabel2; 
@@ -32,7 +32,6 @@ public class MouseStatics extends BaseObject {
 	@Override
 	public void SetViewActive(boolean state) {
 
-		Title.setVisible(state);  
 		OptionLabel.setVisible(state); 
 		SubOptionLabel1.setVisible(state); 
 		SubOptionLabel2.setVisible(state); 
@@ -42,12 +41,6 @@ public class MouseStatics extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
-		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		Title.setText("ESTATÍSTICAS");
-		Title.setTextBold();
-		Title.setOpaque(false);
-		Title.setVisible(false);
 		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		OptionLabel.setText("Mouse");
@@ -55,12 +48,12 @@ public class MouseStatics extends BaseObject {
 		OptionLabel.setVisible(false);
 		SubOptionLabel1 = new GLabel(Jamcollab.app, 64, 112, 136, 16);
 		SubOptionLabel1.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel1.setText("Número cliques:");
+		SubOptionLabel1.setText(Lang.CLICKS_NUMBER);
 		SubOptionLabel1.setOpaque(false);
 		SubOptionLabel1.setVisible(false);
 		SubOptionLabel2 = new GLabel(Jamcollab.app, 64, 128, 136, 16);
 		SubOptionLabel2.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel2.setText("Distância percorrida:");
+		SubOptionLabel2.setText(Lang.DISTANCE_TRAVEL);
 		SubOptionLabel2.setOpaque(false);
 		SubOptionLabel2.setVisible(false);
 		SubOption1Text = new GLabel(Jamcollab.app, 208, 112, 80, 16);

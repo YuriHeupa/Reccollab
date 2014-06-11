@@ -1,6 +1,7 @@
 package processing.app.screens.statics;
 
 import processing.app.BaseObject;
+import processing.app.Lang;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
 import processing.app.tools.filechange.FileChangeHandler;
@@ -73,25 +74,24 @@ public class Statics extends BaseObject {
 
 	@Override
 	public void Init() {
-		view.AddLabel(48, 32, 504, 20, "ESTATÍSTICAS", GAlign.LEFT, GAlign.MIDDLE, true);
 		view.AddLabel(64, 80, 72, 16, "Screenshot", GAlign.LEFT, GAlign.MIDDLE, false);
 		view.AddLabel(304, 80, 72, 16, "Webcam", GAlign.LEFT, GAlign.MIDDLE, false);
 		view.AddLabel(64, 152, 72, 16, "Mouse", GAlign.LEFT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 228, 72, 16, "Arquivos", GAlign.LEFT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 290, 72, 16, "Programas", GAlign.LEFT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 160, 72, 16, "Teclado", GAlign.LEFT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 104, 136, 16, "Número imagens:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 120, 136, 16, "Resolução:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 104, 136, 16, "Número imagens:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 120, 136, 16, "Resolução:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 192, 136, 16, "Distância percorrida:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 176, 136, 16, "Número cliques:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 184, 136, 16, "Número palavras:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 200, 136, 16, "Palavras/Minuto:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 216, 136, 16, "Número letras:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(304, 232, 136, 16, "Letras/Minuto:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 252, 136, 16, "Quantidade dados:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 314, 136, 16, "Mais usado:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 228, 72, 16, Lang.FILES, GAlign.LEFT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 290, 72, 16, Lang.PROCESS, GAlign.LEFT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 160, 72, 16, Lang.KEYBOARD, GAlign.LEFT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 104, 136, 16, Lang.IMAGES_NUMBER, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 120, 136, 16, Lang.RESOLUTION, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 104, 136, 16, Lang.IMAGES_NUMBER, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 120, 136, 16, Lang.RESOLUTION, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 192, 136, 16, Lang.DISTANCE_TRAVEL, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 176, 136, 16, Lang.CLICKS_NUMBER, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 184, 136, 16, Lang.WORDS_NUMBER, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 200, 136, 16, Lang.WORDS_PM_STATIC, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 216, 136, 16, Lang.KEYS_NUMBER, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(304, 232, 136, 16, Lang.KEYS_PM_STATIC, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 252, 136, 16, Lang.DATA_SIZE, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 314, 136, 16, Lang.MORE_USED, GAlign.RIGHT, GAlign.MIDDLE, false);
 
 		
 		ScreenshotImagesNumber = view.AddLabel(208, 104, 80, 16, "0", GAlign.LEFT, GAlign.MIDDLE, false);
@@ -105,7 +105,7 @@ public class Statics extends BaseObject {
 		WordsMinuteTypedNumber = view.AddLabel(448, 200, 80, 16, "0", GAlign.LEFT, GAlign.MIDDLE, false);
 		KeysMinuteTypedNumber = view.AddLabel(448, 232, 80, 16, "0", GAlign.LEFT, GAlign.MIDDLE, false);
 		FilesDataSizeNumber = view.AddLabel(208, 252, 80, 16, "0 MB", GAlign.LEFT, GAlign.MIDDLE, false);
-		ProcessMostOpenWord = view.AddLabel(208, 314, 80, 16, "Indefinido", GAlign.LEFT, GAlign.MIDDLE, false);
+		ProcessMostOpenWord = view.AddLabel(208, 314, 80, 16, Lang.UNDEFINED, GAlign.LEFT, GAlign.MIDDLE, false);
 
 
 	}

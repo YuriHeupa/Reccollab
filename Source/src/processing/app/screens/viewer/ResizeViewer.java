@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
@@ -37,46 +38,37 @@ public class ResizeViewer extends BaseObject {
 
 	public ResizeViewer() {
 		super();
-		setParent("Master");
+		setParent("TreatImages");
 	}
 
 
 	@Override
 	public void Init() {
+		int y = 70;
+		
+		view.AddLabel(4, 88+y, 192, 16, Lang.IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 112+y, 192, 16, Lang.SAVE_PATH, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 136+y, 192, 16, Lang.WIDTH+":", GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(4, 160+y, 192, 16, Lang.HEIGHT+":", GAlign.RIGHT, GAlign.MIDDLE, false);
 
-		view.AddLabel(48, 32, 504, 20, "Redimensionar", GAlign.LEFT, GAlign.MIDDLE, true);
-
-		view.AddLabel(4, 88, 192, 16, "Imagens:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 112, 192, 16, "Destino:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 136, 192, 16, "Largura:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 160, 192, 16, "Altura:", GAlign.RIGHT, GAlign.MIDDLE, false);
-
-		SourcePathInput = view.AddTextField(196, 88, 216, 16, G4P.SCROLLBARS_NONE);
+		SourcePathInput = view.AddTextField(196, 88+y, 216, 16, G4P.SCROLLBARS_NONE);
 		SourcePathInput.setEnabled(false);
-		OutputPathInput = view.AddTextField(196, 112, 216, 16, G4P.SCROLLBARS_NONE);
+		OutputPathInput = view.AddTextField(196, 112+y, 216, 16, G4P.SCROLLBARS_NONE);
 		OutputPathInput.setEnabled(false);
-		WidthInput = view.AddTextField(196, 136, 46, 16, G4P.SCROLLBARS_NONE);
-		HeightInput = view.AddTextField(196, 160, 46, 16, G4P.SCROLLBARS_NONE);
+		WidthInput = view.AddTextField(196, 136+y, 46, 16, G4P.SCROLLBARS_NONE);
+		HeightInput = view.AddTextField(196, 160+y, 46, 16, G4P.SCROLLBARS_NONE);
 
 
-		view.AddButton(420, 88, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
+		view.AddButton(420, 88+y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
 				"SearchMainImagePathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
-		view.AddButton(420, 112, 76, 16, "Procurar", GCScheme.SCHEME_15, this, 
+		view.AddButton(420, 112+y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
 				"SearchOutputPathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
 
-		view.AddButton(470, 32, 100, 24, "Redimensionar", GCScheme.SCHEME_15, 
+		view.AddButton(470, 22+y, 100, 24, Lang.RESIZE, GCScheme.SCHEME_15, 
 				this, "ResizeButtonClicked");
 
-		view.AddButton(34, 308, 127, 22, "Video", this, "VideoButtonClick");
-		view.AddButton(169, 308, 127, 22, "PIP", this, "PIPButtonClick");
-		view.AddButton(304, 308, 127, 22, "Redimensionar", this, "ResizeButtonClick");
-		view.AddButton(439, 308, 127, 22, "Mouse", this, "MouseButtonClick");
-		view.AddButton(34, 336, 127, 22, "Teclado", this, "KeyboardButtonClick");
-		view.AddButton(169, 336, 127, 22, "Arquivos", this, "FilesButtonClick");
-		view.AddButton(304, 336, 127, 22, "Programas", this, "ProcessButtonClick");
-		view.AddButton(439, 336, 127, 22, "Mapa", this, "MapButtonClick");
 	}
 
 
@@ -101,7 +93,8 @@ public class ResizeViewer extends BaseObject {
 		}
 
 		final JPanel p1 = new JPanel(new GridBagLayout());  
-		final JLabel load = new JLabel("Aguarde, gerando 0%");
+		p1.add(new JLabel(Lang.GENERATING), new GridBagConstraints());
+		final JLabel load = new JLabel("0%");
 		p1.add(load, new GridBagConstraints());  
 		resizeDialog.setResizable(false);
 		resizeDialog.getContentPane().add(p1);  
@@ -126,7 +119,7 @@ public class ResizeViewer extends BaseObject {
 				if (source.isDirectory()) { // make sure it's a directory
 					for (File f : listImageFiles) {
 						percent += factorPercentLoad;
-						load.setText("Aguarde, gerando "+String.valueOf((int)(percent))+"%");
+						load.setText(String.valueOf((int)(percent))+"%");
 
 						buffer = Jamcollab.app.loadImage(f.getAbsolutePath());
 						PGraphics pg = Jamcollab.app.createGraphics(Integer.valueOf(WidthInput.getText()), Integer.valueOf(HeightInput.getText()));
@@ -138,14 +131,14 @@ public class ResizeViewer extends BaseObject {
 					}
 				}
 
-				load.setText("Aguarde, gerando 100%");
+				load.setText("100%");
 
 				SwingUtilities.invokeLater(new Runnable(){ 
 					public void run(){  
 						p1.remove(load);
 						resizeDialog.dispose();
 						JOptionPane.showMessageDialog(Jamcollab.jframe, 
-								"Redimensionamento gerado com sucesso");
+								Lang.RESIZE_SUCCESS);
 						Utils.OpenFile(output + File.separator);
 					}  
 				});  
@@ -186,40 +179,6 @@ public class ResizeViewer extends BaseObject {
 		// TODO Auto-generated method stub
 
 	}
-
-	public void ProcessButtonClick(GButton source, GEvent event) {
-		EnableView("ProcessViewer");
-	}
-
-	public void MapButtonClick(GButton source, GEvent event) {
-		EnableView("MapViewer");
-	}
-
-	public void FilesButtonClick(GButton source, GEvent event) {
-		EnableView("FilesViewer");
-	}
-
-	public void KeyboardButtonClick(GButton source, GEvent event) {
-		EnableView("KeyboardViewer");
-	}
-
-	public void MouseButtonClick(GButton source, GEvent event) {
-		EnableView("MouseViewer");
-	}
-
-	public void ResizeButtonClick(GButton source, GEvent event) {
-		EnableView("ResizeViewer");
-	} 
-
-	public void PIPButtonClick(GButton source, GEvent event) {
-		EnableView("PIPViewer");
-	}
-
-	public void VideoButtonClick(GButton source, GEvent event) {
-		EnableView("VideoViewer");
-	}
-
-
 
 	@Override
 	public void Mouse(MouseEvent e) {

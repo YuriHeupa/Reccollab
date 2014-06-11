@@ -2,9 +2,11 @@ package processing.app.screens.statics;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.Vector2D;
 import processing.app.controls.GAlign;
+import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
 import processing.app.screen.managers.TooltipHandler;
 import processing.app.tools.screenshot.ScreenShotHandler;
@@ -14,7 +16,6 @@ import processing.event.MouseEvent;
 public class ScreenshotStatics extends BaseObject {
 
 
-	GLabel Title; 
 	GLabel OptionLabel; 
 	GLabel SubOptionLabel1; 
 	GLabel SubOptionLabel2; 
@@ -22,8 +23,7 @@ public class ScreenshotStatics extends BaseObject {
 	GLabel SubOptionLabel4; 
 	static GLabel SubOption1Text; 
 	static GLabel SubOption2Text; 
-	static GLabel SubOption3Text; 
-	int tickClicked = 0;
+	static GLabel SubOption3Text;
 
 	@Override
 	public void Update() {
@@ -47,12 +47,10 @@ public class ScreenshotStatics extends BaseObject {
 	@Override
 	public void SetViewActive(boolean state) {
 
-		Title.setVisible(state);  
 		OptionLabel.setVisible(state); 
 		SubOptionLabel1.setVisible(state); 
 		SubOptionLabel2.setVisible(state); 
 		SubOptionLabel3.setVisible(state); 
-		//SubOptionLabel4.setVisible(state); 
 		SubOption1Text.setVisible(state); 
 		SubOption2Text.setVisible(state); 
 		SubOption3Text.setVisible(state); 
@@ -61,12 +59,6 @@ public class ScreenshotStatics extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
-		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		Title.setText("ESTATÍSTICAS");
-		Title.setTextBold();
-		Title.setOpaque(false);
-		Title.setVisible(false);
 		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		OptionLabel.setText("Screenshot");
@@ -74,22 +66,22 @@ public class ScreenshotStatics extends BaseObject {
 		OptionLabel.setVisible(false);
 		SubOptionLabel1 = new GLabel(Jamcollab.app, 64, 112, 136, 16);
 		SubOptionLabel1.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel1.setText("Número imagens:");
+		SubOptionLabel1.setText(Lang.IMAGES_NUMBER);
 		SubOptionLabel1.setOpaque(false);
 		SubOptionLabel1.setVisible(false);
 		SubOptionLabel2 = new GLabel(Jamcollab.app, 64, 128, 136, 16);
 		SubOptionLabel2.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel2.setText("Resolução:");
+		SubOptionLabel2.setText(Lang.RESOLUTION);
 		SubOptionLabel2.setOpaque(false);
 		SubOptionLabel2.setVisible(false);
 		SubOptionLabel3 = new GLabel(Jamcollab.app, 64, 144, 136, 16);
 		SubOptionLabel3.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel3.setText("Pasta:");
+		SubOptionLabel3.setText(Lang.FOLDER);
 		SubOptionLabel3.setOpaque(false);
 		SubOptionLabel3.setVisible(false);
 		SubOptionLabel4 = new GLabel(Jamcollab.app, 64, 160, 136, 16);
 		SubOptionLabel4.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel4.setText("Última imagem:");
+		SubOptionLabel4.setText(Lang.LAST_IMAGE);
 		SubOptionLabel4.setOpaque(false);
 		SubOptionLabel4.setVisible(false);
 		SubOption1Text = new GLabel(Jamcollab.app, 208, 112, 80, 16);
@@ -99,7 +91,7 @@ public class ScreenshotStatics extends BaseObject {
 		SubOption1Text.setVisible(false);
 		SubOption2Text = new GLabel(Jamcollab.app, 208, 128, 300, 16);
 		SubOption2Text.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		SubOption2Text.setText("Ainda não há imagens capturadas");
+		SubOption2Text.setText(Lang.NO_IMAGE_CAPTURED);
 		SubOption2Text.setOpaque(false);
 		SubOption2Text.setVisible(false);
 		SubOption3Text = new GLabel(Jamcollab.app, 208, 144, 350, 16);
@@ -107,28 +99,24 @@ public class ScreenshotStatics extends BaseObject {
 		SubOption3Text.setText("null");
 		SubOption3Text.setOpaque(false);
 		SubOption3Text.setVisible(false);
+		SubOption3Text.addEventHandler(this, "LinkClicked");
 		SubOption3Text.setCursorOver(PConstants.HAND);
 
 	}
-
+	
+	public void LinkClicked(GLabel source, GEvent event) {
+		if(!Utils.OpenFile(SubOption3Text.getText()))
+			Utils.OpenFile(Utils.getDefaultSavePath());
+	}
+	
 	@Override
 	public void Mouse(MouseEvent e) {
-		if(e.getAction() ==MouseEvent.RELEASE) {
-			if(Jamcollab.app.mouseButton == PConstants.LEFT) 
-				tickClicked++;
-				if(SubOption3Text.isHover() && SubOption3Text.isVisible() &&
-						tickClicked % 2 == 0) {
-					if(!Utils.OpenFile(SubOption3Text.getText()))
-						Utils.OpenFile(Utils.getDefaultSavePath());
-				}
-		}
-		
 	}
 
 	@Override
 	public void Exit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

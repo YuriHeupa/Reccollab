@@ -2,6 +2,7 @@ package processing.app.screens.configs;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
@@ -32,42 +33,43 @@ public class KeyboardConfig extends BaseObject {
 
 	@Override
 	public void Init() {
+		int y = 50;
 
-		view.AddLabel(48, 32, 504, 20, "Estatísticas de Teclado", GAlign.LEFT, GAlign.MIDDLE, true);
-		view.AddLabel(64, 88, 192, 16, "Palavras digitadas", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 112, 192, 16, "Palavras por minuto", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 136, 192, 16, "Teclas digitadas", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(64, 160, 192, 16, "Teclas por minuto", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(100, 200, 400, 50, "ATENÇÃO! Para sua segurança desabilite sempre ao digitar senhas", GAlign.CENTER, GAlign.MIDDLE, false);
+		view.AddLabel(48, 32+y, 504, 20, Lang.KEYBOARD_STATICS, GAlign.LEFT, GAlign.MIDDLE, true);
+		view.AddLabel(64, 88+y, 192, 16, Lang.WORDS_TYPED, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 112+y, 192, 16, Lang.WORDS_PM, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 136+y, 192, 16, Lang.KEYS_TYPED, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(64, 160+y, 192, 16, Lang.KEYS_PM, GAlign.RIGHT, GAlign.MIDDLE, false);
+		view.AddLabel(100, 200+y, 400, 50, Lang.KEYBOARD_SECURITY_WARNING, GAlign.CENTER, GAlign.MIDDLE, false);
 
-		WordsTypedToggle = new GCheckbox(Jamcollab.app, 256, 88, 24, 20);
+		WordsTypedToggle = new GCheckbox(Jamcollab.app, 256, 88+y, 24, 20);
 		WordsTypedToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		WordsTypedToggle.setOpaque(false);
 		WordsTypedToggle.setVisible(false);
 		WordsTypedToggle.setSelected(Utils.AppDAO.getBooleanData("WORDS_TYPED", false));
-		WordsMinuteToggle = new GCheckbox(Jamcollab.app, 256, 112, 24, 20);
+		WordsMinuteToggle = new GCheckbox(Jamcollab.app, 256, 112+y, 24, 20);
 		WordsMinuteToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		WordsMinuteToggle.setOpaque(false);
 		WordsMinuteToggle.setVisible(false);
 		WordsMinuteToggle.setSelected(Utils.AppDAO.getBooleanData("WORDS_PM", false));
-		KeysTypedToggle = new GCheckbox(Jamcollab.app, 256, 136, 24, 20);
+		KeysTypedToggle = new GCheckbox(Jamcollab.app, 256, 136+y, 24, 20);
 		KeysTypedToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		KeysTypedToggle.setOpaque(false);
 		KeysTypedToggle.setSelected(Utils.AppDAO.getBooleanData("KEYS_TYPED", false));
 		KeysTypedToggle.setVisible(false);
-		KeysMinuteToggle = new GCheckbox(Jamcollab.app, 256, 160, 24, 20);
+		KeysMinuteToggle = new GCheckbox(Jamcollab.app, 256, 160+y, 24, 20);
 		KeysMinuteToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		KeysMinuteToggle.setOpaque(false);
 		KeysMinuteToggle.setSelected(Utils.AppDAO.getBooleanData("KEYS_PM", false));
 		KeysMinuteToggle.setVisible(false);
-		BackButton = new GButton(Jamcollab.app, 480, 32, 80, 24);
-		BackButton.setText("Voltar");
+		BackButton = new GButton(Jamcollab.app, 480, 22+y, 80, 24);
+		BackButton.setText(Lang.BACK);
 		BackButton.setTextBold();
 		BackButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		BackButton.addEventHandler(this, "BackButtonClicked");
 		BackButton.setVisible(false);
-		SaveButton = new GButton(Jamcollab.app, 390, 32, 80, 24);
-		SaveButton.setText("Salvar");
+		SaveButton = new GButton(Jamcollab.app, 390, 22+y, 80, 24);
+		SaveButton.setText(Lang.SAVE);
 		SaveButton.setTextBold();
 		SaveButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		SaveButton.addEventHandler(this, "SaveButtonClicked");
@@ -113,7 +115,7 @@ public class KeyboardConfig extends BaseObject {
 				WordsMinuteToggle.isSelected() != Utils.AppDAO.getBooleanData("WORDS_PM", false) ||
 				KeysTypedToggle.isSelected() != Utils.AppDAO.getBooleanData("KEYS_TYPED", false) ||
 				KeysMinuteToggle.isSelected() != Utils.AppDAO.getBooleanData("KEYS_PM", false)) { 
-			if(Utils.ShowQuestion("Confirmar alterações", "Você tem alterações não salvas, deseja salvar?")) {
+			if(Utils.ShowQuestion(Lang.CONFIRM_CHANGES_TITLE, Lang.CONFIRM_CHANGES_MESSAGE)) {
 				saveChanges();
 			}
 		}

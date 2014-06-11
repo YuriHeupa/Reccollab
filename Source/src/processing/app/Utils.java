@@ -136,6 +136,7 @@ public class Utils {
 	}
 
 	public static void LoadUserDefaultData() {
+		AppDAO.insertData(new Data("LANGUAGE", "0"));
 		AppDAO.insertData(new Data("USERNAME", ""));
 		AppDAO.insertData(new Data("PASSWORD", ""));
 		AppDAO.insertData(new Data("PIN_POS_X", "-1"));

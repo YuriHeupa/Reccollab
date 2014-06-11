@@ -2,6 +2,7 @@ package processing.app.screens.statics;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.Vector2D;
 import processing.app.controls.GAlign;
@@ -13,8 +14,6 @@ import processing.event.MouseEvent;
 
 public class FilechangeStatics extends BaseObject {
 
-
-	GLabel Title; 
 	GLabel OptionLabel; 
 	GLabel SubOptionLabel1; 
 	GLabel SubOptionLabel2; 
@@ -26,7 +25,6 @@ public class FilechangeStatics extends BaseObject {
 	public static GLabel DeletedText; 
 	public static GLabel DataSizeText; 
 	public static GLabel FolderText; 
-	int tickClicked = 0;
 
 	@Override
 	public void Update() {
@@ -47,40 +45,34 @@ public class FilechangeStatics extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
-		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		Title.setText("ESTATÍSTICAS");
-		Title.setTextBold();
-		Title.setOpaque(false);
-		Title.setVisible(false);
 		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		OptionLabel.setText("Arquivos");
+		OptionLabel.setText(Lang.FILES);
 		OptionLabel.setOpaque(false);
 		OptionLabel.setVisible(false);
 		SubOptionLabel1 = new GLabel(Jamcollab.app, 64, 112, 136, 16);
 		SubOptionLabel1.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel1.setText("Criados:");
+		SubOptionLabel1.setText(Lang.CREATED);
 		SubOptionLabel1.setOpaque(false);
 		SubOptionLabel1.setVisible(false);
 		SubOptionLabel2 = new GLabel(Jamcollab.app, 64, 128, 136, 16);
 		SubOptionLabel2.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel2.setText("Modificados:");
+		SubOptionLabel2.setText(Lang.MODIFIED);
 		SubOptionLabel2.setOpaque(false);
 		SubOptionLabel2.setVisible(false);
 		SubOptionLabel3 = new GLabel(Jamcollab.app, 64, 144, 136, 16);
 		SubOptionLabel3.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel3.setText("Excluídos:");
+		SubOptionLabel3.setText(Lang.DELETED);
 		SubOptionLabel3.setOpaque(false);
 		SubOptionLabel3.setVisible(false);
 		SubOptionLabel4 = new GLabel(Jamcollab.app, 64, 160, 136, 16);
 		SubOptionLabel4.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel4.setText("Quantidade dados:");
+		SubOptionLabel4.setText(Lang.DATA_SIZE);
 		SubOptionLabel4.setOpaque(false);
 		SubOptionLabel4.setVisible(false);
 		SubOptionLabel5 = new GLabel(Jamcollab.app, 64, 176, 136, 16);
 		SubOptionLabel5.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel5.setText("Pasta:");
+		SubOptionLabel5.setText(Lang.FOLDER);
 		SubOptionLabel5.setOpaque(false);
 		SubOptionLabel5.setVisible(false);
 		CreatedText = new GLabel(Jamcollab.app, 208, 112, 80, 16);
@@ -113,8 +105,7 @@ public class FilechangeStatics extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-
-		Title.setVisible(state);  
+ 
 		OptionLabel.setVisible(state); 
 		SubOptionLabel1.setVisible(state); 
 		SubOptionLabel2.setVisible(state); 
@@ -133,9 +124,7 @@ public class FilechangeStatics extends BaseObject {
 	public void Mouse(MouseEvent e) {
 		if(e.getAction() ==MouseEvent.RELEASE) {
 			if(Jamcollab.app.mouseButton == PConstants.LEFT) 
-				tickClicked++;
-				if(FolderText.isHover() && FolderText.isVisible() &&
-						tickClicked % 2 == 0) {
+				if(FolderText.isHover() && FolderText.isVisible()) {
 					if(!Utils.OpenFile(FolderText.getText()))
 						Utils.OpenFile(Utils.getDefaultSavePath());
 				}

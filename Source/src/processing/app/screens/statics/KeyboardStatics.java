@@ -2,6 +2,7 @@ package processing.app.screens.statics;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
 import processing.app.controls.GLabel;
@@ -14,7 +15,6 @@ public class KeyboardStatics extends BaseObject {
 
 
 
-	GLabel Title; 
 	GLabel OptionLabel; 
 	GLabel SubOptionLabel1; 
 	GLabel SubOptionLabel2; 
@@ -58,7 +58,6 @@ public class KeyboardStatics extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
-		Title.setVisible(state);  
 		OptionLabel.setVisible(state); 
 		SubOptionLabel1.setVisible(state); 
 		SubOptionLabel2.setVisible(state); 
@@ -77,35 +76,29 @@ public class KeyboardStatics extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
-		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		Title.setText("ESTATÍSTICAS");
-		Title.setTextBold();
-		Title.setOpaque(false);
-		Title.setVisible(false);
 		OptionLabel = new GLabel(Jamcollab.app, 64, 80, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		OptionLabel.setText("Teclado");
+		OptionLabel.setText(Lang.KEYBOARD);
 		OptionLabel.setOpaque(false);
 		OptionLabel.setVisible(false);
 		SubOptionLabel1 = new GLabel(Jamcollab.app, 64, 104, 136, 16);
 		SubOptionLabel1.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel1.setText("Número palavras:");
+		SubOptionLabel1.setText(Lang.WORDS_NUMBER);
 		SubOptionLabel1.setOpaque(false);
 		SubOptionLabel1.setVisible(false);
 		SubOptionLabel2 = new GLabel(Jamcollab.app, 64, 120, 136, 16);
 		SubOptionLabel2.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel2.setText("Últimas palavras:");
+		SubOptionLabel2.setText(Lang.LAST_WORDS);
 		SubOptionLabel2.setOpaque(false);
 		SubOptionLabel2.setVisible(false);
 		SubOptionLabel3 = new GLabel(Jamcollab.app, 64, 216, 136, 16);
 		SubOptionLabel3.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel3.setText("Número letras:");
+		SubOptionLabel3.setText(Lang.KEYS_NUMBER);
 		SubOptionLabel3.setOpaque(false);
 		SubOptionLabel3.setVisible(false);
 		SubOptionLabel4 = new GLabel(Jamcollab.app, 64, 232, 136, 16);
 		SubOptionLabel4.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel4.setText("Últimas letras:");
+		SubOptionLabel4.setText(Lang.LAST_KEYS);
 		SubOptionLabel4.setOpaque(false);
 		SubOptionLabel4.setVisible(false);
 		SubOption1Text = new GLabel(Jamcollab.app, 208, 104, 80, 16);
@@ -129,12 +122,12 @@ public class KeyboardStatics extends BaseObject {
 		
 		SubOptionLabel5 = new GLabel(Jamcollab.app, 200, 104, 136, 16);
 		SubOptionLabel5.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel5.setText("Palavras/Minuto:");
+		SubOptionLabel5.setText(Lang.WORDS_PM_STATIC);
 		SubOptionLabel5.setOpaque(false);
 		SubOptionLabel5.setVisible(false);
 		SubOptionLabel6 = new GLabel(Jamcollab.app, 200, 216, 136, 16);
 		SubOptionLabel6.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		SubOptionLabel6.setText("Letras/Minuto:");
+		SubOptionLabel6.setText(Lang.KEYS_PM_STATIC);
 		SubOptionLabel6.setOpaque(false);
 		SubOptionLabel6.setVisible(false);
 		

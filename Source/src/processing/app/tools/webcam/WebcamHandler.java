@@ -1,13 +1,20 @@
 package processing.app.tools.webcam;
 
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.screens.Master;
 import processing.app.screens.configs.WebcamConfig;
+import processing.core.PConstants;
 import processing.core.PImage;
 import processing.event.MouseEvent;
 
@@ -21,7 +28,7 @@ import com.github.sarxos.webcam.WebcamUtils;
 public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener {
 
 	private static WebcamHandler instance;
-	
+
 	public static void instantiate() {
 		if(instance == null) {
 			instance = new WebcamHandler();
@@ -48,7 +55,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		new Dimension(2000, 1000),
 		new Dimension(1000, 500),
 	};
-	
+
 	/*
 	 * this should be set only in development phase, it shall NOT be used in
 	 * production due to unknown side effects
@@ -56,7 +63,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	 * Webcam.setHandleTermSignal(true);
 	 * }
 	 * */
-	
+
 	/**
 	Checks if the record mode is on
 	@return True if it´s recording
@@ -85,7 +92,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 				if(web.isOpen())
 					web.close();
 			}
-			
+
 			// Select the new webcam
 			selectedCam = Webcam.getWebcams().get(index);
 			if(!selectedCam.getLock().isLocked())
@@ -109,20 +116,38 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	public void takeCapture(String path, Format format) {
 		if(selectedCam != null) {
 			if(selectedCam.isOpen()) {
+				byte[] imageData = null;
 				switch (format) {
 				case BMP:
+
 					WebcamUtils.capture(selectedCam, path+ File.separator+ "(Cam-" +selectedCam.getName()+ ") At-"+ Utils.dateFormat(), "bmp");
 					break;
 				case GIF:
 					WebcamUtils.capture(selectedCam, path+ File.separator+"(Cam-" +selectedCam.getName()+ ") At-"+ Utils.dateFormat(), "gif");
 					break;
 				case JPG:
+					imageData = WebcamUtils.getImageBytes(selectedCam, "jpg");
 					WebcamUtils.capture(selectedCam, path+ File.separator+"(Cam-" +selectedCam.getName()+ ") At-"+ Utils.dateFormat(), "jpg");
 					break;
 				case PNG:
+					imageData = WebcamUtils.getImageBytes(selectedCam, "png");
 					WebcamUtils.capture(selectedCam, path+ File.separator+"(Cam-" +selectedCam.getName()+ ") At-"+ Utils.dateFormat(), "png");
 					break;
 				}
+				if(imageData != null) {
+					ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+					BufferedImage image;
+					try {
+						image = ImageIO.read(bais);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+					imageTaken = new PImage(image.getWidth(),image.getHeight(),PConstants.ARGB);
+					image.getRGB(0, 0, imageTaken.width, imageTaken.height, imageTaken.pixels, 0, imageTaken.width);
+					imageTaken.updatePixels();
+
+				}
+
 				Master.WBFlash.Flash();
 				imageTakenCount++;
 			}
@@ -169,7 +194,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 
 	public static String getImageTakenResolution() {
 		if(imageTaken == null)
-			return "Ainda não há imagens capturadas";
+			return Lang.NO_IMAGE_CAPTURED;
 		String resolution = imageTaken.width + "x" +imageTaken.height;
 		return resolution;
 	}
@@ -177,13 +202,13 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 	@Override
 	public void Mouse(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void Exit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -193,15 +218,15 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		SetActive(String.valueOf(Utils.AppDAO.
 				getStringData("WEBCAM_TOGGLE", "0")).
 				equals("0") ? false : true);
-		
+
 	}
 
 
-	
+
 
 	@Override
 	public void SetViewActive(boolean state) {
 		// TODO Auto-generated method stub
-		
+
 	} 
 }

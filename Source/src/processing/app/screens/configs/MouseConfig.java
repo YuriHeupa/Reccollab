@@ -2,6 +2,7 @@ package processing.app.screens.configs;
 
 import processing.app.BaseObject;
 import processing.app.Jamcollab;
+import processing.app.Lang;
 import processing.app.Utils;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
@@ -36,40 +37,41 @@ public class MouseConfig extends BaseObject {
 
 	@Override
 	public void Init() {
-		Title = new GLabel(Jamcollab.app, 48, 32, 504, 20);
+		int y = 50;
+		Title = new GLabel(Jamcollab.app, 48, 32+y, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
-		Title.setText("Rastro do Mouse");
+		Title.setText(Lang.MOUSE_TRACK);
 		Title.setTextBold();
 		Title.setOpaque(false);
 		Title.setVisible(false);
-		Option1Label = new GLabel(Jamcollab.app, 64, 88, 192, 16);
+		Option1Label = new GLabel(Jamcollab.app, 64, 88+y, 192, 16);
 		Option1Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		Option1Label.setText("Capturar movimento do mouse:");
+		Option1Label.setText(Lang.CAPTURE_MOUSE_MOVEMENT);
 		Option1Label.setOpaque(false);
 		Option1Label.setVisible(false);
-		SaveMouseMovementsToggle = new GCheckbox(Jamcollab.app, 256, 88, 32, 20);
+		SaveMouseMovementsToggle = new GCheckbox(Jamcollab.app, 256, 88+y, 32, 20);
 		SaveMouseMovementsToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SaveMouseMovementsToggle.setOpaque(false);
 		SaveMouseMovementsToggle.setVisible(false);
 		SaveMouseMovementsToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_MOVEMENTS", false));
-		Option2Label = new GLabel(Jamcollab.app, 64, 112, 192, 20);
+		Option2Label = new GLabel(Jamcollab.app, 64, 112+y, 192, 20);
 		Option2Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
-		Option2Label.setText("Capturar cliques do mouse");
+		Option2Label.setText(Lang.CAPTURE_MOUSE_CLICK);
 		Option2Label.setOpaque(false);
 		Option2Label.setVisible(false);
-		SaveMouseClicksToggle = new GCheckbox(Jamcollab.app, 256, 112, 32, 20);
+		SaveMouseClicksToggle = new GCheckbox(Jamcollab.app, 256, 112+y, 32, 20);
 		SaveMouseClicksToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SaveMouseClicksToggle.setOpaque(false);
 		SaveMouseClicksToggle.setVisible(false);
 		SaveMouseClicksToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_CLICKS", false));
-		BackButton = new GButton(Jamcollab.app, 480, 32, 80, 24);
-		BackButton.setText("Voltar");
+		BackButton = new GButton(Jamcollab.app, 480, 22+y, 80, 24);
+		BackButton.setText(Lang.BACK);
 		BackButton.setTextBold();
 		BackButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		BackButton.addEventHandler(this, "BackButtonClicked");
 		BackButton.setVisible(false);
-		SaveButton = new GButton(Jamcollab.app, 390, 32, 80, 24);
-		SaveButton.setText("Salvar");
+		SaveButton = new GButton(Jamcollab.app, 390, 22+y, 80, 24);
+		SaveButton.setText(Lang.SAVE);
 		SaveButton.setTextBold();
 		SaveButton.setLocalColorScheme(GCScheme.SCHEME_15);
 		SaveButton.addEventHandler(this, "SaveButtonClicked");
@@ -98,7 +100,7 @@ public class MouseConfig extends BaseObject {
 	public void BackButtonClicked(GButton source, GEvent event) { 
 		if(SaveMouseMovementsToggle.isSelected() != Utils.AppDAO.getBooleanData("SAVE_MOUSE_MOVEMENTS", false) ||
 				SaveMouseClicksToggle.isSelected() != Utils.AppDAO.getBooleanData("SAVE_MOUSE_CLICKS", false)) { 
-			if(Utils.ShowQuestion("Confirmar alterações", "Você tem alterações não salvas, deseja salvar?")) {
+			if(Utils.ShowQuestion(Lang.CONFIRM_CHANGES_TITLE, Lang.CONFIRM_CHANGES_MESSAGE)) {
 				saveChanges();
 			}
 		}
