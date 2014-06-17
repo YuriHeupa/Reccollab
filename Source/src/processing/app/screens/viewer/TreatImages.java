@@ -29,7 +29,7 @@ public class TreatImages extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		tabs = new GTabGroup(1, this, "tabClick");
 		tabs.addTabs(Lang.MIX, Lang.RESIZE, Lang.MOUSE_ZOOM);
 		
@@ -56,6 +56,12 @@ public class TreatImages extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

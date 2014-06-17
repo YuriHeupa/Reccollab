@@ -59,24 +59,24 @@ public class Map extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		Level1Button = new GButton(Jamcollab.app, 24, 312, 160, 16);
-		Level1Button.setText("Térreo");
+		Level1Button.setText("Tï¿½rreo");
 		Level1Button.setLocalColorScheme(GCScheme.RED_SCHEME);
 		Level1Button.addEventHandler(this, "Level1ButtonClick");
 		Level1Button.setVisible(false);
 		Level3Button = new GButton(Jamcollab.app, 408, 312, 160, 16);
-		Level3Button.setText("2º Andar");
+		Level3Button.setText("2ï¿½ Andar");
 		Level3Button.setLocalColorScheme(GCScheme.RED_SCHEME);
 		Level3Button.addEventHandler(this, "Level3ButtonClick");
 		Level3Button.setVisible(false);
 		Level2Button = new GButton(Jamcollab.app, 216, 312, 160, 16);
-		Level2Button.setText("1º Andar");
+		Level2Button.setText("1ï¿½ Andar");
 		Level2Button.setLocalColorScheme(GCScheme.RED_SCHEME);
 		Level2Button.addEventHandler(this, "Level2ButtonClick");
 		Level2Button.setVisible(false);
 		HintLabel = new GLabel(Jamcollab.app, 8, 336, 584, 16);
-		HintLabel.setText("Para definir sua posição no mapa de um duplo clique na posição desejada");
+		HintLabel.setText("Para definir sua posiï¿½ï¿½o no mapa de um duplo clique na posiï¿½ï¿½o desejada");
 		HintLabel.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		HintLabel.setOpaque(false);
 		HintLabel.setVisible(false);
@@ -228,7 +228,7 @@ if(show) {
 								getCurrentMap().getLevelSize(1));
 						int confirm = JOptionPane.showOptionDialog(Application.jframe,
 								"Deseja abrir o navegador para definir sua posicao online?",
-								"Confirmação de abertura do navegador", JOptionPane.YES_NO_OPTION,
+								"Confirmaï¿½ï¿½o de abertura do navegador", JOptionPane.YES_NO_OPTION,
 								JOptionPane.QUESTION_MESSAGE, null, null, null);
 						switch(confirm) {
 						case JOptionPane.YES_OPTION:
@@ -243,7 +243,7 @@ if(show) {
 										"&y="+(int)convertToOnline.y, null);
 								Application.app.link(uri.toASCIIString());
 							} catch (Exception ex) {
-								System.out.println("Error: " + ex);
+								Utils.LogError("Error: " + ex);
 							}
 							break;
 						case JOptionPane.NO_OPTION:
@@ -272,13 +272,13 @@ if(show) {
 		String mapName = "null";
 		switch(map) {
 		case 0:
-			mapName = "Térreo";
+			mapName = "Tï¿½rreo";
 			break;
 		case 1:
-			mapName = "1º andar";
+			mapName = "1ï¿½ andar";
 			break;
 		case 2:
-			mapName = "2º andar";
+			mapName = "2ï¿½ andar";
 			break;
 		}
 		return mapName;
@@ -337,6 +337,12 @@ if(show) {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

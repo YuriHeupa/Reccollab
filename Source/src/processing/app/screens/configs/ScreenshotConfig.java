@@ -40,7 +40,7 @@ public class ScreenshotConfig extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 50;
 		Title = new GLabel(Jamcollab.app, 48, 32+y, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
@@ -161,6 +161,13 @@ public class ScreenshotConfig extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

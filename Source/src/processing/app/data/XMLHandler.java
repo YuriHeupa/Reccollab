@@ -11,13 +11,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import processing.app.Utils;
+
 public class XMLHandler {
 
 	public Document ReadXML(String file) {
 		try {
 			File fXmlFile = new File(file);
 			if(!fXmlFile.exists()) {
-				System.out.println("Não foi possível carregar o arquivo " + file);
+				Utils.LogError("Couldn't laod the file " + file);
 				return null;
 			}
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

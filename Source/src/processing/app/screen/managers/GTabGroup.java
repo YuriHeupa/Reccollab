@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import processing.app.Utils;
 import processing.app.controls.GEvent;
 import processing.app.controls.GToggleGroup;
 
@@ -28,7 +29,7 @@ public class GTabGroup {
 	public void addTabs(String... tabs) {
 
 		for(int i = 0; i < tabs.length; i++) {
-			GTab tmp = new GTab((600/tabs.length)*i, position*30, 1200/tabs.length, tabs[i]);
+			GTab tmp = new GTab((600/tabs.length)*i, position*30, 1200/tabs.length, tabs[i], position);
 			tmp.addEventHandler(this, "TabClick");
 			tmp.tagNo = i;
 			group.addControl(tmp);
@@ -79,7 +80,7 @@ public class GTabGroup {
 			targetMethod.invoke(target, source.tagNo);
 		} catch (IllegalAccessException e) {
 		} catch (IllegalArgumentException e) {
-			System.out.println("Could'nt find method " + method + " in " + target.getClass().getSimpleName());
+			Utils.LogError("Could'nt find method " + method + " in " + target.getClass().getSimpleName());
 		} catch (InvocationTargetException e) {}
 		selected = source.tagNo;
 	}

@@ -35,7 +35,7 @@ public class GenerateImages extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		tabs = new GTabGroup(1, this, "tabClick");
 		tabs.addTabs("Mouse", Lang.KEYBOARD, Lang.FILES, Lang.PROCESS, Lang.MAP);
 		
@@ -62,6 +62,12 @@ public class GenerateImages extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

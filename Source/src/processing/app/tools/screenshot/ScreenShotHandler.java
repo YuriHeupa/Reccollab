@@ -54,7 +54,8 @@ public class ScreenShotHandler extends BaseObject {
 	 */
 	public static void SetActive(boolean state) {
 		recording = state;
-		startTime = Jamcollab.app.millis();
+		if(state)
+			startTime = Jamcollab.app.millis();
 	}
 
 	private static void saveScreens(PImage [] screens) {
@@ -134,7 +135,7 @@ public class ScreenShotHandler extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		SetActive(String.valueOf(Utils.AppDAO.
 				getStringData("SCREENSHOT_TOGGLE", "0")).
 				equals("0") ? false : true);
@@ -143,6 +144,12 @@ public class ScreenShotHandler extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -21,7 +21,7 @@ public class About extends BaseObject {
 	private GLabel aboutText;
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		view.AddImage(0, 0, "./resources/sprites/border.png");
 		aboutText = view.AddLabel(20, 50, 560, 500, Lang.ABOUT_DESC, false);
 		aboutText.setFont(new Font("Verdana", Font.PLAIN, 22));
@@ -54,6 +54,13 @@ public class About extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

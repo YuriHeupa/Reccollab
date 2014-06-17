@@ -57,7 +57,7 @@ public class TooltipHandler extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		tooltipImg = new GImageButton(Jamcollab.app, 0, 0, 192, 50, 
 				new String[] { "./resources/sprites/tooltip.png", 
 				"./resources/sprites/tooltip.png",
@@ -77,6 +77,12 @@ public class TooltipHandler extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

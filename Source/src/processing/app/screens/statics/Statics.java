@@ -73,7 +73,7 @@ public class Statics extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		view.AddLabel(64, 80, 72, 16, "Screenshot", GAlign.LEFT, GAlign.MIDDLE, false);
 		view.AddLabel(304, 80, 72, 16, "Webcam", GAlign.LEFT, GAlign.MIDDLE, false);
 		view.AddLabel(64, 152, 72, 16, "Mouse", GAlign.LEFT, GAlign.MIDDLE, false);
@@ -118,6 +118,12 @@ public class Statics extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

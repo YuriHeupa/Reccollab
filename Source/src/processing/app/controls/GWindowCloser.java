@@ -52,7 +52,6 @@ public class GWindowCloser {
 	}
 
 	public void post() {
-		// System.out.println("Window to dispose " + toDisposeOf.size());
 		if (!toDisposeOf.isEmpty()) {
 			for (GWindow gwindow : toDisposeOf) {
 				PApplet wapp = gwindow.papplet;

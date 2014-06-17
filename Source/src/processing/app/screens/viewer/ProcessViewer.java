@@ -38,7 +38,7 @@ public class ProcessViewer extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 70;
 
 		view.AddLabel(4, 88+y, 192, 16, Lang.PROCESS_LOGS, GAlign.RIGHT, GAlign.MIDDLE, false);
@@ -177,6 +177,13 @@ public class ProcessViewer extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

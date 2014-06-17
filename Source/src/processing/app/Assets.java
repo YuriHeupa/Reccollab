@@ -15,6 +15,9 @@ public class Assets {
 	public static String WINDOWS_ICON128 = "resources/ico128.png";
 	public static String WINDOWS_ICON300 = "resources/ico300.png";
 	
+
+	public static String HELP_IMAGE = "resources/sprites/help.png";
+	
 	public static String ACTION_TOGGLE = "resources/sprites/actionToggle.png";
 	
 	public static PImage mapPIN = null;

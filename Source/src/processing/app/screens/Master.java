@@ -68,7 +68,7 @@ public class Master extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 
 		tabs = new GTabGroup(0, this, "tabClick");
 		tabs.addTabs(Lang.CAPTURE_TAB, Lang.VIDEO, Lang.TREAT_IMAGE_TAB, Lang.VISUALIZATION_TAB, Lang.STATICS);
@@ -159,6 +159,12 @@ public class Master extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

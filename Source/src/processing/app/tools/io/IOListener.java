@@ -10,8 +10,8 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 
-import processing.app.Jamcollab;
 import processing.app.BaseObject;
+import processing.app.Jamcollab;
 import processing.app.Utils;
 import processing.app.screens.configs.MouseConfig;
 import processing.event.MouseEvent;
@@ -20,6 +20,7 @@ import processing.event.MouseEvent;
 public class IOListener extends BaseObject implements NativeKeyListener, NativeMouseInputListener, NativeMouseWheelListener {
 
 	private String buffer;
+	private static int startTime;
 
 	/*
 	 * Please note that these properties are not available until after the
@@ -118,8 +119,13 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	 */
 	public void nativeMouseMoved(NativeMouseEvent e) {
 		if(Jamcollab.READY)
-			if(MouseConfig.IsMouseMovement())
-				SendEvent("IOHandler", "addMouseMovement", e.getX(), e.getY());
+			if(MouseConfig.IsMouseMovement()) {
+				int elapsed = Jamcollab.app.millis() - startTime;
+				if(((float)(elapsed)) > Utils.AppDAO.getIntData("MOUSE_CAPTURE_INTERVAL", 100)) {
+					SendEvent("IOHandler", "addMouseMovement", e.getX(), e.getY());
+					startTime = Jamcollab.app.millis();
+				}
+			}
 	}
 
 	/**
@@ -144,9 +150,9 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		buffer = "";
-
+		startTime = Jamcollab.app.millis();
 		try {
 			GlobalScreen.registerNativeHook();
 			GlobalScreen.getInstance().addNativeMouseListener(this);
@@ -164,6 +170,12 @@ public class IOListener extends BaseObject implements NativeKeyListener, NativeM
 	public void SetViewActive(boolean state) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

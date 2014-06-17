@@ -28,7 +28,7 @@ public class Home extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		view.AddLabel(160, 160, 260, 20, Lang.YOU_ARE_CONNECTED_AS, true, GCScheme.GREEN_SCHEME);
 
 		view.AddLabel(200, 20, 200, 20, Lang.SELECT_LANGUAGE, GAlign.RIGHT, GAlign.MIDDLE, true);
@@ -120,6 +120,12 @@ public class Home extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

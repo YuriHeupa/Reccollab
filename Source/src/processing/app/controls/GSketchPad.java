@@ -79,15 +79,9 @@ public class GSketchPad extends GAbstractControl {
 					winApp.image(pad, 0, 0, width, height);
 				else
 					winApp.image(pad, 0, 0);
-				// System.out.println("Graphic updated with alpha " +
-				// alphaLevel);
 			} catch (Exception excp) { /* Do nothing */
 			}
 		}
-		// winApp.noFill();
-		// winApp.stroke(palette[3]);
-		// winApp.strokeWeight(1.5f);
-		// winApp.rect(0, 0, width, height);
 		winApp.popMatrix();
 		winApp.popStyle();
 	}

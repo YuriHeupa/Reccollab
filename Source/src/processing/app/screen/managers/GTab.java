@@ -13,13 +13,13 @@ public class GTab extends GOption {
 	PImage tabImage;
 	String text;
 
-	public GTab(int x, int y, int width, String text) {
+	public GTab(int x, int y, int width, String text, int id) {
 		super(Jamcollab.app, x, y, width, 30);
 		this.text = text;
 		setText(text);
 		setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 		setLocalColorScheme(GCScheme.SCHEME_15);
-		tabImage = Jamcollab.app.loadImage("resources/sprites/tab.png");
+		tabImage = Jamcollab.app.loadImage("resources/sprites/tab"+ String.valueOf(id+1) +".png");
 		tabImage.resize(width, 30);
 		setIcon(tabImage, 2, GAlign.CENTER, GAlign.MIDDLE);
 		hotspots = new HotSpot[] { new HSrect(1, 0, 0, width/2, height) // control

@@ -18,8 +18,10 @@ public class Lang {
 	}
 
 	public static void setLanguage(LANGUAGES lang) {
-		switch (lang) {
+		switch (lang) { 
 		case ENGLISH:
+			CLICK_TO_GO = "Click to go to folder";
+			CLICK_ANYWHERE = "(Click anywhere to dismiss)\n The modules can be activated down here";
 			YOU_ARE_CONNECTED_AS = "You are connect as:";
 			SELECT_LANGUAGE = "Select language:";
 			THERES_NO_USER_SELECTED = "There's no user selected";
@@ -156,8 +158,10 @@ public class Lang {
 			BOTTOM_RIGHT = "BOTTOM / RIGHT";
 			TURN_ON = "Turn On";
 			TURN_OFF = "Turn Off";
+			WEBCAM_EROR = "Coldn't connect to webcam\nCheck the configuration";
 			break;
 		case PORTUGUES:
+			CLICK_TO_GO = "Clique para ir para a pasta";
 			YOU_ARE_CONNECTED_AS = "Você está conectado como:";	
 			SELECT_LANGUAGE = "Selecione o idioma:";
 			THERES_NO_USER_SELECTED = "Não há usuário selecionado";
@@ -293,6 +297,8 @@ public class Lang {
 			BOTTOM_RIGHT = "BAIXO / DIREITA";
 			TURN_ON = "Ligar";
 			TURN_OFF = "Desligar";
+			WEBCAM_EROR = "Não foi possível conectar com a webcam\nVerifique as configurações";
+			CLICK_ANYWHERE = "(Clique em qualquer lugar para fechar)\n Os módulos podem ser ativados aqui abaixo";
 			break;
 
 		default:
@@ -300,6 +306,7 @@ public class Lang {
 		}
 	}
 
+	public static String WEBCAM_EROR = "Não foi possível conectar com a webcam\nVerifique as configurações";
 	public static String YOU_ARE_CONNECTED_AS = "Você está conectado como:";
 	public static String SELECT_LANGUAGE = "Selecione o idioma:";
 	public static String THERES_NO_USER_SELECTED = "Não há usuário selecionado";
@@ -435,6 +442,8 @@ public class Lang {
 	public static String BOTTOM_RIGHT = "BAIXO / DIREITA";
 	public static String TURN_ON = "Ligar";
 	public static String TURN_OFF = "Desligar";
+	public static String CLICK_ANYWHERE = "(Clique em qualquer lugar para fechar)\n Os módulos podem ser ativados aqui abaixo";
+	public static String CLICK_TO_GO = "Clique para ir para a pasta";
 
 
 

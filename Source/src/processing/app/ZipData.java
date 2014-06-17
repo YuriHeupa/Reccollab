@@ -10,8 +10,6 @@ public class ZipData {
 	
 	public ZipData(File file, String folder) {
 		this.file = file;
-		//System.out.println(generateFinalPath(getAbsolutePath()));
-		//System.out.println(getAbsolutePath());
 		zipEntry = new ZipEntry(folder + File.separator + file.getName());
 	}
 

@@ -83,7 +83,6 @@ public class Gif extends PImage implements PConstants, Runnable {
 
 	public void dispose() {
 		// fin
-		// System.out.println("disposing");
 		stop();
 		runner = null;
 	}
@@ -286,7 +285,6 @@ public class Gif extends PImage implements PConstants, Runnable {
 	 * Pause the animation at its current frame.
 	 */
 	public void pause() {
-		// System.out.println("pause");
 		play = false;
 	}
 
@@ -294,7 +292,6 @@ public class Gif extends PImage implements PConstants, Runnable {
 	 * Stop the animation, and rewind.
 	 */
 	public void stop() {
-		//System.out.println("stop");
 		play = false;
 		currentFrame = 0;
 		repeatCount = 0;

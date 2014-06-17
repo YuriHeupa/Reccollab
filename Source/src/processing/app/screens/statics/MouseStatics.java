@@ -40,7 +40,7 @@ public class MouseStatics extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		OptionLabel.setText("Mouse");
@@ -78,6 +78,12 @@ public class MouseStatics extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

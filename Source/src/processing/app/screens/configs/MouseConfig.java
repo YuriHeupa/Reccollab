@@ -4,12 +4,14 @@ import processing.app.BaseObject;
 import processing.app.Jamcollab;
 import processing.app.Lang;
 import processing.app.Utils;
+import processing.app.controls.G4P;
 import processing.app.controls.GAlign;
 import processing.app.controls.GButton;
 import processing.app.controls.GCScheme;
 import processing.app.controls.GCheckbox;
 import processing.app.controls.GEvent;
 import processing.app.controls.GLabel;
+import processing.app.controls.GTextField;
 import processing.event.MouseEvent;
 
 public class MouseConfig extends BaseObject {
@@ -21,7 +23,8 @@ public class MouseConfig extends BaseObject {
 	GLabel Option2Label; 
 	GButton BackButton; 
 	GButton SaveButton; 
-
+	GTextField CaptureTimeInput;
+	
 	public MouseConfig() {
 		super();
 		setParent("Master");
@@ -36,7 +39,7 @@ public class MouseConfig extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 50;
 		Title = new GLabel(Jamcollab.app, 48, 32+y, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
@@ -44,22 +47,35 @@ public class MouseConfig extends BaseObject {
 		Title.setTextBold();
 		Title.setOpaque(false);
 		Title.setVisible(false);
-		Option1Label = new GLabel(Jamcollab.app, 64, 88+y, 192, 16);
+		Option1Label = new GLabel(Jamcollab.app, 64, 112+y, 192, 16);
 		Option1Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		Option1Label.setText(Lang.CAPTURE_MOUSE_MOVEMENT);
 		Option1Label.setOpaque(false);
 		Option1Label.setVisible(false);
-		SaveMouseMovementsToggle = new GCheckbox(Jamcollab.app, 256, 88+y, 32, 20);
+		SaveMouseMovementsToggle = new GCheckbox(Jamcollab.app, 256, 112+y, 32, 20);
 		SaveMouseMovementsToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SaveMouseMovementsToggle.setOpaque(false);
 		SaveMouseMovementsToggle.setVisible(false);
 		SaveMouseMovementsToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_MOVEMENTS", false));
-		Option2Label = new GLabel(Jamcollab.app, 64, 112+y, 192, 20);
+		view.AddLabel(64, 136+y, 192, 16, "Frame rate ms:", GAlign.RIGHT, GAlign.MIDDLE, false);
+		
+		CaptureTimeInput = view.AddTextField(256, 136+y, 60, 16, G4P.SCROLLBARS_NONE);
+		CaptureTimeInput.addEventHandler(this, "CaptureTimeInputChanged");
+		CaptureTimeInput.setText(Utils.AppDAO.getStringData("MOUSE_CAPTURE_INTERVAL", "100"));
+		
+		
+		SaveMouseMovementsToggle = new GCheckbox(Jamcollab.app, 256, 112+y, 32, 20);
+		SaveMouseMovementsToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
+		SaveMouseMovementsToggle.setOpaque(false);
+		SaveMouseMovementsToggle.setVisible(false);
+		SaveMouseMovementsToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_MOVEMENTS", false));
+		
+		Option2Label = new GLabel(Jamcollab.app, 64, 88+y, 192, 20);
 		Option2Label.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
 		Option2Label.setText(Lang.CAPTURE_MOUSE_CLICK);
 		Option2Label.setOpaque(false);
 		Option2Label.setVisible(false);
-		SaveMouseClicksToggle = new GCheckbox(Jamcollab.app, 256, 112+y, 32, 20);
+		SaveMouseClicksToggle = new GCheckbox(Jamcollab.app, 256, 88+y, 32, 20);
 		SaveMouseClicksToggle.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		SaveMouseClicksToggle.setOpaque(false);
 		SaveMouseClicksToggle.setVisible(false);
@@ -91,6 +107,14 @@ public class MouseConfig extends BaseObject {
 		SaveMouseMovementsToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_MOVEMENTS", false));
 		SaveMouseClicksToggle.setSelected(Utils.AppDAO.getBooleanData("SAVE_MOUSE_CLICKS", false));
 	}
+
+	public void CaptureTimeInputChanged(GTextField source, GEvent event) { 
+		if(event == GEvent.LOST_FOCUS) {
+			String str = CaptureTimeInput.getText();
+			str = str.replaceAll("[^\\d.]", "");
+			CaptureTimeInput.setText(str);
+		}
+	} 
 	
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
@@ -110,6 +134,7 @@ public class MouseConfig extends BaseObject {
 	private void saveChanges() {
 		Utils.AppDAO.updateData("SAVE_MOUSE_MOVEMENTS", SaveMouseMovementsToggle.isSelected());
 		Utils.AppDAO.updateData("SAVE_MOUSE_CLICKS", SaveMouseClicksToggle.isSelected());
+		Utils.AppDAO.updateData("MOUSE_CAPTURE_INTERVAL", CaptureTimeInput.getText());
 	}
 
 	public static boolean IsMouseClicks() {
@@ -135,6 +160,13 @@ public class MouseConfig extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

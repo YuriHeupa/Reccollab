@@ -43,7 +43,7 @@ public class ResizeViewer extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 70;
 		
 		view.AddLabel(4, 88+y, 192, 16, Lang.IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
@@ -190,5 +190,12 @@ public class ResizeViewer extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 }

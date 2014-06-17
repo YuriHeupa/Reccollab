@@ -47,7 +47,7 @@ public class Login extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		needPass = false;
 		StatusMessage = new GLabel(Jamcollab.app, 180, 234, 220, 40);
 		StatusMessage.setText("");
@@ -149,6 +149,12 @@ public class Login extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

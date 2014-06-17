@@ -54,6 +54,7 @@ public class IOHandler extends BaseObject {
 		// Save mouse general log
 		if(getClickCount() > 0 || getDistanceMouseTravel() > 0) {
 			ArrayList<String> mouseGeneralLog = new ArrayList<String>();
+			mouseGeneralLog.add(Utils.dateFormat());
 			mouseGeneralLog.add("Total de cliques: " +getClickCount());
 			mouseGeneralLog.add("Distancia percorrida: " +getDistanceMouseTravel() + " px");
 			long elapsedTime = System.currentTimeMillis()-startTimeMillis;
@@ -79,6 +80,7 @@ public class IOHandler extends BaseObject {
 		if(getWordsTypedCount() > 0 || getKeysTypedCount() > 0 ||
 				getWordMinuteCount() > 0 || getKeysMinuteCount() > 0) {
 			ArrayList<String> keyboardGeneralLog = new ArrayList<String>();
+			keyboardGeneralLog.add(Utils.dateFormat());
 			keyboardGeneralLog.add("Número palavras: " +getWordsTypedCount());
 			keyboardGeneralLog.add("Número letras: " +getKeysTypedCount());
 			keyboardGeneralLog.add("Palavras/Minuto: " +getWordMinuteCount());
@@ -220,7 +222,7 @@ public class IOHandler extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		listeningMouse = String.valueOf(Utils.AppDAO.
 				getStringData("MOUSE_TOGGLE", "0")).equals("0") ? false : true;
 		listeningKeyboard = String.valueOf(Utils.AppDAO.
@@ -234,6 +236,12 @@ public class IOHandler extends BaseObject {
 	public void SetViewActive(boolean state) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

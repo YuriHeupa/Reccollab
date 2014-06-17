@@ -35,6 +35,7 @@ public abstract class BaseObject {
 	 */
 	public abstract void Mouse(MouseEvent e);
 	public abstract void SetViewActive(boolean state);
+	public abstract void Awake();
 	public abstract void Init();
 	public abstract void Update();
 	public abstract void Exit();
@@ -65,6 +66,10 @@ public abstract class BaseObject {
 
 	public void EnableView(String identifier) {
 		Controller.EnableView(identifier, true);
+	}
+	
+	public void EnablePrevious() {
+		Controller.EnablePrevious();
 	}
 
 	public void DisableView(String identifier) {

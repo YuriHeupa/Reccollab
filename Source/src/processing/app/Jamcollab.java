@@ -118,7 +118,8 @@ public class Jamcollab extends PApplet {
 		case 48:
 			loadingStatus = Lang.INITIALIZING_WEBCAM;
 			// Init Webcam Handler
-			WebcamHandler.instantiate();
+			//WebcamHandler.instantiate();
+			new WebcamHandler();
 			break;
 		case 52:
 			loadingStatus = Lang.INITIALIZING_PROCESS;

@@ -3,6 +3,7 @@ package processing.app.screens.configs;
 import java.io.File;
 
 import processing.app.BaseObject;
+import processing.app.Controller;
 import processing.app.Jamcollab;
 import processing.app.Lang;
 import processing.app.Utils;
@@ -63,7 +64,7 @@ public class WebcamConfig extends BaseObject {
 
 		CaptureTimeInput.setText(Utils.AppDAO.getStringData("WB_CAPTURE_INTERVAL", "0"));
 		SavePathInput.setText(Utils.AppDAO.getStringData("WEBCAM_PATH", ""));
-		CameraSelectionList.setSelected(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0)+1);
+		CameraSelectionList.setSelected(WebcamHandler.GetActiveCameraID());
 	}
 
 	private void saveChanges() {
@@ -76,9 +77,12 @@ public class WebcamConfig extends BaseObject {
 						SavePathInput.getText());
 			}
 		}
-		
-		Utils.AppDAO.updateData("WEBCAM_SELECTEDCAM", CameraSelectionList.getSelectedIndex()-1);
-		SendEvent("WebcamHandler", "SetActiveCamera", CameraSelectionList.getSelectedIndex()-1);
+		if(!Utils.AppDAO.getStringData("WEBCAM_SELECTEDCAM", "null").equals(CameraSelectionList.getSelectedText())) {
+			Utils.AppDAO.updateData("WEBCAM_SELECTEDCAM", CameraSelectionList.getSelectedText());
+			Controller.Event("WebcamHandler", "enable", Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? false : true);
+		} else {
+			Utils.AppDAO.updateData("WEBCAM_SELECTEDCAM", CameraSelectionList.getSelectedText());
+		}
 	}
 
 	public void SaveButtonClicked(GButton source, GEvent event) { 
@@ -125,7 +129,7 @@ public class WebcamConfig extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 50;
 		Title = new GLabel(Jamcollab.app, 48, 32+y, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
@@ -169,7 +173,7 @@ public class WebcamConfig extends BaseObject {
 		CameraSelectionList.setItems(WebcamHandler.GetActiveCameras(), 0);
 		CameraSelectionList.setLocalColorScheme(GCScheme.SCHEME_8);
 		CameraSelectionList.setVisible(false);
-		CameraSelectionList.setSelected(Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0)+1);
+		CameraSelectionList.setSelected(WebcamHandler.GetActiveCameraID());
 		BackButton = new GButton(Jamcollab.app, 480, 22+y, 80, 24);
 		BackButton.setText(Lang.BACK);
 		BackButton.setTextBold();
@@ -190,6 +194,13 @@ public class WebcamConfig extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

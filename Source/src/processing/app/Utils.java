@@ -142,8 +142,10 @@ public class Utils {
 		AppDAO.insertData(new Data("PIN_POS_X", "-1"));
 		AppDAO.insertData(new Data("PIN_POS_Y", "-1"));
 		AppDAO.insertData(new Data("PIN_MAP", "-1"));
+		AppDAO.insertData(new Data("NEED_HELP", "true"));
 		AppDAO.insertData(new Data("SS_CAPTURE_INTERVAL", "60"));
 		AppDAO.insertData(new Data("WB_CAPTURE_INTERVAL", "60"));
+		AppDAO.insertData(new Data("MOUSE_CAPTURE_INTERVAL", "100"));
 		AppDAO.insertData(new Data("SAVE_MOUSE_MOVEMENTS", "true"));
 		AppDAO.insertData(new Data("SAVE_MOUSE_CLICKS", "true"));
 		AppDAO.insertData(new Data("WORDS_TYPED", "false"));
@@ -156,7 +158,7 @@ public class Utils {
 		AppDAO.insertData(new Data("HOTKEY_TOGGLE", "0"));
 		AppDAO.insertData(new Data("MOUSE_TOGGLE", "0"));
 		AppDAO.insertData(new Data("WEBCAM_TOGGLE", "0"));
-		AppDAO.insertData(new Data("WEBCAM_SELECTEDCAM", "0"));
+		AppDAO.insertData(new Data("WEBCAM_SELECTEDCAM", "null"));
 		AppDAO.insertData(new Data("SCREENSHOT_PATH", getDefaultSavePath()+ 
 				File.separator + "Screenshot"));
 		AppDAO.insertData(new Data("WEBCAM_PATH", getDefaultSavePath()+ 
@@ -223,7 +225,7 @@ public class Utils {
 			}
 			out.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("Error: " + e.toString());
+			Utils.LogError("Error: " + e.toString());
 		}
 	}
 
@@ -235,7 +237,7 @@ public class Utils {
 			desktop.open(dirToOpen);
 			return true;
 		} catch (IllegalArgumentException | IOException iae) {
-			System.out.println("File Not Found");
+			Utils.LogError("File Not Found");
 		}
 		return false;
 	}

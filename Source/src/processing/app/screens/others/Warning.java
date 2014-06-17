@@ -25,7 +25,7 @@ public class Warning extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		Title = new GLabel(Jamcollab.app, 48, 62, 504, 20);
 		Title.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		Title.setText(Lang.WARNING_AREA);
@@ -38,10 +38,12 @@ public class Warning extends BaseObject {
 		WarningArea.setVisible(false);
 		WarningArea.setTextEditEnabled(false);
 		WarningArea.setText(Lang.APP_SUCCESS_LOAD);
+		view.AddButton(470, 52, 80, 24, Lang.BACK, GCScheme.SCHEME_15, 
+				this, "BackToConfigButtonClicked");
 	}
 
 	public void BackToConfigButtonClicked(GButton source, GEvent event) { 
-		EnableView("MainConfig");
+		EnablePrevious();
 		
 	}
 
@@ -79,6 +81,13 @@ public class Warning extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

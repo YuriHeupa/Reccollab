@@ -19,7 +19,7 @@ import processing.app.controls.GTextField;
 public class View extends GAbstractControl {
 
 	private BaseObject owner;
-
+	public String previousView;
 
 	public View (BaseObject owner) {
 		super(Jamcollab.app, 0, 0, 1, 1);

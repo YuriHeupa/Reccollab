@@ -48,7 +48,7 @@ public class VideoViewer extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 
 		view.AddLabel(4, 138, 192, 16, Lang.IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 162, 192, 16, Lang.SAVE_PATH, GAlign.RIGHT, GAlign.MIDDLE, false);
@@ -207,6 +207,12 @@ public class VideoViewer extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

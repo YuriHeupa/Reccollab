@@ -40,12 +40,14 @@ public class KeyboardStatics extends BaseObject {
 		SubOption2Text.setText("");
 		for(Keyword word : IOHandler.getWordsMostDigited()) {
 			String tmpStr = SubOption2Text.getText();
-			SubOption2Text.setText(word.getKeyword() + "\n" + tmpStr);
+			if(word != null)
+				SubOption2Text.setText(word.getKeyword() + "\n" + tmpStr);
 		}
 		SubOption4Text.setText("");
 		for(Keyword key : IOHandler.getKeysMostDigited()) {
 			String tmpStr = SubOption4Text.getText();
-			SubOption4Text.setText(key.getKeyword() + "\n" + tmpStr);
+			if(key != null)
+				SubOption4Text.setText(key.getKeyword() + "\n" + tmpStr);
 		}
 	
 	}
@@ -75,7 +77,7 @@ public class KeyboardStatics extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		OptionLabel = new GLabel(Jamcollab.app, 64, 80, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		OptionLabel.setText(Lang.KEYBOARD);
@@ -152,6 +154,12 @@ public class KeyboardStatics extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

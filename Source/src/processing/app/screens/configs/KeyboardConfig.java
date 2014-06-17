@@ -32,7 +32,7 @@ public class KeyboardConfig extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 50;
 
 		view.AddLabel(48, 32+y, 504, 20, Lang.KEYBOARD_STATICS, GAlign.LEFT, GAlign.MIDDLE, true);
@@ -139,6 +139,12 @@ public class KeyboardConfig extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

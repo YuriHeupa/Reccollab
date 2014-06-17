@@ -14,6 +14,8 @@ public class Controller {
 
 	private static Controller instance;
 	private List<BaseObject> objects;
+	private boolean calledInit = false;
+	private static String currentView = "";
 
 	public static void Init(PApplet app) {
 		instance = new Controller();
@@ -26,9 +28,12 @@ public class Controller {
 		if(instance == null || !Jamcollab.READY)
 			return;
 		for(BaseObject bo : instance.objects) {
+			if(!calledInit)
+				bo.Init();
 			bo.Update();
 			bo.view.Update();
 		}
+		calledInit = true;
 	}
 
 	public void mouseEvent(MouseEvent e) {
@@ -51,7 +56,7 @@ public class Controller {
 	public static void registerObject(BaseObject baseObject) {
 		if(instance == null)
 			return;
-		baseObject.Init();
+		baseObject.Awake();
 		if(!instance.objects.contains(baseObject))
 			instance.objects.add(baseObject);
 	}
@@ -87,20 +92,28 @@ public class Controller {
 		}
 
 		// If the paramTypes is null means that the method was not found
-		if(paramTypes == null) return;
+		if(paramTypes == null) {
+			Utils.LogError("Error invocating the target method " + methodName);
+			return;
+		}
 
 		try {
 			targetMethod = bo.getClass().getMethod(methodName, paramTypes);
-		} catch (NoSuchMethodException | SecurityException e1) {}
+		} catch (NoSuchMethodException | SecurityException e1) {
+			Utils.LogError("No method " + methodName + " found in " + bo.getClass().getSimpleName());
+		}
 
 		if(targetMethod == null) return;
 
 		try {
 			targetMethod.invoke(bo, params);
 		} catch (IllegalAccessException e) {
+			Utils.LogError("No access to the method " + methodName);
 		} catch (IllegalArgumentException e) {
-			System.out.println("Wrong arguments passed to the method " + methodName + " in " + bo.getClass().getSimpleName());
-		} catch (InvocationTargetException e) {}
+			Utils.LogError("Wrong arguments passed to the method " + methodName + " in " + bo.getClass().getSimpleName());
+		} catch (InvocationTargetException e) {
+			Utils.LogError("Error invocating the target method " + methodName);
+		}
 		return;
 
 	}
@@ -125,12 +138,21 @@ public class Controller {
 			return target.view.isVisible();
 	}
 
+	public static void EnablePrevious() {
+		BaseObject target = FindByIdentifier(currentView);
+		if(target == null)
+			return;
+		if(!target.view.previousView.isEmpty())
+			EnableView(target.view.previousView, true);
+	}
+
+
 	public static void EnableView(String identifier, boolean disableAll) {
 		if(instance == null)
 			return;
 		BaseObject target = FindByIdentifier(identifier);
 		if(target.view == null) {
-			System.out.println("ViewEnable: The view " + identifier +" couldn´t be found.");
+			Utils.LogWarning("ViewEnable: The view " + identifier +" couldnï¿½t be found.");
 			return;
 		}
 		if(disableAll) {
@@ -139,8 +161,23 @@ public class Controller {
 					bo.view.setVisible(false);
 			}
 		}
-		if(!target.view.isVisible())
-			target.view.setVisible(true);
+		if(!target.view.isVisible()) {
+			if(currentView.isEmpty()) {
+				target.view.setVisible(true);
+				if(disableAll) {
+					currentView = identifier;
+				}
+			} else {
+				if(disableAll) {
+					target.view.previousView = currentView;
+				}
+				target.view.setVisible(true);
+				if(disableAll) {
+					currentView = identifier;
+				}
+			}
+
+		}
 		if(!target.getParent().isEmpty()) {
 			EnableView(target.getParent(), false);
 		}
@@ -152,7 +189,7 @@ public class Controller {
 		if(instance == null)
 			return;
 		if(FindByIdentifier(identifier).view == null) {
-			System.out.println("Disable: The view " + identifier +" couldn´t be found.");
+			Utils.LogWarning("Disable: The view " + identifier +" couldnï¿½t be found.");
 			return;
 		}
 		FindByIdentifier(identifier).view.setVisible(false);

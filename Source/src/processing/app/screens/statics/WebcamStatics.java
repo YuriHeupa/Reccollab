@@ -34,7 +34,7 @@ public class WebcamStatics extends BaseObject {
 		SubOption3Text.setTextUnderlined();
 
 		if(SubOption3Text.isTooltip()) {
-			TooltipHandler.Show(new Vector2D(Jamcollab.app.mouseX, Jamcollab.app.mouseY), "Clique para ir para a pasta");
+			TooltipHandler.Show(new Vector2D(Jamcollab.app.mouseX, Jamcollab.app.mouseY), Lang.CLICK_TO_GO);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class WebcamStatics extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		OptionLabel = new GLabel(Jamcollab.app, 64, 88, 72, 16);
 		OptionLabel.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
 		OptionLabel.setText("Webcam");
@@ -115,6 +115,12 @@ public class WebcamStatics extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

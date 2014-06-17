@@ -55,7 +55,7 @@ public class PIPViewer extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 70;
 		view.AddLabel(4, 88+y, 192, 16, Lang.BACKGROUND_IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
 		view.AddLabel(4, 112+y, 192, 16, Lang.FOREGROUND_IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
@@ -176,7 +176,7 @@ public class PIPViewer extends BaseObject {
 						// Assign the nearest foreground to the background
 						File assignForeground = null;
 						for(int i = 0; i < foregroundList.size(); i++) {
-							if(foregroundList.get(i).getTime() > f.getTime()) {
+							if(foregroundList.get(i).getTime() >= f.getTime()) {
 								assignForeground = foregroundList.get(i).getFile();
 								break;
 							}
@@ -361,5 +361,12 @@ public class PIPViewer extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 }

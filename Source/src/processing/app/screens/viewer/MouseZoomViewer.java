@@ -51,7 +51,7 @@ public class MouseZoomViewer extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 70;
 		
 		view.AddLabel(4, 88+y, 192, 16, Lang.IMAGES, GAlign.RIGHT, GAlign.MIDDLE, false);
@@ -80,7 +80,7 @@ public class MouseZoomViewer extends BaseObject {
 				"SearchOutputPathButtonClick", "resources/sprites/folderIcon.png", 
 				1, GAlign.RIGHT, GAlign.MIDDLE);
 
-		view.AddButton(470, 22+y, 100, 24, Lang.GENERATE, GCScheme.SCHEME_15, 
+		view.AddButton(470, 22+y, 80, 24, Lang.GENERATE, GCScheme.SCHEME_15, 
 				this, "GenerateButtonClicked");
 
 	}
@@ -185,7 +185,7 @@ public class MouseZoomViewer extends BaseObject {
 						// Assign the nearest
 						File assignImage = null;
 						for(int i = 0; i < imagesList.size(); i++) {
-							if(imagesList.get(i).getTime() > m.getTime()) {
+							if(imagesList.get(i).getTime() >= m.getTime()) {
 								assignImage = imagesList.get(i).getFile();
 								break;
 							}
@@ -286,5 +286,12 @@ public class MouseZoomViewer extends BaseObject {
 	public void Exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public void Init() {
+		// TODO Auto-generated method stub
+		
 	}
 }

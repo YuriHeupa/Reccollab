@@ -21,17 +21,14 @@ public class DirectoryManager {
 			spcs += "   ";
 		if(aFile.isFile()) {
 			log.add(spcs + "[FILE] " + aFile.getName());
-			//System.out.println(spcs + "[FILE] " + aFile.getName());
 		} else if (aFile.isDirectory()) {
 			log.add(spcs + "[DIR] " + aFile.getName());
-			//System.out.println(spcs + "[DIR] " + aFile.getName());
 			File[] listOfFiles = aFile.listFiles();
 			if(listOfFiles != null) {
 				for (int i = 0; i < listOfFiles.length; i++)
 					read(listOfFiles[i], log);
 			} else {
 				log.add(spcs + " [ACCESS DENIED]");
-				//System.out.println(spcs + " [ACCESS DENIED]");
 			}
 		}
 		spc_count--;

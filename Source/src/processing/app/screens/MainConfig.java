@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import processing.app.AppZip;
+import processing.app.Assets;
 import processing.app.BaseObject;
 import processing.app.Controller;
 import processing.app.Jamcollab;
@@ -26,6 +27,8 @@ import processing.app.tools.filechange.FileChangeHandler;
 import processing.app.tools.io.IOHandler;
 import processing.app.tools.process.ProcessHandler;
 import processing.app.tools.screenshot.ScreenShotHandler;
+import processing.app.tools.webcam.WebcamHandler;
+import processing.core.PImage;
 import processing.event.MouseEvent;
 
 public class MainConfig extends BaseObject {
@@ -42,6 +45,7 @@ public class MainConfig extends BaseObject {
 	private GImageToggleButton KeyboardToggle; 
 	private GImageToggleButton FilesToggle; 
 	private GImageToggleButton ProcessToggle; 
+	private static PImage helpImage = null;
 
 	Thread zipThread;
 	JDialog loadingZipDialog = new JDialog();  
@@ -53,7 +57,11 @@ public class MainConfig extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
+
+		if(Utils.AppDAO.getBooleanData("NEED_HELP", true)) {
+			helpImage = Jamcollab.app.loadImage(Assets.HELP_IMAGE);
+		}
 
 		view.AddLabel(48, 82, 504, 20, Lang.CONFIGURATION, GAlign.LEFT, GAlign.MIDDLE, true);
 		view.AddLabel(48, 272, 504, 20, Lang.ADVANCED, GAlign.LEFT, GAlign.MIDDLE, true);
@@ -72,9 +80,9 @@ public class MainConfig extends BaseObject {
 
 
 		view.AddButton(400, 52, 80, 24, Lang.EXPORT, GCScheme.SCHEME_15, this, "ExportButton");
-		view.AddButton(482, 52, 80, 24, Lang.IMPORT, GCScheme.SCHEME_15, this, "ImportButton");
+		//view.AddButton(482, 52, 80, 24, Lang.IMPORT, GCScheme.SCHEME_15, this, "ImportButton");
 
-		
+
 
 		ScreenshotModule = new ModuleButton(260, 135, Utils.AppDAO.getIntData("SCREENSHOT_TOGGLE", 0) == 0);
 		ScreenshotModule.addEventHandler(this, "SwitchScreenshot");
@@ -217,7 +225,7 @@ public class MainConfig extends BaseObject {
 
 	public void SwitchWebcam(ModuleButton source, GEvent event) {
 		Utils.AppDAO.updateData("WEBCAM_TOGGLE", Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? 1 : 0);
-		Controller.Event("WebcamHandler", "SetActive", Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? false : true);
+		Controller.Event("WebcamHandler", "enable", Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0 ? false : true);
 		source.Switch(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0) == 0);
 		WebcamToggle.stateValue(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0));
 	} 
@@ -252,12 +260,35 @@ public class MainConfig extends BaseObject {
 
 	@Override
 	public void Update() {
+		WebcamModule.Switch(!WebcamHandler.isRecording());
+		WebcamToggle.stateValue(Utils.AppDAO.getIntData("WEBCAM_TOGGLE", 0));
+
+		if(view.isVisible()) {
+			if(helpImage != null) {
+				Jamcollab.app.image(helpImage, 0, 0);
+				Jamcollab.app.fill(248, 248, 248);
+				Jamcollab.app.textSize(16);
+				Jamcollab.app.text(Lang.CLICK_ANYWHERE, 300, 96);
+			}
+			
+		}
+		
+
 	}
 
 
 	@Override
-	public void Mouse(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void Mouse(MouseEvent e) { 
+		if(view.isVisible()) {
+			if(e.getAction() == MouseEvent.CLICK) {
+				if(helpImage != null) {
+					helpImage = null;
+					Jamcollab.app.background(230);
+					Utils.AppDAO.updateData("NEED_HELP", false);
+				}
+
+			}
+		}
 
 	}
 
@@ -265,6 +296,13 @@ public class MainConfig extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 
 	} 

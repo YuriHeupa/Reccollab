@@ -80,7 +80,7 @@ public class FileChangeHandler extends BaseObject {
 	}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		SetActive(String.valueOf(Utils.AppDAO.
 				getStringData("FILECHANGE_TOGGLE", "0")).
 				equals("0") ? false : true);
@@ -95,6 +95,12 @@ public class FileChangeHandler extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

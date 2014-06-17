@@ -45,7 +45,7 @@ public class ProcessHandler extends BaseObject {
 	public void Mouse(MouseEvent e) {}
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -93,6 +93,12 @@ public class ProcessHandler extends BaseObject {
 
 	@Override
 	public void SetViewActive(boolean state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}

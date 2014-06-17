@@ -90,7 +90,7 @@ class DirectoryWatcher implements Runnable {
 
 				// If the pool is empty get out cause the path could be deleted
 				if(!watchKey.reset()) {
-					System.out.println("Path deleted");
+					Utils.LogError("Path watching deleted");
 					watchKey.cancel();
 					watchService.close();
 					break;
@@ -98,10 +98,10 @@ class DirectoryWatcher implements Runnable {
 			}
 
 		} catch (InterruptedException ex) {
-			System.out.println("Directory Watcher Thread interrupted by exception");
+			Utils.LogError("Directory Watcher Thread interrupted by exception");
 			return;
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.toString());
+			Utils.LogError("Error: " + ex.toString());
 			return;
 		}
 	}

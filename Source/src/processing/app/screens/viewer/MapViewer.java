@@ -39,7 +39,7 @@ public class MapViewer extends BaseObject {
 
 
 	@Override
-	public void Init() {
+	public void Awake() {
 		int y = 70;
 
 
@@ -180,6 +180,13 @@ public class MapViewer extends BaseObject {
 
 	@Override
 	public void Exit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void Init() {
 		// TODO Auto-generated method stub
 		
 	}
