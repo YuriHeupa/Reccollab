@@ -126,6 +126,8 @@ public class Lang {
 			VIDEO_SUCCESS = "Video generated successfully";
 			WIDTH = "Width";
 			HEIGHT = "Height";
+			SHARE_SUCESS = "Success sharing!";
+			SHARE_ERROR = "Error with sharing!";
 			RESIZE_SUCCESS = "Resizing generated successfully";
 			RESIZE = "Resize";
 			PROCESS_LOGS = "Program logs:";
@@ -148,12 +150,15 @@ public class Lang {
 			SIZE = "Size:";
 			PERCENT = "(Percent)";
 			SMALL = "SMALL";
+			SHARING = "Sharing, wait";
 			MEDIUM = "MEDIUM";
 			BIG = "BIG";
 			FULLSCREEN = "FULLSCREEN";
+			SHARE = "Share";
 			CUSTOM = "CUSTOM";
 			TOP_LEFT = "TOP / LEFT";
 			TOP_RIGHT = "TOP / RIGHT";
+			SCREEN = "Screen";
 			BOTTOM_LEFT = "BOTTOM / LEFT";
 			BOTTOM_RIGHT = "BOTTOM / RIGHT";
 			TURN_ON = "Turn On";
@@ -176,6 +181,7 @@ public class Lang {
 			SETTING_APP_CONFIG = "Definindo configurações do programa";
 			LOADING_CONFIG_FILE = "Carregando arquivo de configuração";
 			LOADING_IMAGES = "Carregando imagens";
+			SCREEN = "Tela";
 			VALIDATING_USER_DATA = "Validando dados dos usuário";
 			INITIALIZING_WEBCAM = "Inicializando sistema de captura de video";
 			INITIALIZING_PROCESS = "Inicializando sistema de captura de processos";
@@ -241,6 +247,7 @@ public class Lang {
 			WATCH_FOLDER = "Pasta sendo monitorada:";
 			IMAGES_NUMBER = "Número imagens:";
 			RESOLUTION = "Resolução:";
+			SHARING = "Compartilhando, aguarde";
 			FOLDER = "Pasta:";
 			LAST_IMAGE = "Última imagem:";
 			NO_IMAGE_CAPTURED = "Ainda não há imagens capturadas";
@@ -293,8 +300,11 @@ public class Lang {
 			CUSTOM = "CUSTOMIZADO";
 			TOP_LEFT = "CIMA / ESQUERDA";
 			TOP_RIGHT = "CIMA / DIREITA";
+			SHARE_SUCESS = "Compartilhado com sucesso!";
+			SHARE_ERROR = "Houve um problema!";
 			BOTTOM_LEFT = "BAIXO / ESQUERDA";
 			BOTTOM_RIGHT = "BAIXO / DIREITA";
+			SHARE = "Compartilhar";
 			TURN_ON = "Ligar";
 			TURN_OFF = "Desligar";
 			WEBCAM_EROR = "Não foi possível conectar com a webcam\nVerifique as configurações";
@@ -350,6 +360,7 @@ public class Lang {
 	public static String TREAT_IMAGE_TAB = "Tratar imagens";
 	public static String VISUALIZATION_TAB = "Visualizações";
 	public static String STATICS = "Estatísticas";
+	public static String SHARE = "Compartilhar";
 	public static String KEYBOARD = "Teclado";
 	public static String FILES = "Arquivos";
 	public static String PROCESS = "Programas";
@@ -407,6 +418,7 @@ public class Lang {
 	public static String FORMAT = "Formato:";
 	public static String GENERATE = "Gerar";
 	public static String GENERATING = "Gerando ";
+	public static String SHARING = "Compartilhando, aguarde";
 	public static String VIDEO_SUCCESS = "Video gerado com sucesso";
 	public static String WIDTH = "Largura";
 	public static String HEIGHT = "Altura";
@@ -414,6 +426,8 @@ public class Lang {
 	public static String RESIZE = "Redimensionar";
 	public static String PROCESS_LOGS = "Logs de programas:";
 	public static String GENERATE_SUCCES = "Gerado com sucesso!";
+	public static String SHARE_SUCESS = "Compartilhado com sucesso!";
+	public static String SHARE_ERROR = "Houve um problema!";
 	public static String KEYS_SEQUENCE = "Sequencia de teclas:";
 	public static String WORDS_SEQUENCE = "Sequencia de palavas:";
 	public static String GENERAL_INFO = "Informações gerais:";
@@ -435,6 +449,7 @@ public class Lang {
 	public static String MEDIUM = "MEDIO";
 	public static String BIG = "GRANDE";
 	public static String FULLSCREEN = "TELA INTEIRA";
+	public static String SCREEN = "Tela";
 	public static String CUSTOM = "CUSTOMIZADO";
 	public static String TOP_LEFT = "CIMA / ESQUERDA";
 	public static String TOP_RIGHT = "CIMA / DIREITA";

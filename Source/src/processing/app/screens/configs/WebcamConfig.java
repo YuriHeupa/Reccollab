@@ -93,7 +93,7 @@ public class WebcamConfig extends BaseObject {
 	public void BackButtonClicked(GButton source, GEvent event) { 		
 		if(!Utils.AppDAO.getStringData("WB_CAPTURE_INTERVAL", "").equals(CaptureTimeInput.getText()) ||
 				!Utils.AppDAO.getStringData("WEBCAM_PATH", "").equals(SavePathInput.getText()) ||
-				Utils.AppDAO.getIntData("WEBCAM_SELECTEDCAM", 0) != CameraSelectionList.getSelectedIndex()-1) { 
+				!Utils.AppDAO.getStringData("WEBCAM_SELECTEDCAM", "null").equals(CameraSelectionList.getSelectedText())) { 
 			if(Utils.ShowQuestion(Lang.CONFIRM_CHANGES_TITLE, Lang.CONFIRM_CHANGES_MESSAGE)) {
 				saveChanges();
 			}

@@ -159,7 +159,7 @@ public class WebcamHandler extends BaseObject implements WebcamDiscoveryListener
 		return imageTakenCount;
 	}
 
-	public PImage getImageTaken() {
+	public static PImage getImageTaken() {
 		return imageTaken;
 	}
 

@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import processing.app.BaseObject;
+import processing.app.BaseObjectAdapter;
 import processing.app.Jamcollab;
 import processing.app.Lang;
 import processing.app.Utils;
@@ -31,7 +32,7 @@ import processing.app.tools.io.MouseInfo;
 import processing.core.PGraphics;
 import processing.event.MouseEvent;
 
-public class MouseViewer extends BaseObject {
+public class MouseViewer extends BaseObjectAdapter {
 
 
 	GTextField SourcePathInput; 
@@ -242,40 +243,6 @@ public class MouseViewer extends BaseObject {
 			return;
 		String path = selection.getAbsolutePath();
 		OutputPathInput.setText(path);
-	}
-
-	@Override
-	public void SetViewActive(boolean state) {
-
-	}
-
-
-	@Override
-	public void Update() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void Mouse(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-
-	@Override
-	public void Exit() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void Init() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -9,6 +9,7 @@ import processing.app.controls.GCScheme;
 import processing.app.controls.GEvent;
 import processing.app.screen.managers.FlashAction;
 import processing.app.screen.managers.GTabGroup;
+import processing.app.screens.others.ShareSubTab;
 import processing.app.screens.viewer.GenerateImages;
 import processing.app.screens.viewer.TreatImages;
 import processing.event.MouseEvent;
@@ -59,6 +60,12 @@ public class Master extends BaseObject {
 		case 4:
 			EnableView("Statics");
 			break;
+		case 5:
+			if(tabs.getSelected() != 5) {
+				EnableView("ShareScreenshot");
+				ShareSubTab.tabs.setSelected(0);
+			}
+			break;
 		}
 	}
 	
@@ -71,7 +78,7 @@ public class Master extends BaseObject {
 	public void Awake() {
 
 		tabs = new GTabGroup(0, this, "tabClick");
-		tabs.addTabs(Lang.CAPTURE_TAB, Lang.VIDEO, Lang.TREAT_IMAGE_TAB, Lang.VISUALIZATION_TAB, Lang.STATICS);
+		tabs.addTabs(Lang.CAPTURE_TAB, Lang.VIDEO, Lang.TREAT_IMAGE_TAB, Lang.VISUALIZATION_TAB, Lang.STATICS, Lang.SHARE);
 
 		//if(!Assets.ConfigDAO.getBooleanData("MAPS", false))
 

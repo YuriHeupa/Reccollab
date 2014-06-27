@@ -176,7 +176,7 @@ public class PIPViewer extends BaseObject {
 						// Assign the nearest foreground to the background
 						File assignForeground = null;
 						for(int i = 0; i < foregroundList.size(); i++) {
-							if(foregroundList.get(i).getTime() >= f.getTime()) {
+							if(foregroundList.get(i).getTime() <= f.getTime()) {
 								assignForeground = foregroundList.get(i).getFile();
 								break;
 							}
