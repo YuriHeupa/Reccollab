@@ -80,7 +80,7 @@ public class MainConfig extends BaseObject {
 
 
 		view.AddButton(400, 52, 80, 24, Lang.EXPORT, GCScheme.SCHEME_15, this, "ExportButton");
-		//view.AddButton(482, 52, 80, 24, Lang.IMPORT, GCScheme.SCHEME_15, this, "ImportButton");
+		view.AddButton(482, 52, 80, 24, Lang.IMPORT, GCScheme.SCHEME_15, this, "ImportButton");
 
 
 
@@ -144,6 +144,10 @@ public class MainConfig extends BaseObject {
 		WebcamToggle.setVisible(state);
 	}
 
+	public void ImportButton(GButton source, GEvent event) {
+		Jamcollab.app.selectInput(Lang.SELECT_EXPORT_FOLDER, "selectImportFile", null, this);
+	} 
+
 
 	public void ExportButton(GButton source, GEvent event) {
 		if(zipThread != null) {
@@ -156,6 +160,10 @@ public class MainConfig extends BaseObject {
 		Jamcollab.app.selectFolder(Lang.SELECT_EXPORT_FOLDER, "selectExportFolder", null, this);
 	} 
 
+	public void selectImportFile(File selection) {
+		if(selection == null)
+			return;
+	}
 	public void selectExportFolder(File selection) {
 		if(selection == null)
 			return;
