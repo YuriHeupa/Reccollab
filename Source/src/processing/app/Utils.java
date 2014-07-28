@@ -146,6 +146,7 @@ public class Utils {
 		AppDAO.insertData(new Data("SS_CAPTURE_INTERVAL", "60"));
 		AppDAO.insertData(new Data("WB_CAPTURE_INTERVAL", "60"));
 		AppDAO.insertData(new Data("MOUSE_CAPTURE_INTERVAL", "100"));
+		AppDAO.insertData(new Data("BACKUP_INTERVAL", "60"));
 		AppDAO.insertData(new Data("SAVE_MOUSE_MOVEMENTS", "true"));
 		AppDAO.insertData(new Data("SAVE_MOUSE_CLICKS", "true"));
 		AppDAO.insertData(new Data("WORDS_TYPED", "false"));

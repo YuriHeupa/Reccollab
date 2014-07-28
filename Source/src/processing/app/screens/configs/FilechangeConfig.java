@@ -27,6 +27,8 @@ public class FilechangeConfig extends BaseObject {
 	GButton SearchPathButton2; 
 	GButton BackButton; 
 	GButton SaveButton; 
+	GTextField CaptureTimeInput;
+	
 
 	public FilechangeConfig() {
 		super();
@@ -53,6 +55,13 @@ public class FilechangeConfig extends BaseObject {
 		WatchFolderInput.setEnabled(false);
 		WatchFolderInput.setVisible(false);
 		WatchFolderInput.setText(Utils.AppDAO.getStringData("FILECHANGE_PATH", ""));
+		
+
+		view.AddLabel(64, 136+y, 192, 16, "Intervalo de backup (Minutos):", GAlign.RIGHT, GAlign.MIDDLE, false);
+		
+		CaptureTimeInput = view.AddTextField(256, 136+y, 60, 16, G4P.SCROLLBARS_NONE);
+		CaptureTimeInput.addEventHandler(this, "CaptureTimeInputChanged");
+		CaptureTimeInput.setText(Utils.AppDAO.getStringData("BACKUP_INTERVAL", "60"));
 
 		SearchPathButton1 = new GButton(Jamcollab.app, 480, 88+y, 76, 16);
 		SearchPathButton1.setIcon("resources/sprites/folderIcon.png", 1, GAlign.RIGHT, GAlign.MIDDLE);
@@ -93,6 +102,14 @@ public class FilechangeConfig extends BaseObject {
 		SaveButton.setVisible(false);
 	}
 
+	public void CaptureTimeInputChanged(GTextField source, GEvent event) { 
+		if(event == GEvent.LOST_FOCUS) {
+			String str = CaptureTimeInput.getText();
+			str = str.replaceAll("[^\\d.]", "");
+			CaptureTimeInput.setText(str);
+		}
+	} 
+	
 
 	public void SaveButtonClicked(GButton source, GEvent event) { 
 		saveChanges();
@@ -110,6 +127,7 @@ public class FilechangeConfig extends BaseObject {
 			}
 		}
 		Utils.AppDAO.updateData("FILELOGS_PATH", LogFolderInput.getText());
+		Utils.AppDAO.updateData("BACKUP_INTERVAL", CaptureTimeInput.getText());
 	}
 
 
