@@ -9,7 +9,7 @@ public class Assets {
 
     public static DAO ConfigDAO = new DAO("AppConfig");
 
-    public static String WINDOW_TITLE = "Reccollab - V1.3";
+    public static String WINDOW_TITLE = "Reccollab - V1.4";
     public static String WINDOWS_ICON32 = "resources/ico32.png";
     public static String WINDOWS_ICON64 = "resources/ico64.png";
     public static String WINDOWS_ICON128 = "resources/ico128.png";

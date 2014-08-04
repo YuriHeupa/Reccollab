@@ -55,7 +55,7 @@ public class Lang {
     public static String BACK = "Voltar";
     public static String ABOUT_DESC = "Criado como projeto de iniciação científica por " +
             "Yuri Heupa sob orientação de Bruno Campagnolo, a partir de recursos da " +
-            "Fundação Araucária. Versão 1.3";
+            "Fundação Araucária. Versão 1.4";
     public static String VIDEO = "Vídeo";
     public static String WARNING_AREA = "QUADRO DE AVISOS";
     public static String WARNING_AREA_EXPAND = "QUADRO DE AVISOS: (Clique para expandir)";

@@ -125,13 +125,17 @@ public class VideoViewer extends BaseObject {
                         Encoder.GetCodecAt(CodecSelectionList.getSelectedIndex()));
 
                 load.setText("100%");
-
-                SwingUtilities.invokeLater(() -> {
-                    encodingDialog.dispose();
-                    JOptionPane.showMessageDialog(Reccollab.jframe,
-                            Lang.VIDEO_SUCCESS);
-                    Utils.OpenFile(new File(fileName).getAbsolutePath());
-                });
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+	                    encodingDialog.dispose();
+	                    JOptionPane.showMessageDialog(Reccollab.jframe,
+	                            Lang.VIDEO_SUCCESS);
+	                    Utils.OpenFile(new File(fileName).getAbsolutePath());
+						
+					}
+				});
             }
         };
 
