@@ -90,7 +90,7 @@ public class Encoder {
 
         writer = ToolFactory.makeWriter(fileName);
         writer.addVideoStream(0, 0, codec,
-                openStrem.getWidth() / 2, openStrem.getHeight() / 2);
+                openStrem.getWidth(), openStrem.getHeight());
 
         float percent = 0;
         float factorPercentLoad = 100.0f / imgs.size();

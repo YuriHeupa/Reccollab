@@ -3,10 +3,7 @@ package processing.app.screens.others;
 import processing.app.BaseObjectAdapter;
 import processing.app.Lang;
 import processing.app.Reccollab;
-import processing.app.controls.GAlign;
-import processing.app.controls.GButton;
-import processing.app.controls.GCScheme;
-import processing.app.controls.GEvent;
+import processing.app.controls.*;
 import processing.app.tools.webcam.WebcamHandler;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -28,16 +25,24 @@ public class ShareWebcam extends BaseObjectAdapter {
     PImage lastImageResized = null;
 
     // Change this to the URL of the PHP script on your server
-    String scriptURL = "http://localhost/sharetest/saveimg.php";
-    String scriptURL2 = "http://localhost/sharetest/showimg.php";
-
+    String sharedURL = "http://localhost/sharetest";
+    String scriptURL = "/saveimg.php";
+    String scriptURL2 = "/showimg.php";
     String TMPFNAME = "_tmp_file_to_upload";
-
     int myImg = -1;
+    private GTextField URLPathInput;
 
     public ShareWebcam() {
         super();
         setParent("ShareSubTab");
+    }
+
+    private String getScriptURL() {
+        return URLPathInput.getText() + scriptURL;
+    }
+
+    private String getScriptURL2() {
+        return URLPathInput.getText() + scriptURL2;
     }
 
     @Override
@@ -58,7 +63,9 @@ public class ShareWebcam extends BaseObjectAdapter {
     public void Awake() {
 
         int y = 70;
-        view.AddLabel(4, 88 + y, 192, 16, "", GAlign.RIGHT, GAlign.MIDDLE, false);
+
+        view.AddLabel(4, 22 + y, 192, 16, "URL: ", GAlign.RIGHT, GAlign.MIDDLE, false);
+        URLPathInput = view.AddTextField(196, 22 + y, 216, 16, G4P.SCROLLBARS_NONE, sharedURL);
         view.AddButton(460, 22 + y, 120, 24, Lang.SHARE, GCScheme.SCHEME_15,
                 this, "ShareButtonClicked");
     }
@@ -92,7 +99,7 @@ public class ShareWebcam extends BaseObjectAdapter {
                         if (shared) {
                             JOptionPane.showMessageDialog(Reccollab.jframe,
                                     Lang.SHARE_SUCESS);
-                            Reccollab.app.link(scriptURL2 + "?img=" + myImg);
+                            Reccollab.app.link(getScriptURL2() + "?img=" + myImg);
                         } else
                             JOptionPane.showMessageDialog(Reccollab.jframe,
                                     Lang.SHARE_ERROR);
@@ -131,7 +138,7 @@ public class ShareWebcam extends BaseObjectAdapter {
 
     private void postData(String filename, String ctype, byte[] bytes) {
         try {
-            URL u = new URL(scriptURL);
+            URL u = new URL(getScriptURL());
             URLConnection c = u.openConnection();
             // post multipart data
 
