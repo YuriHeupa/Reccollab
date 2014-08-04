@@ -23,50 +23,44 @@
 
 package processing.app.controls;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 /**
  * The preview panel class for the color selector.
- * 
- * @author Peter Lager
  *
+ * @author Peter Lager
  */
 @SuppressWarnings("serial")
 class ColorPreviewPanel extends JPanel implements ChangeListener {
-	JLabel lblPrev, lblCurr;
-	JLabel lblPrevColor, lblCurrColor;
-	
-	
-	public ColorPreviewPanel(Color c){
-		setLayout(new FlowLayout());
-		lblPrev = new JLabel("Initial Color");
-		lblCurr = new JLabel("Current Color");
-		lblPrevColor = new JLabel("                   ");
-		lblPrevColor.setOpaque(true);
-		lblPrevColor.setBackground(c);
-		lblCurrColor = new JLabel("                   ");
-		lblCurrColor.setOpaque(true);
-		lblCurrColor.setBackground(c);
-		add(lblCurr);
-		add(lblCurrColor);
-		add(lblPrevColor);
-		add(lblPrev);
-	}
+    JLabel lblPrev, lblCurr;
+    JLabel lblPrevColor, lblCurrColor;
 
+    public ColorPreviewPanel(Color c) {
+        setLayout(new FlowLayout());
+        lblPrev = new JLabel("Initial Color");
+        lblCurr = new JLabel("Current Color");
+        lblPrevColor = new JLabel("                   ");
+        lblPrevColor.setOpaque(true);
+        lblPrevColor.setBackground(c);
+        lblCurrColor = new JLabel("                   ");
+        lblCurrColor.setOpaque(true);
+        lblCurrColor.setBackground(c);
+        add(lblCurr);
+        add(lblCurrColor);
+        add(lblPrevColor);
+        add(lblPrev);
+    }
 
-	public void stateChanged(ChangeEvent e) {
-		ColorSelectionModel csm = (ColorSelectionModel)e.getSource();
-		lblCurrColor.setBackground(csm.getSelectedColor());
-	}
-	
-	public void setPrevColor(Color pcol){
-		lblPrevColor.setBackground(pcol);
-	}
+    public void stateChanged(ChangeEvent e) {
+        ColorSelectionModel csm = (ColorSelectionModel) e.getSource();
+        lblCurrColor.setBackground(csm.getSelectedColor());
+    }
+
+    public void setPrevColor(Color pcol) {
+        lblPrevColor.setBackground(pcol);
+    }
 }

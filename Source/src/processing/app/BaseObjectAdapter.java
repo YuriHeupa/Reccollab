@@ -2,28 +2,33 @@ package processing.app;
 
 import processing.event.MouseEvent;
 
-
 public abstract class BaseObjectAdapter extends BaseObject {
 
-	public BaseObjectAdapter() {
-		super();
-	}
-	public void Mouse(MouseEvent e) {
+    public BaseObjectAdapter() {
+        super();
+    }
 
-	}
-	public void SetViewActive(boolean state){
+    public void Mouse(MouseEvent e) {
 
-	}
-	public  void Awake(){
+    }
 
-	}
-	public  void Init(){
+    public void SetViewActive(boolean state) {
 
-	}
-	public  void Update(){
+    }
 
-	}
-	public  void Exit(){
+    public void Awake() {
 
-	}
+    }
+
+    public void Init() {
+
+    }
+
+    public void Update() {
+
+    }
+
+    public void Exit() {
+
+    }
 }

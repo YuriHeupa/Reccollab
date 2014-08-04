@@ -5,29 +5,28 @@ import java.util.zip.ZipEntry;
 
 public class ZipData {
 
-	private File file;
-	private ZipEntry zipEntry;
-	
-	public ZipData(File file, String folder) {
-		this.file = file;
-		zipEntry = new ZipEntry(folder + File.separator + file.getName());
-	}
+    private File file;
+    private ZipEntry zipEntry;
 
-	public ZipEntry getZipEntry() {
-		return zipEntry;
-	}
+    public ZipData(File file, String folder) {
+        this.file = file;
+        zipEntry = new ZipEntry(folder + File.separator + file.getName());
+    }
 
-	public String getAbsolutePath() {
-		return file.getAbsolutePath();
-	}
+    public ZipEntry getZipEntry() {
+        return zipEntry;
+    }
 
-	public boolean isFolder() {
-		return file.isDirectory();
-	}
-	
-	public String fileName() {
-		return file.getName();
-	}
+    public String getAbsolutePath() {
+        return file.getAbsolutePath();
+    }
 
+    public boolean isFolder() {
+        return file.isDirectory();
+    }
+
+    public String fileName() {
+        return file.getName();
+    }
 
 }

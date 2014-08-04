@@ -36,99 +36,96 @@ import java.util.LinkedList;
  * control does not set the focus on the first control, in fact it will be
  * ignored. Similar logic applies to SHIFT_TAB on the first control<br>
  * At least 2 controls must be added to the tab manager.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GTabManager {
 
-	private LinkedList<GEditableTextControl> textControls;
+    private LinkedList<GEditableTextControl> textControls;
 
-	public GTabManager() {
-		textControls = new LinkedList<GEditableTextControl>();
-	}
+    public GTabManager() {
+        textControls = new LinkedList<GEditableTextControl>();
+    }
 
-	/**
-	 * Attempt to add multiple controls to the tab manager. The tab order is
-	 * determined by their order as parameters to this method.
-	 * 
-	 * @param controls
-	 *            a comma separated list of text field or text area controls.
-	 * @return true if any or all of the controls were added and false if none
-	 *         were added.
-	 */
-	public boolean addControls(GEditableTextControl... controls) {
-		boolean result = false;
-		for (GEditableTextControl control : controls)
-			result |= addControl(control);
-		return result;
-	}
+    /**
+     * Attempt to add multiple controls to the tab manager. The tab order is
+     * determined by their order as parameters to this method.
+     *
+     * @param controls a comma separated list of text field or text area controls.
+     * @return true if any or all of the controls were added and false if none
+     * were added.
+     */
+    public boolean addControls(GEditableTextControl... controls) {
+        boolean result = false;
+        for (GEditableTextControl control : controls)
+            result |= addControl(control);
+        return result;
+    }
 
-	/**
-	 * Add the next text control to this tab manager.
-	 * 
-	 * @param control
-	 *            to add
-	 * @return true if added successfully
-	 */
-	public boolean addControl(GEditableTextControl control) {
-		if (!textControls.contains(control)) {
-			control.tabManager = this;
-			textControls.addLast(control);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Add the next text control to this tab manager.
+     *
+     * @param control to add
+     * @return true if added successfully
+     */
+    public boolean addControl(GEditableTextControl control) {
+        if (!textControls.contains(control)) {
+            control.tabManager = this;
+            textControls.addLast(control);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Remove a control from the tab manager. This does not affect the tab order
-	 * of the remaining controls.
-	 * 
-	 * @param control
-	 * @return true if remove successfully
-	 */
-	public boolean removeControl(GEditableTextControl control) {
-		int index = textControls.lastIndexOf(control);
-		if (index > 0) {
-			control.tabManager = null;
-			textControls.remove(index);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Remove a control from the tab manager. This does not affect the tab order
+     * of the remaining controls.
+     *
+     * @param control
+     * @return true if remove successfully
+     */
+    public boolean removeControl(GEditableTextControl control) {
+        int index = textControls.lastIndexOf(control);
+        if (index > 0) {
+            control.tabManager = null;
+            textControls.remove(index);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Used when the tab key is pressed to move to the next control
-	 * 
-	 * @param control
-	 * @return true if it found a next control else false
-	 */
-	boolean nextControl(GEditableTextControl control) {
-		int index = textControls.lastIndexOf(control);
-		if (textControls.size() > 1 && index >= 0
-				&& index < textControls.size() - 1) {
-			index++;
-			GAbstractControl.controlToTakeFocus = textControls.get(index);
-			;
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Used when the tab key is pressed to move to the next control
+     *
+     * @param control
+     * @return true if it found a next control else false
+     */
+    boolean nextControl(GEditableTextControl control) {
+        int index = textControls.lastIndexOf(control);
+        if (textControls.size() > 1 && index >= 0
+                && index < textControls.size() - 1) {
+            index++;
+            GAbstractControl.controlToTakeFocus = textControls.get(index);
+            ;
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Used when the shift+tab key is pressed to move to the previous control
-	 * 
-	 * @param control
-	 * @return true if it found a previous control else false
-	 */
-	boolean prevControl(GEditableTextControl control) {
-		int index = textControls.lastIndexOf(control);
-		if (textControls.size() > 1 && index > 0) {
-			index--;
-			GAbstractControl.controlToTakeFocus = textControls.get(index);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Used when the shift+tab key is pressed to move to the previous control
+     *
+     * @param control
+     * @return true if it found a previous control else false
+     */
+    boolean prevControl(GEditableTextControl control) {
+        int index = textControls.lastIndexOf(control);
+        if (textControls.size() > 1 && index > 0) {
+            index--;
+            GAbstractControl.controlToTakeFocus = textControls.get(index);
+            return true;
+        }
+        return false;
+    }
 
 }

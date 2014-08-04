@@ -23,49 +23,50 @@
 
 package processing.app.controls;
 
-import java.io.File;
-import javax.swing.filechooser.FileFilter;
 import processing.core.PApplet;
 
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
+
 class FileChooserFilter extends FileFilter {
-	
-	private final String[] ftypes;
-	private String description = null;
-	
-	public FileChooserFilter(String types){
-		this(types, null);
-	}
-	
-	public FileChooserFilter(String types, String desc){
-		ftypes = PApplet.split(types.toLowerCase(), ',');
-		for(String e : ftypes)
-			e = e.trim();
-		description = desc;
-	}
-	
-	@Override
-	public boolean accept(File f) {
-		String fext = getExtension(f);
-		if(fext != null){
-			for(String e : ftypes)
-				if(fext.equals(e))
-					return true;
-		}
-		return false;
-	}
 
-	@Override
-	public String getDescription() {
-		return description;
-	}
+    private final String[] ftypes;
+    private String description = null;
 
-	public String getExtension(File f) {
+    public FileChooserFilter(String types) {
+        this(types, null);
+    }
+
+    public FileChooserFilter(String types, String desc) {
+        ftypes = PApplet.split(types.toLowerCase(), ',');
+        for (String e : ftypes)
+            e = e.trim();
+        description = desc;
+    }
+
+    @Override
+    public boolean accept(File f) {
+        String fext = getExtension(f);
+        if (fext != null) {
+            for (String e : ftypes)
+                if (fext.equals(e))
+                    return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public String getExtension(File f) {
         String ext = null;
         String s = f.getName();
         int i = s.lastIndexOf('.');
 
-        if (i > 0 &&  i < s.length() - 1)
-            ext = s.substring(i+1).toLowerCase();
+        if (i > 0 && i < s.length() - 1)
+            ext = s.substring(i + 1).toLowerCase();
         return ext;
     }
 }

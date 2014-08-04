@@ -25,57 +25,56 @@ package processing.app.controls;
 
 /**
  * Use this class to create a single selection collection of options. <br>
- * 
+ * <p>
  * To use create an object of this class and then add GOption objects to it with
  * the addControl method. <br>
- * 
+ * <p>
  * You cannot add GCheckbox objects because they are designed to work
  * independently.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GToggleGroup {
 
-	private GToggleControl selected = null;
-	private GToggleControl deselected = null;
+    private GToggleControl selected = null;
+    private GToggleControl deselected = null;
 
-	/**
-	 * Create a toggle group object.
-	 */
-	public GToggleGroup() {
-	}
+    /**
+     * Create a toggle group object.
+     */
+    public GToggleGroup() {
+    }
 
-	/**
-	 * Add a GOption object to this group.
-	 * 
-	 * @param tc
-	 */
-	public void addControl(GToggleControl tc) {
-		tc.setToggleGroup(this);
-	}
+    /**
+     * Add a GOption object to this group.
+     *
+     * @param tc
+     */
+    public void addControl(GToggleControl tc) {
+        tc.setToggleGroup(this);
+    }
 
-	/**
-	 * Add a set of comma separated GOptions.
-	 * 
-	 * @param controls
-	 */
-	public void addControls(GToggleControl... controls) {
-		for (GToggleControl tc : controls)
-			tc.setToggleGroup(this);
-	}
+    /**
+     * Add a set of comma separated GOptions.
+     *
+     * @param controls
+     */
+    public void addControls(GToggleControl... controls) {
+        for (GToggleControl tc : controls)
+            tc.setToggleGroup(this);
+    }
 
-	public GToggleControl getSelected() {
-		return selected;
-	}
-	
-	/**
-	 * Used internally to change selection
-	 */
-	void makeSelected(GToggleControl tc) {
-		deselected = selected;
-		if (deselected != null)
-			deselected.setSelected(false);
-		selected = tc;
-	}
+    public GToggleControl getSelected() {
+        return selected;
+    }
+
+    /**
+     * Used internally to change selection
+     */
+    void makeSelected(GToggleControl tc) {
+        deselected = selected;
+        if (deselected != null)
+            deselected.setSelected(false);
+        selected = tc;
+    }
 }

@@ -23,32 +23,32 @@
 
 package processing.app.controls;
 
+import processing.core.PApplet;
+
 import java.io.File;
 import java.io.FilenameFilter;
 
-import processing.core.PApplet;
-
 class FilenameChooserFilter implements FilenameFilter {
 
-	private final String[] ftypes;
+    private final String[] ftypes;
 
-	public FilenameChooserFilter(String types){
-		ftypes = PApplet.split(types.toLowerCase(), ',');
-		for(String e : ftypes)
-			e = e.trim();
-	}
+    public FilenameChooserFilter(String types) {
+        ftypes = PApplet.split(types.toLowerCase(), ',');
+        for (String e : ftypes)
+            e = e.trim();
+    }
 
-	public boolean accept(File dir, String name) {
-		String fext = null;
-		int i = name.lastIndexOf('.');
-		if (i > 0 &&  i < name.length() - 1)
-			fext = name.substring(i+1).toLowerCase();
-		if(fext != null){
-			for(String e : ftypes)
-				if(fext.equals(e))
-					return true;
-		}
-		return false;
-	}
+    public boolean accept(File dir, String name) {
+        String fext = null;
+        int i = name.lastIndexOf('.');
+        if (i > 0 && i < name.length() - 1)
+            fext = name.substring(i + 1).toLowerCase();
+        if (fext != null) {
+            for (String e : ftypes)
+                if (fext.equals(e))
+                    return true;
+        }
+        return false;
+    }
 
 }

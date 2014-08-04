@@ -28,173 +28,162 @@ import processing.core.PImage;
 
 /**
  * Base class for controls with text and/or icon.<br>
- * 
+ * <p>
  * This class forms the basis for any control that has text and/or an icon. <br>
  * Use the setIcon, setIconAlign, setText and setTextAlign to control horizontal
  * and vertical alignment of the icon and text withing the control face.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public abstract class GTextIconAlignBase extends GTextAlign {
 
-	protected PImage[] bicon = null;
-	protected int iconW = 0, iconH = 0;
-	protected GAlign iconAlignH = GAlign.RIGHT, iconAlignV = GAlign.MIDDLE;
-	protected int siX, siY;
+    protected PImage[] bicon = null;
+    protected int iconW = 0, iconH = 0;
+    protected GAlign iconAlignH = GAlign.RIGHT, iconAlignV = GAlign.MIDDLE;
+    protected int siX, siY;
 
-	public GTextIconAlignBase(PApplet theApplet, float p0, float p1, float p2,
-			float p3) {
-		super(theApplet, p0, p1, p2, p3);
-	}
+    public GTextIconAlignBase(PApplet theApplet, float p0, float p1, float p2,
+                              float p3) {
+        super(theApplet, p0, p1, p2, p3);
+    }
 
-	/**
-	 * Set the text to be displayed and calculate the wrap length taking into
-	 * account any icon set.
-	 * 
-	 * @param text
-	 */
-	public void setText(String text) {
-		if (text == null || text.length() == 0)
-			text = " ";
-		if (iconW == 0)
-			stext = new StyledString(text, (int) width - TPAD2);
-		else
-			stext = new StyledString(text, (int) width - iconW - TPAD4);
-		bufferInvalid = true;
-	}
+    /**
+     * Set the text to be displayed and calculate the wrap length taking into
+     * account any icon set.
+     *
+     * @param text
+     */
+    public void setText(String text) {
+        if (text == null || text.length() == 0)
+            text = " ";
+        if (iconW == 0)
+            stext = new StyledString(text, (int) width - TPAD2);
+        else
+            stext = new StyledString(text, (int) width - iconW - TPAD4);
+        bufferInvalid = true;
+    }
 
-	/**
-	 * Set the icon to be used and the horizontal and/or vertical icon
-	 * alignment. Use the constants in GAlign e.g.
-	 * 
-	 * <pre>
-	 * GAlign.LEFT
-	 * </pre>
-	 * 
-	 * <br>
-	 * 
-	 * @param fname
-	 *            the filename of the icon
-	 * @param nbrImages
-	 *            number of tiled images in the icon
-	 * @param horz
-	 *            LEFT or RIGHT
-	 * @param vert
-	 *            TOP, MIDDLE, BOTTOM
-	 */
-	public void setIcon(String fname, int nbrImages, GAlign horz, GAlign vert) {
-		PImage iconImage = ImageManager.loadImage(winApp, fname);
-		setIcon(iconImage, nbrImages, horz, vert);
-	}
+    /**
+     * Set the icon to be used and the horizontal and/or vertical icon
+     * alignment. Use the constants in GAlign e.g.
+     * <p>
+     * <pre>
+     * GAlign.LEFT
+     * </pre>
+     * <p>
+     * <br>
+     *
+     * @param fname     the filename of the icon
+     * @param nbrImages number of tiled images in the icon
+     * @param horz      LEFT or RIGHT
+     * @param vert      TOP, MIDDLE, BOTTOM
+     */
+    public void setIcon(String fname, int nbrImages, GAlign horz, GAlign vert) {
+        PImage iconImage = ImageManager.loadImage(winApp, fname);
+        setIcon(iconImage, nbrImages, horz, vert);
+    }
 
-	/**
-	 * Set the icon to be used and the horizontal and/or vertical icon
-	 * alignment. Use the constants in GAlign e.g.
-	 * 
-	 * <pre>
-	 * GAlign.LEFT
-	 * </pre>
-	 * 
-	 * <br>
-	 * 
-	 * If you want to set just one of these then pass null in the other
-	 * 
-	 * @param icon
-	 *            the icon
-	 * @param nbrImages
-	 *            number of tiled images in the icon
-	 * @param horz
-	 *            LEFT, CENTER, RIGHT
-	 * @param vert
-	 *            TOP, MIDDLE, BOTTOM
-	 */
-	public void setIcon(PImage icon, int nbrImages, GAlign horz, GAlign vert) {
-		if (icon != null) {
-			if (nbrImages == 3)
-				bicon = ImageManager.makeTiles1D(winApp, icon, nbrImages, 1);
-			else {
-				bicon = new PImage[3];
-				PImage[] temp = ImageManager.makeTiles1D(winApp, icon,
-						nbrImages, 1);
-				System.arraycopy(temp, 0, bicon, 0, temp.length);
-				for (int i = temp.length; i < 3; i++) {
-					bicon[i] = bicon[i - 1];
-				}
-			}
+    /**
+     * Set the icon to be used and the horizontal and/or vertical icon
+     * alignment. Use the constants in GAlign e.g.
+     * <p>
+     * <pre>
+     * GAlign.LEFT
+     * </pre>
+     * <p>
+     * <br>
+     * <p>
+     * If you want to set just one of these then pass null in the other
+     *
+     * @param icon      the icon
+     * @param nbrImages number of tiled images in the icon
+     * @param horz      LEFT, CENTER, RIGHT
+     * @param vert      TOP, MIDDLE, BOTTOM
+     */
+    public void setIcon(PImage icon, int nbrImages, GAlign horz, GAlign vert) {
+        if (icon != null) {
+            if (nbrImages == 3)
+                bicon = ImageManager.makeTiles1D(winApp, icon, nbrImages, 1);
+            else {
+                bicon = new PImage[3];
+                PImage[] temp = ImageManager.makeTiles1D(winApp, icon,
+                        nbrImages, 1);
+                System.arraycopy(temp, 0, bicon, 0, temp.length);
+                for (int i = temp.length; i < 3; i++) {
+                    bicon[i] = bicon[i - 1];
+                }
+            }
 
-			// We have loaded the image so validate alignment
-			if (horz != null && horz.isHorzAlign()) {
-				iconAlignH = horz;
-			}
-			if (vert != null && vert.isVertAlign()) {
-				iconAlignV = vert;
-			}
-			iconW = bicon[0].width;
-			iconH = bicon[0].height;
-			stext.setWrapWidth((int) width - iconW - TPAD4);
-			bufferInvalid = true;
-		}
-	}
+            // We have loaded the image so validate alignment
+            if (horz != null && horz.isHorzAlign()) {
+                iconAlignH = horz;
+            }
+            if (vert != null && vert.isVertAlign()) {
+                iconAlignV = vert;
+            }
+            iconW = bicon[0].width;
+            iconH = bicon[0].height;
+            stext.setWrapWidth((int) width - iconW - TPAD4);
+            bufferInvalid = true;
+        }
+    }
 
-	/**
-	 * Change the alignment of an existing icon.
-	 * 
-	 * @param horz
-	 *            horizontal alignment (see @see GAlign)
-	 * @param vert
-	 *            vertical alignment (see @see GAlign)
-	 */
-	public void setIconAlign(GAlign horz, GAlign vert) {
-		if (iconW != 0) {
-			if (horz != null && horz.isHorzAlign() && horz != GAlign.CENTER) {
-				iconAlignH = horz;
-			}
-			if (vert != null && vert != null && vert.isVertAlign()) {
-				iconAlignV = vert;
-			}
-			bufferInvalid = true;
-		}
-	}
+    /**
+     * Change the alignment of an existing icon.
+     *
+     * @param horz horizontal alignment (see @see GAlign)
+     * @param vert vertical alignment (see @see GAlign)
+     */
+    public void setIconAlign(GAlign horz, GAlign vert) {
+        if (iconW != 0) {
+            if (horz != null && horz.isHorzAlign() && horz != GAlign.CENTER) {
+                iconAlignH = horz;
+            }
+            if (vert != null && vert != null && vert.isVertAlign()) {
+                iconAlignV = vert;
+            }
+            bufferInvalid = true;
+        }
+    }
 
-	/**
-	 * Calculate various values based on alignment of text and icon
-	 */
-	protected void calcAlignment() {
-		super.calcAlignment(); // calculate the text alignment
-		if (iconW != 0) {
-			switch (iconAlignH) {
-			case CENTER:
-				// alterar alinhamento do texto aqui
-				break;
-			case LEFT:
-				siX = TPAD;
-				if (textAlignH != GAlign.RIGHT)
-					stX += (iconW + TPAD2); // Image on left so adjust text
-											// start x position
-				break;
-			case RIGHT:
-			default:
-				siX = (int) width - iconW - TPAD2;
-				if (textAlignH == GAlign.RIGHT)
-					stX -= (iconW + TPAD2);
-				break;
-			}
-			switch (iconAlignV) {
-			case TOP:
-				siY = TPAD;
-				break;
-			case BOTTOM:
-				siY = (int) height - iconH - TPAD2;
-				break;
-			case MIDDLE:
-			default:
-				siY = (int) (height - iconH) / 2;
-			}
-		}
-	}
+    /**
+     * Calculate various values based on alignment of text and icon
+     */
+    protected void calcAlignment() {
+        super.calcAlignment(); // calculate the text alignment
+        if (iconW != 0) {
+            switch (iconAlignH) {
+                case CENTER:
+                    // alterar alinhamento do texto aqui
+                    break;
+                case LEFT:
+                    siX = TPAD;
+                    if (textAlignH != GAlign.RIGHT)
+                        stX += (iconW + TPAD2); // Image on left so adjust text
+                    // start x position
+                    break;
+                case RIGHT:
+                default:
+                    siX = (int) width - iconW - TPAD2;
+                    if (textAlignH == GAlign.RIGHT)
+                        stX -= (iconW + TPAD2);
+                    break;
+            }
+            switch (iconAlignV) {
+                case TOP:
+                    siY = TPAD;
+                    break;
+                case BOTTOM:
+                    siY = (int) height - iconH - TPAD2;
+                    break;
+                case MIDDLE:
+                default:
+                    siY = (int) (height - iconH) / 2;
+            }
+        }
+    }
 
-	public String toString() {
-		return tag;
-	}
+    public String toString() {
+        return tag;
+    }
 }

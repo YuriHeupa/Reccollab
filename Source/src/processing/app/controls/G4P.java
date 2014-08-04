@@ -23,11 +23,13 @@
 
 package processing.app.controls;
 
+import processing.core.PApplet;
+import processing.core.PConstants;
 
-import java.awt.Color;
-import java.awt.FileDialog;
-import java.awt.Font;
-import java.awt.Frame;
+import javax.swing.*;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -38,639 +40,557 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import javax.swing.JColorChooser;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
-import javax.swing.filechooser.FileFilter;
-
-import processing.core.PApplet;
-import processing.core.PConstants;
-
 /**
  * The core class for the global manipulation and execution of G4P. <br>
  * It also gives access to many of the constants used in this library.
- * 
- * @author Peter Lager
  *
+ * @author Peter Lager
  */
 public class G4P implements GConstants, PConstants {
 
-	static PApplet sketchApplet = null;
+    public static GWindowCloser windowCloser = null;
+    static PApplet sketchApplet = null;
+    static int globalColorScheme = GCScheme.BLUE_SCHEME;
+    static int globalAlpha = 255;
+    /**
+     * Java has cross platform support for 5 logical fonts so use one of these
+     * in preference to platform specific fonts or include them here.
+     * <ul>
+     * <li>Dialog </li>
+     * <li>DialogInput </li>t
+     * <li>Monospaced </li>
+     * <li>Serif </li>
+     * <li>SansSerif </li>
+     * </ul>
+     */
+    static Font globalFont = new Font("SansSerif", Font.PLAIN, 12);
+    static Font numericLabelFont = new Font("DialogInput", Font.BOLD, 12);
+    // Store of info about windows and controls
+    static HashMap<PApplet, GWindowInfo> windows = new HashMap<PApplet, GWindowInfo>();
+    // Used to order controls
+    static GAbstractControl.Z_Order zorder = new GAbstractControl.Z_Order();
+    /* INTERNAL USE ONLY  Mouse over changer */
+    static boolean cursorChangeEnabled = true;
+    static int mouseOff = ARROW;
+    static boolean showMessages = true;
+    // Determines how position and size parameters are interpreted when
+    // a control is created
+    // Introduced V3.0
+    static GControlMode control_mode = GControlMode.CORNER;
+    static LinkedList<G4Pstyle> styles = new LinkedList<G4Pstyle>();
+    static JColorChooser chooser = null;
+    static Color lastColor = Color.white; // White
+    private static String PANE_TEXT_STYLE_MACOS = "<html> <head> <style type=\"text/css\">" +
+            "b { font: 13pt \"Lucida Grande\" } p { font: 11pt \"Lucida Grande\"; margin-top: 8px }" +
+            "</style> </head> <b>@@TITLE@@</b> <p>@@MESSAGE@@</p>";
+    private static String PANE_TEXT_STYLE_OTHER = "<html> <head> <style type=\"text/css\">" +
+            "b { font: 12pt \"Lucida Grande\" } p { font: 11pt \"Lucida Grande\"; margin-top: 8px }" +
+            "</style> </head> <b>@@MESSAGE@@ </b>";
 
-	public static GWindowCloser windowCloser = null;
-	
-	/**
-	 * return the pretty version of the library.
-	 */
-	public static String getPrettyVersion() {
-		return "3.3.1";
-	}
+    /**
+     * return the pretty version of the library.
+     */
+    public static String getPrettyVersion() {
+        return "3.3.1";
+    }
 
-	/**
-	 * return the version of the library used by Processing
-	 */
-	public static String getVersion() {
-		return "16";
-	}
+    /**
+     * return the version of the library used by Processing
+     */
+    public static String getVersion() {
+        return "16";
+    }
 
-	static int globalColorScheme = GCScheme.BLUE_SCHEME;
-	static int globalAlpha = 255;
+    /**
+     * Used to register the main sketch window with G4P. This is ignored if any
+     * G4P controls or windows have already been created because the act of
+     * creating a control will do this for you. <br>
+     * <p>
+     * Some controls are created without passing a reference to the sketch applet
+     * but still need to know it. An example is the GColorChooser control which
+     * cannot be used until this method is called or some other G4P control has
+     * been created.
+     * <p>
+     * Also some other libraries such as PeasyCam change the transformation matrix.
+     * In which case either a G4P control should be created or this method called
+     * before creating a PeasyCam object.
+     *
+     * @param app
+     */
+    public static void registerSketch(PApplet app) {
+        if (sketchApplet == null) {
+            sketchApplet = app;
+            GWindowInfo winfo = windows.get(app);
+            if (winfo == null) {
+                winfo = new GWindowInfo(app);
+                windows.put(app, winfo);
+            }
+        }
+    }
 
-	/**
-	 * Java has cross platform support for 5 logical fonts so use one of these
-	 * in preference to platform specific fonts or include them here.
-	 * <ul>
-	 * <li>Dialog </li>
-	 * <li>DialogInput </li>t
-	 * <li>Monospaced </li>
-	 * <li>Serif </li>
-	 * <li>SansSerif </li>
-	 * </ul>
-	 */
-	static Font globalFont = new Font("SansSerif", Font.PLAIN, 12);
-	static Font numericLabelFont = new Font("DialogInput", Font.BOLD, 12);
+    /**
+     * Set the global colour scheme. This will change the local
+     * colour scheme for every control.
+     *
+     * @param cs colour scheme to use (0-15)
+     */
+    public static void setGlobalColorScheme(int cs) {
+        cs = Math.abs(cs) % 16; // Force into valid range
+        if (globalColorScheme != cs) {
+            globalColorScheme = cs;
+            for (GWindowInfo winfo : windows.values())
+                winfo.setColorScheme(globalColorScheme);
+        }
+    }
 
-	// Store of info about windows and controls
-	static HashMap<PApplet, GWindowInfo> windows = new HashMap<PApplet, GWindowInfo>();
-	// Used to order controls
-	static GAbstractControl.Z_Order zorder = new GAbstractControl.Z_Order();
+    /**
+     * Set the colour scheme for all the controls drawn by the given
+     * PApplet. This will override any previous colour scheme for
+     * these controls.
+     *
+     * @param app
+     * @param cs
+     */
+    public static void setWindowColorScheme(PApplet app, int cs) {
+        cs = Math.abs(cs) % 16; // Force into valid range
+        GWindowInfo winfo = windows.get(app);
+        if (winfo != null)
+            winfo.setColorScheme(cs);
+    }
 
-	/* INTERNAL USE ONLY  Mouse over changer */
-	static boolean cursorChangeEnabled = true;
-	static int mouseOff = ARROW;
+    /**
+     * Set the colour scheme for all the controls drawn by the given
+     * GWindow. This will override any previous colour scheme for
+     * these controls.
+     *
+     * @param win
+     * @param cs
+     */
+    public static void setWindowColorScheme(GWindow win, int cs) {
+        cs = Math.abs(cs) % 16; // Force into valid range
+        GWindowInfo winfo = windows.get(win.papplet);
+        if (winfo != null)
+            winfo.setColorScheme(cs);
+    }
 
-	static boolean showMessages = true;
+    /**
+     * Set the transparency of all controls. If the alpha level for a
+     * control falls below G4P.ALPHA_BLOCK then it will no longer
+     * respond to mouse and keyboard events.
+     *
+     * @param alpha value in the range 0 (transparent) to 255 (opaque)
+     */
+    public static void setGlobalAlpha(int alpha) {
+        alpha = Math.abs(alpha) % 256; // Force into valid range
+        if (globalAlpha != alpha) {
+            globalAlpha = alpha;
+            for (GWindowInfo winfo : windows.values())
+                winfo.setAlpha(globalAlpha);
+        }
+    }
 
-	// Determines how position and size parameters are interpreted when
-	// a control is created
-	// Introduced V3.0
-	static GControlMode control_mode = GControlMode.CORNER;
+    /**
+     * Set the transparency level for all controls drawn by the given
+     * PApplet. If the alpha level for a control falls below
+     * G4P.ALPHA_BLOCK then it will no longer respond to mouse
+     * and keyboard events.
+     *
+     * @param app
+     * @param alpha value in the range 0 (transparent) to 255 (opaque)
+     */
+    public static void setWindowAlpha(PApplet app, int alpha) {
+        alpha = Math.abs(alpha) % 256; // Force into valid range
+        GWindowInfo winfo = windows.get(app);
+        if (winfo != null)
+            winfo.setAlpha(alpha);
+    }
 
-	static LinkedList<G4Pstyle> styles = new LinkedList<G4Pstyle>();
+    /**
+     * Set the transparency level for all controls drawn by the given
+     * GWindow. If the alpha level for a control falls below
+     * G4P.ALPHA_BLOCK then it will no longer respond to mouse
+     * and keyboard events.
+     *
+     * @param win   apply to this window
+     * @param alpha value in the range 0 (transparent) to 255 (opaque)
+     */
+    public static void setWindowAlpha(GWindow win, int alpha) {
+        alpha = Math.abs(alpha) % 256; // Force into valid range
+        GWindowInfo winfo = windows.get(win.papplet);
+        if (winfo != null)
+            winfo.setAlpha(alpha);
+    }
 
-	static JColorChooser chooser = null;
-	static Color lastColor = Color.white; // White
+    /**
+     * Register a GWindow object.
+     *
+     * @param window
+     */
+    static void addWindow(GWindow window) {
+        PApplet app = window.papplet;
+        GWindowInfo winfo = windows.get(app);
+        if (winfo == null) {
+            winfo = new GWindowInfo(app);
+            windows.put(app, winfo);
+        }
+        // Create and start windows closer object
+        if (windowCloser == null) {
+            windowCloser = new GWindowCloser();
+            sketchApplet.registerMethod("post", windowCloser);
+        }
+    }
 
-	/**
-	 * Used to register the main sketch window with G4P. This is ignored if any
-	 * G4P controls or windows have already been created because the act of
-	 * creating a control will do this for you. <br>
-	 * 
-	 * Some controls are created without passing a reference to the sketch applet
-	 * but still need to know it. An example is the GColorChooser control which
-	 * cannot be used until this method is called or some other G4P control has
-	 * been created.
-	 * 
-	 * Also some other libraries such as PeasyCam change the transformation matrix.
-	 * In which case either a G4P control should be created or this method called
-	 * before creating a PeasyCam object.
-	 * 
-	 * @param app
-	 */
-	public static void registerSketch(PApplet app){
-		if(sketchApplet == null) {
-			sketchApplet = app;
-			GWindowInfo winfo = windows.get(app);
-			if(winfo == null){
-				winfo = new GWindowInfo(app);
-				windows.put(app, winfo);
-			}			
-		}
-	}
+    /**
+     * This is called by the GWindow's WindowAdapter when it detects a
+     * WindowClosing event. It adds this window to a list of windows to
+     * be closed by the GWindowCloser object in its 'post' method.
+     *
+     * @param window the GWindow to be closed
+     */
+    static void markWindowForClosure(GWindow window) {
+        windowCloser.addWindow(window);
+    }
 
-	/**
-	 * Set the global colour scheme. This will change the local
-	 * colour scheme for every control.
-	 * @param cs colour scheme to use (0-15)
-	 */
-	public static void setGlobalColorScheme(int cs){
-		cs = Math.abs(cs) % 16; // Force into valid range
-		if(globalColorScheme != cs){
-			globalColorScheme = cs;
-			for(GWindowInfo winfo : windows.values())
-				winfo.setColorScheme(globalColorScheme);
-		}
-	}
+    /**
+     * Used internally to register a control with its applet.
+     *
+     * @param control
+     */
+    public static void addControl(GAbstractControl control) {
+        PApplet app = control.getPApplet();
+        // The first applet must be the sketchApplet
+        if (G4P.sketchApplet == null)
+            G4P.sketchApplet = app;
+        GWindowInfo winfo = windows.get(app);
+        if (winfo == null) {
+            winfo = new GWindowInfo(app);
+            windows.put(app, winfo);
+        }
+        winfo.addControl(control);
+    }
 
-	/**
-	 * Set the colour scheme for all the controls drawn by the given 
-	 * PApplet. This will override any previous colour scheme for 
-	 * these controls.
-	 * @param app
-	 * @param cs
-	 */
-	public static void setWindowColorScheme(PApplet app, int cs){
-		cs = Math.abs(cs) % 16; // Force into valid range
-		GWindowInfo winfo = windows.get(app);
-		if(winfo != null)
-			winfo.setColorScheme(cs);
-	}
+    /**
+     * Remove a control from the window. This is used in preparation
+     * for disposing of a control.
+     *
+     * @param control
+     * @return true if control was remove else false
+     */
+    static boolean removeControl(GAbstractControl control) {
+        PApplet app = control.getPApplet();
+        GWindowInfo winfo = windows.get(app);
+        if (winfo != null) {
+            winfo.removeControl(control);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Set the colour scheme for all the controls drawn by the given 
-	 * GWindow. This will override any previous colour scheme for 
-	 * these controls.
-	 * @param win
-	 * @param cs
-	 */
-	public static void setWindowColorScheme(GWindow win, int cs){
-		cs = Math.abs(cs) % 16; // Force into valid range
-		GWindowInfo winfo = windows.get(win.papplet);
-		if(winfo != null)
-			winfo.setColorScheme(cs);
-	}
+    /**
+     * Get the control creation mode @see ctrlMode(int mode)
+     *
+     * @return the current control mode
+     */
+    public static GControlMode getCtrlMode() {
+        return control_mode;
+    }
 
+    /**
+     * Change the way position and size parameters are interpreted when a control is created.
+     * or added to another control e.g. GPanel. <br>
+     * There are 3 modes. <br><pre>
+     * PApplet.CORNER	 (x, y, w, h) <br>
+     * PApplet.CORNERS	 (x0, y0, x1, y1) <br>
+     * PApplet.CENTER	 (cx, cy, w, h) </pre><br>
+     *
+     * @param mode illegal values are ignored leaving the mode unchanged
+     */
+    public static void setCtrlMode(GControlMode mode) {
+        if (mode != null)
+            control_mode = mode;
+    }
 
-	/**
-	 * Set the transparency of all controls. If the alpha level for a 
-	 * control falls below G4P.ALPHA_BLOCK then it will no longer 
-	 * respond to mouse and keyboard events.
-	 * 
-	 * @param alpha value in the range 0 (transparent) to 255 (opaque)
-	 */
-	public static void setGlobalAlpha(int alpha){
-		alpha = Math.abs(alpha) % 256; // Force into valid range
-		if(globalAlpha != alpha){
-			globalAlpha = alpha;
-			for(GWindowInfo winfo : windows.values())
-				winfo.setAlpha(globalAlpha);
-		}
-	}
+    /**
+     * G4P has a range of support messages eg <br>if you create a GUI component
+     * without an event handler or, <br>a slider where the visible size of the
+     * slider is less than the difference between min and max values.
+     * <p>
+     * This method allows the user to enable (default) or disable this option. If
+     * disable then it should be called before any GUI components are created.
+     *
+     * @param enable
+     */
+    public static void messagesEnabled(boolean enable) {
+        showMessages = enable;
+    }
 
-	/**
-	 * Set the transparency level for all controls drawn by the given
-	 * PApplet. If the alpha level for a control falls below 
-	 * G4P.ALPHA_BLOCK then it will no longer respond to mouse
-	 * and keyboard events.
-	 * 
-	 * @param app
-	 * @param alpha value in the range 0 (transparent) to 255 (opaque)
-	 */
-	public static void setWindowAlpha(PApplet app, int alpha){
-		alpha = Math.abs(alpha) % 256; // Force into valid range
-		GWindowInfo winfo = windows.get(app);
-		if(winfo != null)
-			winfo.setAlpha(alpha);
-	}
+    /**
+     * Enables or disables cursor over component change. <br>
+     * <p>
+     * Calls to this method are ignored if no G4P controls have been created.
+     *
+     * @param enable true to enable cursor change over components.
+     */
+    public static void setMouseOverEnabled(boolean enable) {
+        cursorChangeEnabled = enable;
+    }
 
-	/**
-	 * Set the transparency level for all controls drawn by the given
-	 * GWindow. If the alpha level for a control falls below 
-	 * G4P.ALPHA_BLOCK then it will no longer respond to mouse
-	 * and keyboard events.
-	 * 
-	 * @param win apply to this window
-	 * @param alpha value in the range 0 (transparent) to 255 (opaque)
-	 */
-	public static void setWindowAlpha(GWindow win, int alpha){
-		alpha = Math.abs(alpha) % 256; // Force into valid range
-		GWindowInfo winfo = windows.get(win.papplet);
-		if(winfo != null)
-			winfo.setAlpha(alpha);
-	}
+    public static void setCursor(int cursorOff, GWindow window) {
+        PApplet app = window.papplet;
+        setCursor(cursorOff, app);
+    }
 
-	/**
-	 * Register a GWindow object.
-	 * 
-	 * @param window
-	 */
-	static void addWindow(GWindow window){
-		PApplet app = window.papplet;
-		GWindowInfo winfo = windows.get(app);
-		if(winfo == null){
-			winfo = new GWindowInfo(app);
-			windows.put(app, winfo);
-		}
-		// Create and start windows closer object
-		if(windowCloser == null){
-			windowCloser = new GWindowCloser();
-			sketchApplet.registerMethod("post", windowCloser);
-		}
-	}
+    public static void setCursor(int cursorOff, PApplet app) {
+        GWindowInfo winfo = windows.get(app);
+        if (winfo != null) {
+            mouseOff = cursorOff;
+            winfo.app.cursor(cursorOff);
+        }
+    }
 
-	/**
-	 * This is called by the GWindow's WindowAdapter when it detects a 
-	 * WindowClosing event. It adds this window to a list of windows to
-	 * be closed by the GWindowCloser object in its 'post' method.
-	 * 
-	 * @param window the GWindow to be closed
-	 */
-	static void markWindowForClosure(GWindow window){
-		windowCloser.addWindow(window);
-	}
-	
-	/**
-	 * Used internally to register a control with its applet.
-	 * @param control
-	 */
-	public static void addControl(GAbstractControl control){
-		PApplet app = control.getPApplet();
-		// The first applet must be the sketchApplet
-		if(G4P.sketchApplet == null)
-			G4P.sketchApplet = app;
-		GWindowInfo winfo = windows.get(app);
-		if(winfo == null){
-			winfo = new GWindowInfo(app);
-			windows.put(app, winfo);
-		}
-		winfo.addControl(control);
-	}
+    /**
+     * Inform G4P which cursor to use for mouse over.
+     */
+    public static int getCursor() {
+        return mouseOff;
+    }
 
-	/**
-	 * Remove a control from the window. This is used in preparation 
-	 * for disposing of a control.
-	 * @param control
-	 * @return true if control was remove else false
-	 */
-	static boolean removeControl(GAbstractControl control){
-		PApplet app = control.getPApplet();
-		GWindowInfo winfo = windows.get(app);
-		if(winfo != null){
-			winfo.removeControl(control);
-			return true;
-		}
-		return false;
-	}
+    public static void setCursor(int cursorOff) {
+        mouseOff = cursorOff;
+        for (GWindowInfo winfo : windows.values())
+            winfo.app.cursor(cursorOff);
+    }
 
-	/**
-	 * Change the way position and size parameters are interpreted when a control is created. 
-	 * or added to another control e.g. GPanel. <br>
-	 * There are 3 modes. <br><pre>
-	 * PApplet.CORNER	 (x, y, w, h) <br>
-	 * PApplet.CORNERS	 (x0, y0, x1, y1) <br>
-	 * PApplet.CENTER	 (cx, cy, w, h) </pre><br>
-	 * 
-	 * @param mode illegal values are ignored leaving the mode unchanged
-	 */
-	public static void setCtrlMode(GControlMode mode){
-		if(mode != null)
-			control_mode = mode;
-	}
+    /**
+     * @deprecated use getCursor()
+     */
+    @Deprecated
+    public static int getCursorOff() {
+        return mouseOff;
+    }
 
-	/**
-	 * Get the control creation mode @see ctrlMode(int mode)
-	 * @return the current control mode
-	 */
-	public static GControlMode getCtrlMode(){
-		return control_mode;
-	}
+    /**
+     * Inform G4P which cursor shapes will be used.
+     * Initial values are ARROW (off) and HAND (over)
+     * use setCursor method
+     *
+     * @param cursorOff
+     * @deprecated use setCursor(int)
+     */
+    @Deprecated
+    public static void setCursorOff(int cursorOff) {
+        mouseOff = cursorOff;
+    }
 
-	/**
-	 * G4P has a range of support messages eg <br>if you create a GUI component 
-	 * without an event handler or, <br>a slider where the visible size of the
-	 * slider is less than the difference between min and max values.
-	 * 
-	 * This method allows the user to enable (default) or disable this option. If
-	 * disable then it should be called before any GUI components are created.
-	 * 
-	 * @param enable
-	 */
-	public static void messagesEnabled(boolean enable){
-		showMessages = enable;
-	}
+    /**
+     * Save the current style on a stack. <br>
+     * There should be a matching popStyle otherwise the program it will
+     * cause a memory leakage.
+     */
+    static void pushStyle() {
+        G4Pstyle s = new G4Pstyle();
+        s.ctrlMode = control_mode;
+        s.showMessages = showMessages;
+        // Now save the style for later
+        styles.addLast(s);
+    }
 
-	/**
-	 * Enables or disables cursor over component change. <br>
-	 * 
-	 * Calls to this method are ignored if no G4P controls have been created.
-	 * 
-	 * @param enable true to enable cursor change over components.
-	 */
-	public static void setMouseOverEnabled(boolean enable){
-		cursorChangeEnabled = enable;
-	}
+    /**
+     * Remove and restore the current style from the stack. <br>
+     * There should be a matching pushStyle otherwise the program will crash.
+     */
+    static void popStyle() {
+        G4Pstyle s = styles.removeLast();
+        control_mode = s.ctrlMode;
+        showMessages = s.showMessages;
+    }
 
-	/**
-	 * Inform G4P which cursor shapes will be used.
-	 * Initial values are ARROW (off) and HAND (over)
-	 * use setCursor method
-	 * @param cursorOff
-	 * 
-	 * @deprecated use setCursor(int)
-	 */
-	@Deprecated
-	public static void setCursorOff(int cursorOff){
-		mouseOff = cursorOff;
-	}
+    /**
+     * Get a list of all open GWindow objects even if minimised or invisible. <br>
+     * If an ArrayList is provided then its contents are cleared before adding references
+     * to all open GWindow objects. If an ArrayList is not provided then a new
+     * ArrayList will be created. <br>
+     * This method never returns null, if there are no open windows the list will
+     * be of size zero.
+     *
+     * @param list an optional ArrayList to use. In null will create a new ArrayList.
+     * @return an ArrayList of references to all open GWindow objects.
+     */
+    public static ArrayList<GWindow> getOpenWindowsAsList(ArrayList<GWindow> list) {
+        if (list == null)
+            list = new ArrayList<GWindow>();
+        else
+            list.clear();
+        Collection<GWindowInfo> windowInfos = windows.values();
+        for (GWindowInfo info : windowInfos) {
+            if (info.isGWindow)
+                list.add(((GWinApplet) info.app).owner);
+        }
+        return list;
+    }
 
-	public static void setCursor(int cursorOff){
-		mouseOff = cursorOff;
-		for(GWindowInfo winfo : windows.values())
-			winfo.app.cursor(cursorOff);
-	}
+    /**
+     * Get an array of GWindow objects even if minimised or invisible. <br>
+     * This method never returns null, if there are no open windows the array
+     * will be of length zero.
+     *
+     * @return an array of references to all open GWindow objects.
+     */
+    public static GWindow[] getOpenWindowsAsArray() {
+        ArrayList<GWindow> list = getOpenWindowsAsList(null);
+        return list.toArray(new GWindow[list.size()]);
+    }
 
-	public static void setCursor(int cursorOff, GWindow window){
-		PApplet app = window.papplet;
-		setCursor(cursorOff, app);
-	}
+    /**
+     * This will open a version of the Java Swing color chooser dialog. The dialog's
+     * UI is dependent on the OS and JVM implementation running. <br>
+     * <p>
+     * If you click on Cancel then it returns the last color previously selected.
+     *
+     * @return the ARGB colour as a 32 bit integer (as used in Processing).
+     */
+    public static int selectColor() {
+        Frame owner = (sketchApplet == null) ? null : sketchApplet.frame;
+        if (chooser == null) {
+            chooser = new JColorChooser();
+            AbstractColorChooserPanel[] oldPanels = chooser.getChooserPanels();
+            // Do not assume what panels are present
+            LinkedList<AbstractColorChooserPanel> panels = new LinkedList<AbstractColorChooserPanel>();
+            for (AbstractColorChooserPanel p : oldPanels) {
+                String displayName = p.getDisplayName().toLowerCase();
+                if (displayName.equals("swatches"))
+                    panels.addLast(p);
+                else if (displayName.equals("rgb"))
+                    panels.addFirst(p);
+                else if (displayName.startsWith("hs"))
+                    panels.addFirst(p);
+            }
+            AbstractColorChooserPanel[] newPanels;
+            newPanels = panels.toArray(new AbstractColorChooserPanel[panels.size()]);
+            chooser.setChooserPanels(newPanels);
+            ColorPreviewPanel pp = new ColorPreviewPanel(lastColor);
+            chooser.getSelectionModel().addChangeListener(pp);
+            chooser.setPreviewPanel(pp);
+        }
+        // Set the preview color
+        ((ColorPreviewPanel) chooser.getPreviewPanel()).setPrevColor(lastColor);
+        // Use the last color selected to start it off
+        chooser.setColor(lastColor);
+        JDialog dialog = JColorChooser.createDialog(owner,
+                "Color picker",
+                true,
+                chooser,
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        lastColor = chooser.getColor();
+                    }
+                },
+                null);
+        dialog.setVisible(true);
+        return lastColor.getRGB();
+    }
 
-	public static void setCursor(int cursorOff, PApplet app){
-		GWindowInfo winfo = windows.get(app);
-		if(winfo != null){
-			mouseOff = cursorOff;
-			winfo.app.cursor(cursorOff);
-		}
-	}
+    /**
+     * Select a folder from the local file system.
+     *
+     * @param prompt the frame text for the chooser
+     * @return the absolute path name for the selected folder, or null if action
+     * cancelled.
+     */
+    public static String selectFolder(String prompt) {
+        String selectedFolder = null;
+        Frame frame = (sketchApplet == null) ? null : sketchApplet.frame;
+        if (PApplet.platform == MACOSX && PApplet.useNativeSelect != false) {
+            FileDialog fileDialog =
+                    new FileDialog(frame, prompt, FileDialog.LOAD);
+            System.setProperty("apple.awt.fileDialogForDirectories", "true");
+            fileDialog.setVisible(true);
+            System.setProperty("apple.awt.fileDialogForDirectories", "false");
+            String filename = fileDialog.getFile();
+            if (filename != null) {
+                try {
+                    selectedFolder = (new File(fileDialog.getDirectory(), fileDialog.getFile())).getCanonicalPath();
+                } catch (IOException e) {
+                    selectedFolder = null;
+                }
+            }
+        } else {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle(prompt);
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int result = fileChooser.showOpenDialog(frame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    selectedFolder = fileChooser.getSelectedFile().getCanonicalPath();
+                } catch (IOException e) {
+                    selectedFolder = null;
+                }
+            }
+        }
+        return selectedFolder;
+    }
 
-	/**
-	 * Inform G4P which cursor to use for mouse over.
-	 * 
-	 */
-	public static int getCursor(){
-		return mouseOff;
-	}
+    /**
+     * Select a file for input from the local file system. <br>
+     *
+     * @param prompt the frame text for the chooser
+     * @return the absolute path name for the selected folder, or null if action
+     * cancelled.
+     */
+    public static String selectInput(String prompt) {
+        return selectInput(prompt, null, null);
+    }
 
-	/**
-	 * @deprecated use getCursor()
-	 */
-	@Deprecated
-	public static int getCursorOff(){
-		return mouseOff;
-	}
+    /**
+     * Select a file for input from the local file system. <br>
+     * <p>
+     * This version allows the dialog window to filter the output based on file extensions.
+     * This is not available on all platforms, if not then it is ignored. <br>
+     * <p>
+     * It is definitely available on Linux systems because it uses the standard Swing
+     * JFileFinder component.
+     *
+     * @param prompt   the frame text for the chooser
+     * @param types    a comma separated list of file extensions e.g. "png,gif,jpg,jpeg"
+     * @param typeDesc simple textual description of the file types e.g. "Image files"
+     * @return the absolute path name for the selected folder, or null if action
+     * cancelled.
+     */
+    public static String selectInput(String prompt, String types, String typeDesc) {
+        return selectImpl(prompt, FileDialog.LOAD, types, typeDesc);
+    }
 
-	/**
-	 * Save the current style on a stack. <br>
-	 * There should be a matching popStyle otherwise the program it will
-	 * cause a memory leakage.
-	 */
-	static void pushStyle(){
-		G4Pstyle s = new G4Pstyle();
-		s.ctrlMode = control_mode;
-		s.showMessages = showMessages;
-		// Now save the style for later
-		styles.addLast(s);
-	}
+    /**
+     * Select a file for output from the local file system. <br>
+     *
+     * @param prompt the frame text for the chooser
+     * @return the absolute path name for the selected folder, or null if action is cancelled.
+     */
+    public static String selectOutput(String prompt) {
+        return selectOutput(prompt, null, null);
+    }
 
-	/**
-	 * Remove and restore the current style from the stack. <br>
-	 * There should be a matching pushStyle otherwise the program will crash.
-	 */
-	static void popStyle(){
-		G4Pstyle s = styles.removeLast();
-		control_mode = s.ctrlMode;
-		showMessages = s.showMessages;
-	}
-
-	/**
-	 * This class represents the current style used by G4P. 
-	 * It can be extended to add other attributes but these should be 
-	 * included in the pushStyle and popStyle. 
-	 * @author Peter
-	 *
-	 */
-	static class G4Pstyle {
-		GControlMode ctrlMode;
-		boolean showMessages;
-	}
-
-	/**
-	 * Get a list of all open GWindow objects even if minimised or invisible. <br>
-	 * If an ArrayList is provided then its contents are cleared before adding references
-	 * to all open GWindow objects. If an ArrayList is not provided then a new 
-	 * ArrayList will be created. <br>
-	 * This method never returns null, if there are no open windows the list will 
-	 * be of size zero.
-	 * 
-	 * @param list an optional ArrayList to use. In null will create a new ArrayList.
-	 * @return an ArrayList of references to all open GWindow objects.
-	 */
-	public static ArrayList<GWindow> getOpenWindowsAsList(ArrayList<GWindow> list){
-		if(list == null)
-			list = new ArrayList<GWindow>();
-		else
-			list.clear();
-		Collection<GWindowInfo> windowInfos = windows.values();
-		for(GWindowInfo info : windowInfos){
-			if(info.isGWindow)
-				list.add( ((GWinApplet)info.app).owner);
-		}
-		return list;
-	}
-	
-	/**
-	 * Get an array of GWindow objects even if minimised or invisible. <br>
-	 * This method never returns null, if there are no open windows the array
-	 *  will be of length zero.
-	 * @return an array of references to all open GWindow objects.
-	 */
-	public static GWindow[] getOpenWindowsAsArray(){
-		ArrayList<GWindow> list = getOpenWindowsAsList(null);
-		return list.toArray(new GWindow[list.size()]);
-	}
-	
-	/**
-	 * This will open a version of the Java Swing color chooser dialog. The dialog's
-	 * UI is dependent on the OS and JVM implementation running. <br>
-	 * 
-	 * If you click on Cancel then it returns the last color previously selected.
-	 * 
-	 * @return the ARGB colour as a 32 bit integer (as used in Processing). 
-	 */
-	public static int selectColor(){
-		Frame owner = (sketchApplet == null) ? null : sketchApplet.frame;
-		if(chooser == null){
-			chooser = new JColorChooser();
-			AbstractColorChooserPanel[] oldPanels = chooser.getChooserPanels();
-			// Do not assume what panels are present
-			LinkedList<AbstractColorChooserPanel> panels = new LinkedList<AbstractColorChooserPanel>();	
-			for(AbstractColorChooserPanel p : oldPanels){
-				String displayName = p.getDisplayName().toLowerCase();
-				if(displayName.equals("swatches"))
-					panels.addLast(p);
-				else if(displayName.equals("rgb"))
-					panels.addFirst(p);
-				else if(displayName.startsWith("hs"))
-					panels.addFirst(p);
-			}
-			AbstractColorChooserPanel[] newPanels;
-			newPanels = panels.toArray(new AbstractColorChooserPanel[panels.size()]);
-			chooser.setChooserPanels(newPanels);
-			ColorPreviewPanel pp = new ColorPreviewPanel(lastColor);
-			chooser.getSelectionModel().addChangeListener(pp);
-			chooser.setPreviewPanel(pp);
-		}
-		// Set the preview color
-		((ColorPreviewPanel)chooser.getPreviewPanel()).setPrevColor(lastColor);
-		// Use the last color selected to start it off
-		chooser.setColor(lastColor);
-		JDialog dialog = JColorChooser.createDialog(owner,
-				"Color picker", 
-				true, 
-				chooser, 
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						lastColor = chooser.getColor();
-					}
-				}, 
-				null);
-		dialog.setVisible(true);
-		return lastColor.getRGB();
-	}
-
-	/**
-	 * Select a folder from the local file system.
-	 * 
-	 * @param prompt the frame text for the chooser
-	 * @return the absolute path name for the selected folder, or null if action 
-	 * cancelled.
-	 */
-	public static String selectFolder(String prompt){
-		String selectedFolder = null;
-		Frame frame = (sketchApplet == null) ? null : sketchApplet.frame;
-		if (PApplet.platform == MACOSX && PApplet.useNativeSelect != false) {
-			FileDialog fileDialog =
-				new FileDialog(frame, prompt, FileDialog.LOAD);
-			System.setProperty("apple.awt.fileDialogForDirectories", "true");
-			fileDialog.setVisible(true);
-			System.setProperty("apple.awt.fileDialogForDirectories", "false");
-			String filename = fileDialog.getFile();
-			if (filename != null) {
-				try {
-					selectedFolder = (new File(fileDialog.getDirectory(), fileDialog.getFile())).getCanonicalPath();
-				} catch (IOException e) {
-					selectedFolder = null;
-				}
-			}
-		} else {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle(prompt);
-			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			int result = fileChooser.showOpenDialog(frame);
-			if (result == JFileChooser.APPROVE_OPTION) {
-				try {
-					selectedFolder = fileChooser.getSelectedFile().getCanonicalPath();
-				} catch (IOException e) {
-					selectedFolder = null;
-				}
-			}
-		}
-		return selectedFolder;
-	}
-
-	/**
-	 * Select a file for input from the local file system. <br>
-	 * 
-	 * 
-	 * @param prompt the frame text for the chooser
-	 * @return the absolute path name for the selected folder, or null if action 
-	 * cancelled.
-	 */
-	public static String selectInput(String prompt){
-		return selectInput(prompt, null, null);
-	}
-
-	/**
-	 * Select a file for input from the local file system. <br>
-	 * 
-	 * This version allows the dialog window to filter the output based on file extensions.
-	 * This is not available on all platforms, if not then it is ignored. <br>
-	 * 
-	 * It is definitely available on Linux systems because it uses the standard Swing
-	 * JFileFinder component.
-	 * 
-	 * @param prompt the frame text for the chooser
-	 * @param types a comma separated list of file extensions e.g. "png,gif,jpg,jpeg"
-	 * @param typeDesc simple textual description of the file types e.g. "Image files"
-	 * @return the absolute path name for the selected folder, or null if action 
-	 * cancelled.
-	 */
-	public static String selectInput(String prompt, String types, String typeDesc){
-		return selectImpl(prompt, FileDialog.LOAD, types, typeDesc);
-	}
-
-	/**
-	 * Select a file for output from the local file system. <br>
-	 * 
-	 * @param prompt the frame text for the chooser
-	 * @return the absolute path name for the selected folder, or null if action is cancelled.
-	 */
-	public static String selectOutput(String prompt){
-		return selectOutput(prompt, null, null);
-	}
-
-	/**
-	 * Select a file for output from the local file system. <br>
-	 * 
-	 * This version allows the dialog window to filter the output based on file extensions.
-	 * This is not available on all platforms, if not then it is ignored. <br>
-	 * 
-	 * It is definitely available on Linux systems because it uses the standard swing
-	 * JFileFinder component.
-	 * 
-	 * @param prompt the frame text for the chooser
-	 * @param types a comma separated list of file extensions e.g. "png,jpf,tiff"
-	 * @param typeDesc simple textual description of the file types e.g. "Image files"
-	 * @return the absolute path name for the selected folder, or null if action 
-	 * cancelled.
-	 */
-	public static String selectOutput(String prompt, String types, String typeDesc){
-		return selectImpl(prompt, FileDialog.SAVE, types, typeDesc);
-	}
-
-	/**
-	 * The implementation of the select input and output methods.
-	 * @param prompt
-	 * @param mode
-	 * @param types
-	 * @param typeDesc
-	 * @return the absolute path name for the selected folder, or null if action 
-	 * cancelled.
-	 */
-	private static String selectImpl(String prompt, int mode, String types, String typeDesc) {
-		// If no initial selection made then use last selection	
-		// Assume that a file will not be selected
-		String selectedFile = null;
-		// Get the owner
-		Frame owner = (sketchApplet == null) ? null : sketchApplet.frame;
-		// Create a file filter
-		if (PApplet.useNativeSelect) {
-			FileDialog dialog = new FileDialog(owner, prompt, mode);
-			FilenameFilter filter = null;
-			if(types != null && types.length() > 0){
-				filter = new FilenameChooserFilter(types);
-				dialog.setFilenameFilter(filter);
-			}
-			dialog.setVisible(true);
-			String directory = dialog.getDirectory();
-			if(directory != null){
-				selectedFile = dialog.getFile();
-				if(selectedFile != null){
-					try {
-						selectedFile = (new File(directory, selectedFile)).getCanonicalPath();
-					} catch (IOException e) {
-						selectedFile = null;
-					}
-				}
-			}
-		} else {
-			JFileChooser chooser = new JFileChooser();
-			chooser.setDialogTitle(prompt);
-			FileFilter filter = null;
-			if(types != null && types.length() > 0){
-				filter = new FileChooserFilter(types, typeDesc);
-				chooser.setFileFilter(filter);
-			}
-			int result = JFileChooser.ERROR_OPTION;
-			if (mode == FileDialog.SAVE) {
-				result = chooser.showSaveDialog(owner);
-			} else if (mode == FileDialog.LOAD) {
-				result = chooser.showOpenDialog(owner);
-			}
-			if (result == JFileChooser.APPROVE_OPTION) {
-				try {
-					selectedFile = chooser.getSelectedFile().getCanonicalPath();
-				} catch (IOException e) {
-					selectedFile = null;
-				}
-			}
-		}
-		return selectedFile;
-	}
+    /**
+     * Select a file for output from the local file system. <br>
+     * <p>
+     * This version allows the dialog window to filter the output based on file extensions.
+     * This is not available on all platforms, if not then it is ignored. <br>
+     * <p>
+     * It is definitely available on Linux systems because it uses the standard swing
+     * JFileFinder component.
+     *
+     * @param prompt   the frame text for the chooser
+     * @param types    a comma separated list of file extensions e.g. "png,jpf,tiff"
+     * @param typeDesc simple textual description of the file types e.g. "Image files"
+     * @return the absolute path name for the selected folder, or null if action
+     * cancelled.
+     */
+    public static String selectOutput(String prompt, String types, String typeDesc) {
+        return selectImpl(prompt, FileDialog.SAVE, types, typeDesc);
+    }
 
 	/*
-	 
+
 	Component parentComponent
 	    The first argument to each showXxxDialog method is always the parent component, which must be a 
 	    Frame, a component inside a Frame, or null. If you specify a Frame or Dialog, then the Dialog 
@@ -718,102 +638,162 @@ public class G4P implements GConstants, PConstants {
 	specified icon.
  */
 
-	private static String PANE_TEXT_STYLE_MACOS = "<html> <head> <style type=\"text/css\">"+
-    "b { font: 13pt \"Lucida Grande\" } p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+
-    "</style> </head> <b>@@TITLE@@</b> <p>@@MESSAGE@@</p>";
-	
-	private static String PANE_TEXT_STYLE_OTHER = "<html> <head> <style type=\"text/css\">"+
-    "b { font: 12pt \"Lucida Grande\" } p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+
-    "</style> </head> <b>@@MESSAGE@@ </b>";
-	
-	/**
-	 * Display a simple message dialog window. <br>
-	 * 
-	 * The actual UI will depend on the platform your application is running on. <br>
-	 * 
-	 * The message type should be one of the following <br>
-	 * G4P.PLAIN, G4P.ERROR, G4P.INFO, G4P.WARNING, G4P.QUERY <br>
-	 * 
-	 * @param owner the control responsible for this dialog. 
-	 * @param message the text to be displayed in the main area of the dialog
-	 * @param title the text to appear in the dialog's title bar.
-	 * @param messageType the message type
-	 */
-	public static void showMessage(Object owner, String message, String title, int messageType){
-		Frame frame = getFrame(owner);
-		String m;
-		if(PApplet.platform == PApplet.MACOSX){
-			m = PANE_TEXT_STYLE_MACOS.replaceAll("@@TITLE@@", title);
-			title = "";
-			m = m.replaceAll("@@MESSAGE@@", message);
-		}
-		else {
-			m = PANE_TEXT_STYLE_OTHER.replaceAll("@@MESSAGE@@", message);
-		}
-		JOptionPane.showMessageDialog(frame, m, title, messageType);
-	}
-	
-	/**
-	 * Display a simple message dialog window. <br>
-	 * 
-	 * The actual UI will depend on the platform your application is running on. <br>
-	 * 
-	 * The message type should be one of the following <br>
-	 * 	G4P.PLAIN, G4P.ERROR, G4P.INFO, G4P.WARNING, G4P.QUERY <br>
-	 * 
-	 * The option type  should be one of the following <br>
-	 * G4P.YES_NO, G4P.YES_NO_CANCEL, G4P.OK_CANCEL <br>
-	 * 
-	 * This method returns a value to indicate which button was clicked. It will be
-	 * one of the following <br>
-	 * G4P.OK, G4P.YES, G4P.NO, G4P.CANCEL, G4P.CLOSED <br>
-	 * 
-	 * Some comments on the returned value: <ul>
-	 * <li>G4P.OK and G4P.YES have the same integer value so can be used interchangeably. </li>
-	 * <li>G4P.CLOSED maybe returned if the dialog box is closed although on some 
-	 * systems G4P.NO or G4P.CANCEL may be returned instead. </li>
-	 * <li>It is better to test for a positive response because they have the same value. </li>
-	 * <li> If you must test for a negative response use !G4P.OK or !G4P.YES </li></ul>
-	 * 
-	 * @param owner the control responsible for this dialog. 
-	 * @param message the text to be displayed in the main area of the dialog
-	 * @param title the text to appear in the dialog's title bar.
-	 * @param messageType the message type
-	 * @param optionType
-	 * @return which button was clicked
-	 */
-	public static int selectOption(Object owner, String message, String title, int messageType, int optionType){
-		Frame frame = getFrame(owner);
-		String m;
-		if(PApplet.platform == PApplet.MACOSX){
-			m = PANE_TEXT_STYLE_MACOS.replaceAll("@@TITLE@@", title);
-			title = "";
-			m = m.replaceAll("@@MESSAGE@@", message);
-		}
-		else {
-			m = PANE_TEXT_STYLE_OTHER.replaceAll("@@MESSAGE@@", message);
-		}
-		return JOptionPane.showOptionDialog(frame, m, title, optionType, messageType, null, null, null);
-	}
-	
-	/**
-	 * Find the Frame associated with this object.
-	 * 
-	 * @param owner the object that is responsible for this message
-	 * @return the frame (if any) that owns this object
-	 */
-	private static Frame getFrame(Object owner){
-		Frame frame = null;
-		if(owner instanceof PApplet || owner instanceof GWinApplet)
-			frame = ((PApplet)owner).frame;
-		else if(owner instanceof GWindow)
-			frame = (Frame)owner;
-		else if(owner instanceof GAbstractControl)
-			frame = ((GAbstractControl) owner).getPApplet().frame;
-		return frame;
-	}
-	
-	
+    /**
+     * The implementation of the select input and output methods.
+     *
+     * @param prompt
+     * @param mode
+     * @param types
+     * @param typeDesc
+     * @return the absolute path name for the selected folder, or null if action
+     * cancelled.
+     */
+    private static String selectImpl(String prompt, int mode, String types, String typeDesc) {
+        // If no initial selection made then use last selection
+        // Assume that a file will not be selected
+        String selectedFile = null;
+        // Get the owner
+        Frame owner = (sketchApplet == null) ? null : sketchApplet.frame;
+        // Create a file filter
+        if (PApplet.useNativeSelect) {
+            FileDialog dialog = new FileDialog(owner, prompt, mode);
+            FilenameFilter filter = null;
+            if (types != null && types.length() > 0) {
+                filter = new FilenameChooserFilter(types);
+                dialog.setFilenameFilter(filter);
+            }
+            dialog.setVisible(true);
+            String directory = dialog.getDirectory();
+            if (directory != null) {
+                selectedFile = dialog.getFile();
+                if (selectedFile != null) {
+                    try {
+                        selectedFile = (new File(directory, selectedFile)).getCanonicalPath();
+                    } catch (IOException e) {
+                        selectedFile = null;
+                    }
+                }
+            }
+        } else {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle(prompt);
+            FileFilter filter = null;
+            if (types != null && types.length() > 0) {
+                filter = new FileChooserFilter(types, typeDesc);
+                chooser.setFileFilter(filter);
+            }
+            int result = JFileChooser.ERROR_OPTION;
+            if (mode == FileDialog.SAVE) {
+                result = chooser.showSaveDialog(owner);
+            } else if (mode == FileDialog.LOAD) {
+                result = chooser.showOpenDialog(owner);
+            }
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    selectedFile = chooser.getSelectedFile().getCanonicalPath();
+                } catch (IOException e) {
+                    selectedFile = null;
+                }
+            }
+        }
+        return selectedFile;
+    }
 
-	
+    /**
+     * Display a simple message dialog window. <br>
+     * <p>
+     * The actual UI will depend on the platform your application is running on. <br>
+     * <p>
+     * The message type should be one of the following <br>
+     * G4P.PLAIN, G4P.ERROR, G4P.INFO, G4P.WARNING, G4P.QUERY <br>
+     *
+     * @param owner       the control responsible for this dialog.
+     * @param message     the text to be displayed in the main area of the dialog
+     * @param title       the text to appear in the dialog's title bar.
+     * @param messageType the message type
+     */
+    public static void showMessage(Object owner, String message, String title, int messageType) {
+        Frame frame = getFrame(owner);
+        String m;
+        if (PApplet.platform == PApplet.MACOSX) {
+            m = PANE_TEXT_STYLE_MACOS.replaceAll("@@TITLE@@", title);
+            title = "";
+            m = m.replaceAll("@@MESSAGE@@", message);
+        } else {
+            m = PANE_TEXT_STYLE_OTHER.replaceAll("@@MESSAGE@@", message);
+        }
+        JOptionPane.showMessageDialog(frame, m, title, messageType);
+    }
+
+    /**
+     * Display a simple message dialog window. <br>
+     * <p>
+     * The actual UI will depend on the platform your application is running on. <br>
+     * <p>
+     * The message type should be one of the following <br>
+     * G4P.PLAIN, G4P.ERROR, G4P.INFO, G4P.WARNING, G4P.QUERY <br>
+     * <p>
+     * The option type  should be one of the following <br>
+     * G4P.YES_NO, G4P.YES_NO_CANCEL, G4P.OK_CANCEL <br>
+     * <p>
+     * This method returns a value to indicate which button was clicked. It will be
+     * one of the following <br>
+     * G4P.OK, G4P.YES, G4P.NO, G4P.CANCEL, G4P.CLOSED <br>
+     * <p>
+     * Some comments on the returned value: <ul>
+     * <li>G4P.OK and G4P.YES have the same integer value so can be used interchangeably. </li>
+     * <li>G4P.CLOSED maybe returned if the dialog box is closed although on some
+     * systems G4P.NO or G4P.CANCEL may be returned instead. </li>
+     * <li>It is better to test for a positive response because they have the same value. </li>
+     * <li> If you must test for a negative response use !G4P.OK or !G4P.YES </li></ul>
+     *
+     * @param owner       the control responsible for this dialog.
+     * @param message     the text to be displayed in the main area of the dialog
+     * @param title       the text to appear in the dialog's title bar.
+     * @param messageType the message type
+     * @param optionType
+     * @return which button was clicked
+     */
+    public static int selectOption(Object owner, String message, String title, int messageType, int optionType) {
+        Frame frame = getFrame(owner);
+        String m;
+        if (PApplet.platform == PApplet.MACOSX) {
+            m = PANE_TEXT_STYLE_MACOS.replaceAll("@@TITLE@@", title);
+            title = "";
+            m = m.replaceAll("@@MESSAGE@@", message);
+        } else {
+            m = PANE_TEXT_STYLE_OTHER.replaceAll("@@MESSAGE@@", message);
+        }
+        return JOptionPane.showOptionDialog(frame, m, title, optionType, messageType, null, null, null);
+    }
+
+    /**
+     * Find the Frame associated with this object.
+     *
+     * @param owner the object that is responsible for this message
+     * @return the frame (if any) that owns this object
+     */
+    private static Frame getFrame(Object owner) {
+        Frame frame = null;
+        if (owner instanceof PApplet || owner instanceof GWinApplet)
+            frame = ((PApplet) owner).frame;
+        else if (owner instanceof GWindow)
+            frame = (Frame) owner;
+        else if (owner instanceof GAbstractControl)
+            frame = ((GAbstractControl) owner).getPApplet().frame;
+        return frame;
+    }
+
+    /**
+     * This class represents the current style used by G4P.
+     * It can be extended to add other attributes but these should be
+     * included in the pushStyle and popStyle.
+     *
+     * @author Peter
+     */
+    static class G4Pstyle {
+        GControlMode ctrlMode;
+        boolean showMessages;
+    }
+
 }

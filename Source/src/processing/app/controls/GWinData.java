@@ -25,15 +25,14 @@ package processing.app.controls;
 
 /**
  * This class is used to hold the data associated with a GWindow object.
- * 
+ * <p>
  * You should extend this class to provide the data to be processed by the
  * window
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GWinData {
 
-	public GWindow owner;
+    public GWindow owner;
 
 }

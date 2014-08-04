@@ -1,29 +1,28 @@
 package processing.app.tools.io;
 
-
 public class Keyword {
 
-	private String word;
-	private String handleTime;
-	
-	public Keyword(String text, String handleTime) {
-		word = text;
-		this.handleTime = handleTime;
-	}
+    private String word;
+    private String handleTime;
 
-	public String getKeyword() {
-		return word;
-	}
+    public Keyword(String text, String handleTime) {
+        word = text;
+        this.handleTime = handleTime;
+    }
 
-	public void setKeyword(String word) {
-		this.word = word;
-	}
+    public String getKeyword() {
+        return word;
+    }
 
-	public String getHandleTime() {
-		return handleTime;
-	}
+    public void setKeyword(String word) {
+        this.word = word;
+    }
 
-	public String getInfo() {
-		return "[" +getHandleTime() + "] - " + getKeyword();
-	}
+    public String getHandleTime() {
+        return handleTime;
+    }
+
+    public String getInfo() {
+        return "[" + getHandleTime() + "] - " + getKeyword();
+    }
 }

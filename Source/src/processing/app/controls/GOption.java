@@ -27,57 +27,53 @@ import processing.core.PApplet;
 
 /**
  * A two-state toggle control. <br>
- * 
+ * <p>
  * GOption objects (also known as radio buttons) are two-state toggle switches
  * that can either be used independently or if added to a GToggleGroup control
  * part of a single selection option group.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GOption extends GToggleControl {
 
-	/**
-	 * Create an option button without text.
-	 * 
-	 * @param theApplet
-	 *            that will display the control
-	 * @param p0
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 */
-	public GOption(PApplet theApplet, float p0, float p1, float p2, float p3) {
-		this(theApplet, p0, p1, p2, p3, "");
-	}
+    /**
+     * Create an option button without text.
+     *
+     * @param theApplet that will display the control
+     * @param p0
+     * @param p1
+     * @param p2
+     * @param p3
+     */
+    public GOption(PApplet theApplet, float p0, float p1, float p2, float p3) {
+        this(theApplet, p0, p1, p2, p3, "");
+    }
 
-	/**
-	 * Create an option button with text.
-	 * 
-	 * @param theApplet
-	 *            that will display the control
-	 * @param p0
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 * @param text
-	 *            text to be displayed
-	 */
-	public GOption(PApplet theApplet, float p0, float p1, float p2, float p3,
-			String text) {
-		super(theApplet, p0, p1, p2, p3);
-		opaque = false;
-		setText(text);
-		setIcon("pinhead.png", 2, GAlign.LEFT, null);
-		setTextAlign(GAlign.LEFT, null);
-		z = Z_SLIPPY;
-		// Now register control with applet
-		createEventHandler(G4P.sketchApplet, "handleToggleControlEvents",
-				new Class<?>[] { GToggleControl.class, GEvent.class },
-				new String[] { "option", "event" });
-		registeredMethods = DRAW_METHOD | MOUSE_METHOD;
-		cursorOver = HAND;
-		G4P.addControl(this);
-	}
+    /**
+     * Create an option button with text.
+     *
+     * @param theApplet that will display the control
+     * @param p0
+     * @param p1
+     * @param p2
+     * @param p3
+     * @param text      text to be displayed
+     */
+    public GOption(PApplet theApplet, float p0, float p1, float p2, float p3,
+                   String text) {
+        super(theApplet, p0, p1, p2, p3);
+        opaque = false;
+        setText(text);
+        setIcon("pinhead.png", 2, GAlign.LEFT, null);
+        setTextAlign(GAlign.LEFT, null);
+        z = Z_SLIPPY;
+        // Now register control with applet
+        createEventHandler(G4P.sketchApplet, "handleToggleControlEvents",
+                new Class<?>[]{GToggleControl.class, GEvent.class},
+                new String[]{"option", "event"});
+        registeredMethods = DRAW_METHOD | MOUSE_METHOD;
+        cursorOver = HAND;
+        G4P.addControl(this);
+    }
 
 }

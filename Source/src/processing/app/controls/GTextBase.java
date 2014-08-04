@@ -23,235 +23,221 @@
 
 package processing.app.controls;
 
-import java.awt.Font;
-import java.awt.font.TextAttribute;
-
 import processing.core.PApplet;
+
+import java.awt.*;
+import java.awt.font.TextAttribute;
 
 /**
  * Base class for any control that uses styled text.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public abstract class GTextBase extends GAbstractControl {
 
-	protected static final int TPAD = 2;
-	protected static final int TPAD2 = TPAD * 2;
-	protected static final int TPAD4 = TPAD * 4;
+    protected static final int TPAD = 2;
+    protected static final int TPAD2 = TPAD * 2;
+    protected static final int TPAD4 = TPAD * 4;
 
-	/** The styled text used by this control */
-	public StyledString stext = null;
+    /**
+     * The styled text used by this control
+     */
+    public StyledString stext = null;
 
-	protected Font localFont = G4P.globalFont;
+    protected Font localFont = G4P.globalFont;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param theApplet
-	 * @param p0
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 */
-	public GTextBase(PApplet theApplet, float p0, float p1, float p2, float p3) {
-		super(theApplet, p0, p1, p2, p3);
-	}
+    /**
+     * Constructor
+     *
+     * @param theApplet
+     * @param p0
+     * @param p1
+     * @param p2
+     * @param p3
+     */
+    public GTextBase(PApplet theApplet, float p0, float p1, float p2, float p3) {
+        super(theApplet, p0, p1, p2, p3);
+    }
 
-	/**
-	 * Set the text to be displayed.
-	 * 
-	 * @param text
-	 */
-	public void setText(String text) {
-		if (text == null || text.length() == 0)
-			text = " ";
-		stext = new StyledString(text, Integer.MAX_VALUE);
-		bufferInvalid = true;
-	}
+    /**
+     * Load the styled string to be used by this control.
+     *
+     * @param fname the name of the file to use
+     * @return true if loaded successfully else false
+     */
+    public boolean loadText(String fname) {
+        StyledString ss = StyledString.load(winApp, fname);
+        if (ss != null) {
+            setStyledText(ss);
+            stext.startIdx = stext.endIdx = -1;
+            bufferInvalid = true;
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Load the styled string to be used by this control.
-	 * 
-	 * @param fname
-	 *            the name of the file to use
-	 * @return true if loaded successfully else false
-	 */
-	public boolean loadText(String fname) {
-		StyledString ss = StyledString.load(winApp, fname);
-		if (ss != null) {
-			setStyledText(ss);
-			stext.startIdx = stext.endIdx = -1;
-			bufferInvalid = true;
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Save the styled text used by this control to file.
+     *
+     * @param fname the name of the file to use
+     * @return true if saved successfully else false
+     */
+    public boolean saveText(String fname) {
+        if (stext != null) {
+            stext.startIdx = stext.endIdx = -1;
+            StyledString.save(winApp, stext, fname);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Save the styled text used by this control to file.
-	 * 
-	 * @param fname
-	 *            the name of the file to use
-	 * @return true if saved successfully else false
-	 */
-	public boolean saveText(String fname) {
-		if (stext != null) {
-			stext.startIdx = stext.endIdx = -1;
-			StyledString.save(winApp, stext, fname);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Set the font to be used in this control
+     *
+     * @param font AWT font to use
+     */
+    public void setFont(Font font) {
+        if (font != null && font != localFont && buffer != null) {
+            localFont = font;
+            buffer.g2.setFont(localFont);
+            bufferInvalid = true;
+        }
+    }
 
-	/**
-	 * Set the font to be used in this control
-	 * 
-	 * @param font
-	 *            AWT font to use
-	 */
-	public void setFont(Font font) {
-		if (font != null && font != localFont && buffer != null) {
-			localFont = font;
-			buffer.g2.setFont(localFont);
-			bufferInvalid = true;
-		}
-	}
+    /**
+     * Clear <b>all</b> applied styles from the whole text.
+     */
+    public void setTextPlain() {
+        stext.clearAttributes();
+        bufferInvalid = true;
+    }
 
-	/**
-	 * Allows the user to provide their own styled text for this component
-	 * 
-	 * @param ss
-	 */
-	public void setStyledText(StyledString ss) {
-		if (ss != null) {
-			stext = ss;
-			stext.setWrapWidth((int) width - TPAD2);
-			bufferInvalid = true;
-		}
-	}
+    /**
+     * Make the selected characters bold. <br>
+     * Characters affected are >= start and < end
+     *
+     * @param start the first character to style
+     * @param end   the first character not to style
+     */
+    public void setTextBold(int start, int end) {
+        addAttributeImpl(G4P.WEIGHT, G4P.WEIGHT_BOLD, start, end);
+    }
 
-	/**
-	 * Clear <b>all</b> applied styles from the whole text.
-	 */
-	public void setTextPlain() {
-		stext.clearAttributes();
-		bufferInvalid = true;
-	}
+    /**
+     * Make all the characters bold.
+     */
+    public void setTextBold() {
+        addAttributeImpl(G4P.WEIGHT, G4P.WEIGHT_BOLD);
+    }
 
-	/**
-	 * Make the selected characters bold. <br>
-	 * Characters affected are >= start and < end
-	 * 
-	 * @param start
-	 *            the first character to style
-	 * @param end
-	 *            the first character not to style
-	 */
-	public void setTextBold(int start, int end) {
-		addAttributeImpl(G4P.WEIGHT, G4P.WEIGHT_BOLD, start, end);
-	}
+    /**
+     * Make the selected characters italic. <br>
+     * Characters affected are >= start and < end
+     *
+     * @param start the first character to style
+     * @param end   the first character not to style
+     */
+    public void setTextItalic(int start, int end) {
+        addAttributeImpl(G4P.POSTURE, G4P.POSTURE_OBLIQUE, start, end);
+    }
 
-	/**
-	 * Make all the characters bold.
-	 */
-	public void setTextBold() {
-		addAttributeImpl(G4P.WEIGHT, G4P.WEIGHT_BOLD);
-	}
-	
-	/**
-	 * Make the selected characters italic. <br>
-	 * Characters affected are >= start and < end
-	 * 
-	 * @param start
-	 *            the first character to style
-	 * @param end
-	 *            the first character not to style
-	 */
-	public void setTextItalic(int start, int end) {
-		addAttributeImpl(G4P.POSTURE, G4P.POSTURE_OBLIQUE, start, end);
-	}
-	
-	/**
-	 * Make all the characters italic.
-	 */
-	public void setTextItalic() {
-		addAttributeImpl(G4P.POSTURE, G4P.POSTURE_OBLIQUE);
-	}
+    /**
+     * Make all the characters italic.
+     */
+    public void setTextItalic() {
+        addAttributeImpl(G4P.POSTURE, G4P.POSTURE_OBLIQUE);
+    }
 
-	/**
-	 * Make the selected characters underlined. <br>
-	 * Characters affected are >= start and < end
-	 * 
-	 * @param start
-	 *            the first character to style
-	 * @param end
-	 *            the first character not to style
-	 */
-	public void setTextUnderlined(int start, int end) {
-		addAttributeImpl(G4P.UNDERLINE, G4P.UNDERLINE_ON, start, end);
-	}
-	
-	/**
-	 * Make all the characters underlined.
-	 */
-	public void setTextUnderlined() {
-		addAttributeImpl(G4P.UNDERLINE, G4P.UNDERLINE_ON);
-	}
+    /**
+     * Make the selected characters underlined. <br>
+     * Characters affected are >= start and < end
+     *
+     * @param start the first character to style
+     * @param end   the first character not to style
+     */
+    public void setTextUnderlined(int start, int end) {
+        addAttributeImpl(G4P.UNDERLINE, G4P.UNDERLINE_ON, start, end);
+    }
 
-	/**
-	 * Get the text used for this control.
-	 * 
-	 * @return the displayed text without styling
-	 */
-	public StyledString getStyledText() {
-		return stext;
-	}
+    /**
+     * Make all the characters underlined.
+     */
+    public void setTextUnderlined() {
+        addAttributeImpl(G4P.UNDERLINE, G4P.UNDERLINE_ON);
+    }
 
-	/**
-	 * Get the text used for this control.
-	 * 
-	 * @return the displayed text without styling
-	 */
-	public String getText() {
-		return stext.getPlainText();
-	}
+    /**
+     * Get the text used for this control.
+     *
+     * @return the displayed text without styling
+     */
+    public StyledString getStyledText() {
+        return stext;
+    }
 
-	/**
-	 * Apply the style to the whole text
-	 * 
-	 * @param style
-	 *            the style attribute
-	 * @param value
-	 *            'amount' to apply
-	 */
-	protected void addAttributeImpl(TextAttribute style, Object value) {
-		stext.addAttribute(style, value);
-		bufferInvalid = true;
-	}
+    /**
+     * Allows the user to provide their own styled text for this component
+     *
+     * @param ss
+     */
+    public void setStyledText(StyledString ss) {
+        if (ss != null) {
+            stext = ss;
+            stext.setWrapWidth((int) width - TPAD2);
+            bufferInvalid = true;
+        }
+    }
 
-	/**
-	 * Apply the style to a portion of the strin
-	 * 
-	 * @param style
-	 *            the style attribute
-	 * @param value
-	 *            'amount' to apply
-	 * @param s
-	 *            first character to be included for styling
-	 * @param e
-	 *            the first character not to be included for stylin
-	 */
-	protected void addAttributeImpl(TextAttribute style, Object value, int s,
-			int e) {
-		if (s >= e)
-			return;
-		if (s < 0)
-			s = 0;
-		if (e > stext.length())
-			e = stext.length();
-		stext.addAttribute(style, value, s, e);
-		bufferInvalid = true;
-	}
+    /**
+     * Get the text used for this control.
+     *
+     * @return the displayed text without styling
+     */
+    public String getText() {
+        return stext.getPlainText();
+    }
+
+    /**
+     * Set the text to be displayed.
+     *
+     * @param text
+     */
+    public void setText(String text) {
+        if (text == null || text.length() == 0)
+            text = " ";
+        stext = new StyledString(text, Integer.MAX_VALUE);
+        bufferInvalid = true;
+    }
+
+    /**
+     * Apply the style to the whole text
+     *
+     * @param style the style attribute
+     * @param value 'amount' to apply
+     */
+    protected void addAttributeImpl(TextAttribute style, Object value) {
+        stext.addAttribute(style, value);
+        bufferInvalid = true;
+    }
+
+    /**
+     * Apply the style to a portion of the strin
+     *
+     * @param style the style attribute
+     * @param value 'amount' to apply
+     * @param s     first character to be included for styling
+     * @param e     the first character not to be included for stylin
+     */
+    protected void addAttributeImpl(TextAttribute style, Object value, int s,
+                                    int e) {
+        if (s >= e)
+            return;
+        if (s < 0)
+            s = 0;
+        if (e > stext.length())
+            e = stext.length();
+        stext.addAttribute(style, value, s, e);
+        bufferInvalid = true;
+    }
 
 }

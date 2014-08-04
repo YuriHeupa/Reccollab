@@ -1,248 +1,223 @@
 package processing.app.screens.viewer;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import processing.app.BaseObjectAdapter;
+import processing.app.Lang;
+import processing.app.Reccollab;
+import processing.app.Utils;
+import processing.app.controls.*;
+import processing.app.tools.io.MouseInfo;
+import processing.core.PGraphics;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
-import processing.app.BaseObject;
-import processing.app.BaseObjectAdapter;
-import processing.app.Jamcollab;
-import processing.app.Lang;
-import processing.app.Utils;
-import processing.app.controls.G4P;
-import processing.app.controls.GAlign;
-import processing.app.controls.GButton;
-import processing.app.controls.GCScheme;
-import processing.app.controls.GCheckbox;
-import processing.app.controls.GEvent;
-import processing.app.controls.GOption;
-import processing.app.controls.GTextField;
-import processing.app.controls.GToggleGroup;
-import processing.app.tools.io.MouseInfo;
-import processing.core.PGraphics;
-import processing.event.MouseEvent;
-
 public class MouseViewer extends BaseObjectAdapter {
 
+    GTextField SourcePathInput;
+    GTextField OutputPathInput;
+    Thread generateThread;
+    JDialog generatingDialog = new JDialog();
 
-	GTextField SourcePathInput; 
-	GTextField OutputPathInput; 
-	Thread generateThread;
-	JDialog generatingDialog = new JDialog();  
+    GOption heatMapPos;
+    GOption heatMapClicks;
+    GCheckbox heatMap;
+    GCheckbox accumulate;
+    GCheckbox generalInfo;
 
-	GOption heatMapPos;
-	GOption heatMapClicks;
-	GCheckbox heatMap;
-	GCheckbox accumulate;
-	GCheckbox generalInfo;
+    public MouseViewer() {
+        super();
+        setParent("GenerateImages");
+    }
 
-	public MouseViewer() {
-		super();
-		setParent("GenerateImages");
-	}
+    @Override
+    public void Awake() {
+        int y = 70;
 
+        view.AddLabel(4, 88 + y, 192, 16, Lang.MOUSE_LOGS, GAlign.RIGHT, GAlign.MIDDLE, false);
+        view.AddLabel(4, 112 + y, 192, 16, Lang.SAVE_PATH, GAlign.RIGHT, GAlign.MIDDLE, false);
+        view.AddLabel(4, 136 + y, 192, 16, Lang.ACCUMULATE_TRACK, GAlign.RIGHT, GAlign.MIDDLE, false);
+        view.AddLabel(4, 160 + y, 192, 16, "Heatmap:", GAlign.RIGHT, GAlign.MIDDLE, false);
+        view.AddLabel(4, 184 + y, 192, 16, Lang.GENERAL_INFO, GAlign.RIGHT, GAlign.MIDDLE, false);
 
-	@Override
-	public void Awake() {
-		int y = 70;
+        accumulate = new GCheckbox(Reccollab.app, 196, 136 + y, 24, 20);
+        accumulate.setOpaque(false);
+        view.AddControl(accumulate);
 
+        GToggleGroup group = new GToggleGroup();
 
-		view.AddLabel(4, 88+y, 192, 16, Lang.MOUSE_LOGS, GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 112+y, 192, 16, Lang.SAVE_PATH, GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 136+y, 192, 16, Lang.ACCUMULATE_TRACK, GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 160+y, 192, 16, "Heatmap:", GAlign.RIGHT, GAlign.MIDDLE, false);
-		view.AddLabel(4, 184+y, 192, 16, Lang.GENERAL_INFO, GAlign.RIGHT, GAlign.MIDDLE, false);
+        heatMap = new GCheckbox(Reccollab.app, 196, 160 + y, 24, 20);
+        heatMap.setOpaque(false);
+        view.AddControl(heatMap);
 
-		accumulate = new GCheckbox(Jamcollab.app, 196, 136+y, 24, 20);
-		accumulate.setOpaque(false);
-		view.AddControl(accumulate);
+        heatMapPos = new GOption(Reccollab.app, 220, 160 + y, 80, 20);
+        heatMapPos.setOpaque(false);
+        heatMapPos.setText(Lang.POSITION);
+        view.AddControl(heatMapPos);
+        group.addControl(heatMapPos);
 
-		GToggleGroup group = new GToggleGroup();
+        heatMapClicks = new GOption(Reccollab.app, 290, 160 + y, 80, 20);
+        heatMapClicks.setOpaque(false);
+        heatMapClicks.setText("Clicks");
+        view.AddControl(heatMapClicks);
+        group.addControl(heatMapClicks);
 
-		heatMap = new GCheckbox(Jamcollab.app, 196, 160+y, 24, 20);
-		heatMap.setOpaque(false);
-		view.AddControl(heatMap);
+        generalInfo = new GCheckbox(Reccollab.app, 196, 184 + y, 24, 20);
+        generalInfo.setOpaque(false);
+        view.AddControl(generalInfo);
 
-		heatMapPos = new GOption(Jamcollab.app, 220, 160+y, 80, 20);
-		heatMapPos.setOpaque(false);
-		heatMapPos.setText(Lang.POSITION);
-		view.AddControl(heatMapPos);
-		group.addControl(heatMapPos);
+        SourcePathInput = view.AddTextField(196, 88 + y, 216, 16, G4P.SCROLLBARS_NONE);
+        SourcePathInput.setEnabled(false);
+        OutputPathInput = view.AddTextField(196, 112 + y, 216, 16, G4P.SCROLLBARS_NONE);
+        OutputPathInput.setEnabled(false);
 
-		heatMapClicks = new GOption(Jamcollab.app, 290, 160+y, 80, 20);
-		heatMapClicks.setOpaque(false);
-		heatMapClicks.setText("Clicks");
-		view.AddControl(heatMapClicks);
-		group.addControl(heatMapClicks);
+        view.AddButton(420, 88 + y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this,
+                "SearchSourcePathButtonClick", "resources/sprites/folderIcon.png",
+                1, GAlign.RIGHT, GAlign.MIDDLE);
+        view.AddButton(420, 112 + y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this,
+                "SearchOutputPathButtonClick", "resources/sprites/folderIcon.png",
+                1, GAlign.RIGHT, GAlign.MIDDLE);
 
-		generalInfo = new GCheckbox(Jamcollab.app, 196, 184+y, 24, 20);
-		generalInfo.setOpaque(false);
-		view.AddControl(generalInfo);
+        view.AddButton(480, 22 + y, 80, 24, Lang.GENERATE, GCScheme.SCHEME_15,
+                this, "GenerateButtonClicked");
+    }
 
+    public void GenerateButtonClicked(GButton source, GEvent event) {
 
-		SourcePathInput = view.AddTextField(196, 88+y, 216, 16, G4P.SCROLLBARS_NONE);
-		SourcePathInput.setEnabled(false);
-		OutputPathInput = view.AddTextField(196, 112+y, 216, 16, G4P.SCROLLBARS_NONE);
-		OutputPathInput.setEnabled(false);
+        if (SourcePathInput.getText().isEmpty() || SourcePathInput.getText().equals(" "))
+            return;
 
-		view.AddButton(420, 88+y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
-				"SearchSourcePathButtonClick", "resources/sprites/folderIcon.png", 
-				1, GAlign.RIGHT, GAlign.MIDDLE);
-		view.AddButton(420, 112+y, 76, 16, Lang.SEARCH, GCScheme.SCHEME_15, this, 
-				"SearchOutputPathButtonClick", "resources/sprites/folderIcon.png", 
-				1, GAlign.RIGHT, GAlign.MIDDLE);
+        if (generateThread != null) {
+            if (generateThread.isAlive()) {
+                generatingDialog.setVisible(true);
+                generatingDialog.setLocationRelativeTo(Reccollab.jframe);
+                return;
+            }
+        }
 
-		view.AddButton(480, 22+y, 80, 24, Lang.GENERATE, GCScheme.SCHEME_15, 
-				this, "GenerateButtonClicked");
-	}
+        final JPanel p1 = new JPanel(new GridBagLayout());
+        p1.add(new JLabel(Lang.GENERATING), new GridBagConstraints());
+        final JLabel load = new JLabel("0%");
+        p1.add(load, new GridBagConstraints());
+        generatingDialog.setResizable(false);
+        generatingDialog.getContentPane().add(p1);
+        generatingDialog.setSize(180, 60);
+        generatingDialog.setLocationRelativeTo(Reccollab.jframe);
+        generatingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-	public void GenerateButtonClicked(GButton source, GEvent event) { 
+        generateThread = new Thread() {
+            public void run() {
 
-		if(SourcePathInput.getText().isEmpty() || SourcePathInput.getText().equals(" ")) 
-			return;
+                File source = new File(SourcePathInput.getText());
+                File[] listTxtFiles = source.listFiles(Utils.TEXT_FILTER);
 
+                ArrayList<MouseInfo> mouseInfos = new ArrayList<MouseInfo>();
 
-		if(generateThread != null) {
-			if(generateThread.isAlive()) {
-				generatingDialog.setVisible(true);
-				generatingDialog.setLocationRelativeTo(Jamcollab.jframe);  
-				return;
-			}
-		}
+                float percent = 0;
+                float factorPercentLoad = 50.0f / listTxtFiles.length;
 
-		final JPanel p1 = new JPanel(new GridBagLayout());  
-		p1.add(new JLabel(Lang.GENERATING), new GridBagConstraints());
-		final JLabel load = new JLabel("0%");
-		p1.add(load, new GridBagConstraints());  
-		generatingDialog.setResizable(false);
-		generatingDialog.getContentPane().add(p1);  
-		generatingDialog.setSize(180, 60);  
-		generatingDialog.setLocationRelativeTo(Jamcollab.jframe);  
-		generatingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+                final String output = (!OutputPathInput.getText().isEmpty()
+                        && !OutputPathInput.getText().equals(" ")) ?
+                        OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Reccollab";
 
-		generateThread = new Thread() {  
-			public void run() {  
+                if (source.isDirectory()) { // make sure it's a directory
+                    for (File f : source.listFiles(Utils.TEXT_FILTER)) {
+                        if (percent < 50)
+                            percent += factorPercentLoad;
+                        load.setText(String.valueOf((int) (percent)) + "%");
 
-				File source = new File(SourcePathInput.getText());
-				File[] listTxtFiles = source.listFiles(Utils.TEXT_FILTER);
-				
-				ArrayList<MouseInfo> mouseInfos = new ArrayList<MouseInfo>();
-				
-				float percent = 0;
-				float factorPercentLoad = 50.0f/listTxtFiles.length;
-				
-				final String output = (!OutputPathInput.getText().isEmpty() 
-						&& !OutputPathInput.getText().equals(" ")) ? 
-								OutputPathInput.getText() : Utils.getDefaultSavePath() + File.separator + "Jamcollab";
+                        BufferedReader br = null;
 
+                        try {
 
-				if (source.isDirectory()) { // make sure it's a directory
-					for (File f : source.listFiles(Utils.TEXT_FILTER)) {
-						if(percent < 50)
-							percent += factorPercentLoad;
-						load.setText(String.valueOf((int)(percent))+"%");
-						
-						BufferedReader br = null;
-						 
-						try {
-				 
-							String currentLine;
-				 
-							br = new BufferedReader(new FileReader(f.getAbsolutePath()));
-				 
-							while ((currentLine = br.readLine()) != null) {
-								String handleTime = currentLine.substring(0, 26);
-								int button = Integer.valueOf(currentLine.substring(29, 30));
-								int x = Integer.valueOf(currentLine.substring(32, currentLine.indexOf("x")));
-								int y = Integer.valueOf(currentLine.substring(currentLine.indexOf("x")+1, currentLine.indexOf("y")));
-								int w = Integer.valueOf(currentLine.substring(currentLine.indexOf("R")+2, currentLine.indexOf("w")));
-								int h = Integer.valueOf(currentLine.substring(currentLine.indexOf("w")+1, currentLine.length()-2));
-								mouseInfos.add(new MouseInfo(x, y, w, h, button, handleTime));
-							}
-				 
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							try {
-								if (br != null)br.close();
-							} catch (IOException ex) {
-								ex.printStackTrace();
-							}
-						}
-					}
-				}
-				
-				load.setText("50%");
+                            String currentLine;
 
-				for (MouseInfo m : mouseInfos) {
-					if(percent < 100)
-						percent += factorPercentLoad;
-					load.setText(String.valueOf((int)(percent))+"%");
-					
-					PGraphics pg = Jamcollab.app.createGraphics(100, 100);
-					pg.beginDraw();
-					pg.text(m.getInfo(), 0, 0);
-					pg.endDraw();
-					pg.save(output + File.separator + "mouse_"+Utils.dateFormat()+".jpg");
-					
-				}
+                            br = new BufferedReader(new FileReader(f.getAbsolutePath()));
 
-				
-				
-				load.setText("100%");
+                            while ((currentLine = br.readLine()) != null) {
+                                String handleTime = currentLine.substring(0, 26);
+                                int button = Integer.valueOf(currentLine.substring(29, 30));
+                                int x = Integer.valueOf(currentLine.substring(32, currentLine.indexOf("x")));
+                                int y = Integer.valueOf(currentLine.substring(currentLine.indexOf("x") + 1,
+                                        currentLine.indexOf("y")));
+                                int w = Integer.valueOf(currentLine.substring(currentLine.indexOf("R") + 2,
+                                        currentLine.indexOf("w")));
+                                int h = Integer.valueOf(currentLine.substring(currentLine.indexOf("w") + 1,
+                                        currentLine.length() - 2));
+                                mouseInfos.add(new MouseInfo(x, y, w, h, button, handleTime));
+                            }
 
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (br != null) br.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
+                }
 
-				SwingUtilities.invokeLater(new Runnable(){ 
-					public void run(){  
-						p1.remove(load);
-						generatingDialog.dispose();
-						JOptionPane.showMessageDialog(Jamcollab.jframe, 
-								Lang.GENERATE_SUCCES);
-						
-										
-						Utils.OpenFile(output + File.separator);
-					}  
-				});  
-			}  
-		};  
+                load.setText("50%");
 
-		generateThread.start();  
-		generatingDialog.setVisible(true);  
+                for (MouseInfo m : mouseInfos) {
+                    if (percent < 100)
+                        percent += factorPercentLoad;
+                    load.setText(String.valueOf((int) (percent)) + "%");
 
-	} 
+                    PGraphics pg = Reccollab.app.createGraphics(100, 100);
+                    pg.beginDraw();
+                    pg.text(m.getInfo(), 0, 0);
+                    pg.endDraw();
+                    pg.save(output + File.separator + "mouse_" + Utils.dateFormat() + ".jpg");
 
-	public void SearchSourcePathButtonClick(GButton source, GEvent event) { 
-		Jamcollab.app.selectFolder(Lang.SELECT_FOLDER, "selectSourceFolder", null, this);
-	} 
+                }
 
+                load.setText("100%");
 
-	public void SearchOutputPathButtonClick(GButton source, GEvent event) { 
-		Jamcollab.app.selectFolder(Lang.SELECT_FOLDER, "selectOutputFolder", null, this);
-	} 
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        p1.remove(load);
+                        generatingDialog.dispose();
+                        JOptionPane.showMessageDialog(Reccollab.jframe,
+                                Lang.GENERATE_SUCCES);
 
-	public void selectSourceFolder(File selection) {
-		if(selection == null)
-			return;
-		String path = selection.getAbsolutePath();
-		SourcePathInput.setText(path);
-	}
+                        Utils.OpenFile(output + File.separator);
+                    }
+                });
+            }
+        };
 
+        generateThread.start();
+        generatingDialog.setVisible(true);
 
-	public void selectOutputFolder(File selection) {
-		if(selection == null)
-			return;
-		String path = selection.getAbsolutePath();
-		OutputPathInput.setText(path);
-	}
+    }
+
+    public void SearchSourcePathButtonClick(GButton source, GEvent event) {
+        Reccollab.app.selectFolder(Lang.SELECT_FOLDER, "selectSourceFolder", null, this);
+    }
+
+    public void SearchOutputPathButtonClick(GButton source, GEvent event) {
+        Reccollab.app.selectFolder(Lang.SELECT_FOLDER, "selectOutputFolder", null, this);
+    }
+
+    public void selectSourceFolder(File selection) {
+        if (selection == null)
+            return;
+        String path = selection.getAbsolutePath();
+        SourcePathInput.setText(path);
+    }
+
+    public void selectOutputFolder(File selection) {
+        if (selection == null)
+            return;
+        String path = selection.getAbsolutePath();
+        OutputPathInput.setText(path);
+    }
 
 }

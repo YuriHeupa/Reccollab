@@ -28,62 +28,61 @@ import processing.core.PGraphics;
 
 /**
  * Display area for user generated graphics. <br>
- * 
+ * <p>
  * This control will display a PGraphics object created and updated by the user.
  * If the size of the users graphic is different from the control the output
  * will be rescaled to fit the control size irrespective of the aspect ratio.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GSketchPad extends GAbstractControl {
 
-	// Scale graphic should be set to true if the grpahics object
-	// and this sketch pad object are of different sizes.
-	protected boolean scaleGraphic = false;
+    // Scale graphic should be set to true if the grpahics object
+    // and this sketch pad object are of different sizes.
+    protected boolean scaleGraphic = false;
 
-	protected PGraphics pad = null;
+    protected PGraphics pad = null;
 
-	public GSketchPad(PApplet theApplet, float p0, float p1, float p2, float p3) {
-		super(theApplet, p0, p1, p2, p3);
-		cursorOver = G4P.mouseOff; // does not change
-		registeredMethods = DRAW_METHOD;
-		G4P.addControl(this);
-	}
+    public GSketchPad(PApplet theApplet, float p0, float p1, float p2, float p3) {
+        super(theApplet, p0, p1, p2, p3);
+        cursorOver = G4P.mouseOff; // does not change
+        registeredMethods = DRAW_METHOD;
+        G4P.addControl(this);
+    }
 
-	public void setGraphic(PGraphics pg) {
-		if (pg == null)
-			return;
-		pad = pg;
-		scaleGraphic = (int) width != pg.width || (int) height != pg.height;
-	}
+    public void setGraphic(PGraphics pg) {
+        if (pg == null)
+            return;
+        pad = pg;
+        scaleGraphic = (int) width != pg.width || (int) height != pg.height;
+    }
 
-	public void draw() {
-		if (!visible)
-			return;
+    public void draw() {
+        if (!visible)
+            return;
 
-		winApp.pushStyle();
-		winApp.pushMatrix();
-		// Perform the rotation
-		winApp.translate(cx, cy);
-		winApp.rotate(rotAngle);
-		// Move matrix to line up with top-left corner
-		winApp.translate(-halfWidth, -halfHeight);
-		// Draw buffer
-		winApp.imageMode(PApplet.CORNER);
-		if (alphaLevel < 255)
-			winApp.tint(TINT_FOR_ALPHA, alphaLevel);
-		if (pad != null) {
-			try {
-				if (scaleGraphic)
-					winApp.image(pad, 0, 0, width, height);
-				else
-					winApp.image(pad, 0, 0);
-			} catch (Exception excp) { /* Do nothing */
-			}
-		}
-		winApp.popMatrix();
-		winApp.popStyle();
-	}
+        winApp.pushStyle();
+        winApp.pushMatrix();
+        // Perform the rotation
+        winApp.translate(cx, cy);
+        winApp.rotate(rotAngle);
+        // Move matrix to line up with top-left corner
+        winApp.translate(-halfWidth, -halfHeight);
+        // Draw buffer
+        winApp.imageMode(PApplet.CORNER);
+        if (alphaLevel < 255)
+            winApp.tint(TINT_FOR_ALPHA, alphaLevel);
+        if (pad != null) {
+            try {
+                if (scaleGraphic)
+                    winApp.image(pad, 0, 0, width, height);
+                else
+                    winApp.image(pad, 0, 0);
+            } catch (Exception excp) { /* Do nothing */
+            }
+        }
+        winApp.popMatrix();
+        winApp.popStyle();
+    }
 
 }

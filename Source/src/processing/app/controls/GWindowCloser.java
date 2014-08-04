@@ -23,9 +23,9 @@
 
 package processing.app.controls;
 
-import java.util.ArrayList;
-
 import processing.core.PApplet;
+
+import java.util.ArrayList;
 
 /**
  * This class will be used to safely close windows provided that their
@@ -35,35 +35,34 @@ import processing.core.PApplet;
  * This class has to be declared public so it can register the post event, but
  * it should not be used directly. <br>
  * To close a window call the GWinodw close() method.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GWindowCloser {
 
-	private ArrayList<GWindow> toDisposeOf;
+    private ArrayList<GWindow> toDisposeOf;
 
-	GWindowCloser() {
-		toDisposeOf = new ArrayList<GWindow>();
-	}
+    GWindowCloser() {
+        toDisposeOf = new ArrayList<GWindow>();
+    }
 
-	public void addWindow(GWindow gwindow) {
-		toDisposeOf.add(gwindow);
-	}
+    public void addWindow(GWindow gwindow) {
+        toDisposeOf.add(gwindow);
+    }
 
-	public void post() {
-		if (!toDisposeOf.isEmpty()) {
-			for (GWindow gwindow : toDisposeOf) {
-				PApplet wapp = gwindow.papplet;
-				GWindowInfo winfo = G4P.windows.get(wapp);
-				if (winfo != null) {
-					winfo.dispose();
-					G4P.windows.remove(wapp);
-					gwindow.dispose();
-				}
-			}
-			toDisposeOf.clear();
-		}
-	}
+    public void post() {
+        if (!toDisposeOf.isEmpty()) {
+            for (GWindow gwindow : toDisposeOf) {
+                PApplet wapp = gwindow.papplet;
+                GWindowInfo winfo = G4P.windows.get(wapp);
+                if (winfo != null) {
+                    winfo.dispose();
+                    G4P.windows.remove(wapp);
+                    gwindow.dispose();
+                }
+            }
+            toDisposeOf.clear();
+        }
+    }
 
 }

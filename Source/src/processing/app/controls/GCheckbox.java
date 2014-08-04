@@ -27,64 +27,60 @@ import processing.core.PApplet;
 
 /**
  * A two-state toggle control. <br>
- * 
+ * <p>
  * GCheckbox objects (also known as tick boxes) are two-state toggle switches
  * that are used independently of other tick boxes.
- * 
+ *
  * @author Peter Lager
- * 
  */
 public class GCheckbox extends GToggleControl {
 
-	/**
-	 * Create an option button without text.
-	 * 
-	 * @param theApplet
-	 *            that will display the control
-	 * @param p0
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 */
-	public GCheckbox(PApplet theApplet, float p0, float p1, float p2, float p3) {
-		this(theApplet, p0, p1, p2, p3, "");
-	}
+    /**
+     * Create an option button without text.
+     *
+     * @param theApplet that will display the control
+     * @param p0
+     * @param p1
+     * @param p2
+     * @param p3
+     */
+    public GCheckbox(PApplet theApplet, float p0, float p1, float p2, float p3) {
+        this(theApplet, p0, p1, p2, p3, "");
+    }
 
-	/**
-	 * Create an option button with text.
-	 * 
-	 * @param theApplet
-	 *            that will display the control
-	 * @param p0
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 * @param text
-	 *            text to be displayed
-	 */
-	public GCheckbox(PApplet theApplet, float p0, float p1, float p2, float p3,
-			String text) {
-		super(theApplet, p0, p1, p2, p3);
-		opaque = false;
-		setText(text);
-		setIcon("tick.png", 2, GAlign.LEFT, null);
-		setTextAlign(GAlign.LEFT, null);
-		z = Z_SLIPPY;
-		// Now register control with applet
-		createEventHandler(G4P.sketchApplet, "handleToggleControlEvents",
-				new Class<?>[] { GToggleControl.class, GEvent.class },
-				new String[] { "checkbox", "event" });
-		registeredMethods = DRAW_METHOD | MOUSE_METHOD;
-		cursorOver = HAND;
-		G4P.addControl(this);
-	}
+    /**
+     * Create an option button with text.
+     *
+     * @param theApplet that will display the control
+     * @param p0
+     * @param p1
+     * @param p2
+     * @param p3
+     * @param text      text to be displayed
+     */
+    public GCheckbox(PApplet theApplet, float p0, float p1, float p2, float p3,
+                     String text) {
+        super(theApplet, p0, p1, p2, p3);
+        opaque = false;
+        setText(text);
+        setIcon("tick.png", 2, GAlign.LEFT, null);
+        setTextAlign(GAlign.LEFT, null);
+        z = Z_SLIPPY;
+        // Now register control with applet
+        createEventHandler(G4P.sketchApplet, "handleToggleControlEvents",
+                new Class<?>[]{GToggleControl.class, GEvent.class},
+                new String[]{"checkbox", "event"});
+        registeredMethods = DRAW_METHOD | MOUSE_METHOD;
+        cursorOver = HAND;
+        G4P.addControl(this);
+    }
 
-	/**
-	 * This enforces independent action because this control cannot be added to
-	 * a toggle group
-	 */
-	@Override
-	protected void setToggleGroup(GToggleGroup tg) {
-	}
+    /**
+     * This enforces independent action because this control cannot be added to
+     * a toggle group
+     */
+    @Override
+    protected void setToggleGroup(GToggleGroup tg) {
+    }
 
 }
